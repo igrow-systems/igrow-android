@@ -53,9 +53,9 @@ public class EvironmentalSensorListActivity extends FragmentActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            ((EvironmentalSensorListFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.evironmentalsensor_list))
-                    .setActivateOnItemClick(true);
+            //((EvironmentalSensorListFragment) getSupportFragmentManager()
+            //        .findFragmentById(R.id.evironmentalsensor_list))
+            //        .setActivateOnItemClick(true);
         }
 
 

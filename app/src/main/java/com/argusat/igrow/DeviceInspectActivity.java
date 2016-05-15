@@ -1,4 +1,6 @@
+/*
 package com.opengpssignal.igrow;
+
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -146,3 +148,4 @@ public class DeviceInspectActivity extends Activity {
         mChart.setData(data);
     }
 }
+*/
