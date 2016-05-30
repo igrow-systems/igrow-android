@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opengpssignal.igrow;
+package com.argusat.igrow.android;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public class IGrowGattAttributes {
 
-    private static HashMap<String, String> attributes = new HashMap();
+    private static HashMap<String, String> attributes = new HashMap<String, String>();
 
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 

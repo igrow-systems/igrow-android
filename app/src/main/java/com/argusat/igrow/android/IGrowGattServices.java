@@ -19,7 +19,7 @@
 
 */
 
-package com.opengpssignal.igrow;
+package com.argusat.igrow.android;
 
 import java.util.UUID;
 

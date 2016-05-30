@@ -1,4 +1,4 @@
-package com.argusat.igrow;
+package com.argusat.igrow.android;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.argusat.igrow.dummy.DummyContent;
+import com.argusat.igrow.android.DummyContent;
 
 /**
  * A list fragment representing a list of EnvironmentalSensors. This fragment

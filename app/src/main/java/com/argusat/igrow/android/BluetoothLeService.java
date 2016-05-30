@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opengpssignal.igrow;
+package com.argusat.igrow.android;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;

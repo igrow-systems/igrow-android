@@ -1,4 +1,4 @@
-package com.argusat.igrow;
+package com.argusat.igrow.android;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,10 +32,10 @@ public class EnvironmentalSensorListAdapter extends RecyclerView.Adapter<Environ
                                                    int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.my_text_view, parent, false);
+                .inflate(R.layout.listitem_device, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder vh = new ViewHolder(v);
+        ViewHolder vh = new ViewHolder((TextView)v);
         return vh;
     }
 

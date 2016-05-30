@@ -1,4 +1,4 @@
-package com.argusat.igrow;
+package com.argusat.igrow.android;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.argusat.igrow.dummy.DummyContent;
 
 /**
  * A fragment representing a single EvironmentalSensor detail screen.
@@ -49,7 +47,7 @@ public class EvironmentalSensorDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_evironmentalsensor_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_environmentalsensor_detail, container, false);
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {

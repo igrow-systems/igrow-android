@@ -1,4 +1,4 @@
-package com.argusat.igrow;
+package com.argusat.igrow.android;
 
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
@@ -20,7 +20,7 @@ public class EvironmentalSensorDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_evironmentalsensor_detail);
+        setContentView(R.layout.activity_environmentalsensor_detail);
 
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

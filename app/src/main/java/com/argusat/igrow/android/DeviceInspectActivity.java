@@ -1,4 +1,6 @@
-package com.opengpssignal.igrow;
+
+
+package com.argusat.igrow.android;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -31,9 +33,9 @@ public class DeviceInspectActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //if (id == R.id.action_settings) {
+        //    return true;
+        //}
 
         return super.onOptionsItemSelected(item);
     }
@@ -49,20 +51,17 @@ public class DeviceInspectActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_device_inspect);
+        setContentView(R.layout.activity_environmentalsensor_detail);
 
-        tvTemperature = (TextView) findViewById(R.id.tvTemperature);
-        tvHumidity = (TextView) findViewById(R.id.tvHumidity);
-        tvIrradiance = (TextView) findViewById(R.id.tvIrradiance);
+        //tvTemperature = (TextView) findViewById(R.id.tvTemperature);
+        //tvHumidity = (TextView) findViewById(R.id.tvHumidity);
+        //tvIrradiance = (TextView) findViewById(R.id.tvIrradiance);
 
         mChart = (LineChart) findViewById(R.id.chart1);
         // if enabled, the chart will always start at zero on the y-axis
 
         // no description text
         mChart.setDescription("");
-
-        // enable value highlighting
-        mChart.setHighlightEnabled(true);
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
@@ -84,7 +83,7 @@ public class DeviceInspectActivity extends Activity {
 
         YAxis y = mChart.getAxisLeft();
         y.setTypeface(tf);
-        y.setLabelCount(5);
+        y.setLabelCount(5, true);
         y.setEnabled(false);
 
         mChart.getAxisRight().setEnabled(false);
@@ -102,7 +101,7 @@ public class DeviceInspectActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_device_inspect, menu);
+        getMenuInflater().inflate(R.menu.gatt_services, menu);
         return true;
     }
 

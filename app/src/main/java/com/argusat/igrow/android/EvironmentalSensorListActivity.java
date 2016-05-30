@@ -1,10 +1,9 @@
-package com.argusat.igrow;
+package com.argusat.igrow.android;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 
@@ -42,7 +41,7 @@ public class EvironmentalSensorListActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_evironmentalsensor_list);
+        setContentView(R.layout.activity_environmentalsensor_list);
 
         if (findViewById(R.id.evironmentalsensor_detail_container) != null) {
             // The detail container view will be present only in the
