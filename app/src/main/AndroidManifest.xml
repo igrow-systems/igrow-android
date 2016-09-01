@@ -33,6 +33,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EvironmentalSensorListActivity" />
         </activity>
+        <activity
+            android:name=".EvironmentalSensorInitActivity"
+            android:label="@string/title_evironmentalsensor_init">
+            /*android:parentActivityName=".EvironmentalSensorListActivity"*/
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".EvironmentalSensorListActivity" />
+        </activity>
     </application>
 
 </manifest>
