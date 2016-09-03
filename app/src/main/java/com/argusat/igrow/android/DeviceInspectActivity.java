@@ -124,13 +124,13 @@ public class DeviceInspectActivity extends Activity {
         }
 
         // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(vals1, "DataSet 1");
-        set1.setDrawCubic(true);
+        LineDataSet set1 = new LineDataSet(vals1, "Temperature");
+        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set1.setCubicIntensity(0.2f);
         //set1.setDrawFilled(true);
         set1.setDrawCircles(false);
         set1.setLineWidth(2f);
-        set1.setCircleSize(5f);
+        set1.setCircleRadius(5f);
         set1.setHighLightColor(Color.rgb(244, 117, 117));
         set1.setColor(Color.rgb(104, 241, 175));
         set1.setFillColor(ColorTemplate.getHoloBlue());

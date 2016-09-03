@@ -1,6 +1,7 @@
 package com.argusat.igrow.android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -90,8 +91,10 @@ public class EvironmentalSensorListFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity = getActivity();
 
         // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {

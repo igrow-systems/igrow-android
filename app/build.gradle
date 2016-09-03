@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 24
     buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.argusat.igrow.android"
         minSdkVersion 19
-        targetSdkVersion 22
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -21,10 +22,30 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.+'
-    compile 'com.android.support:support-v4:22.2.+'
-    compile 'com.android.support:recyclerview-v7:22.2.+'
-    compile 'com.android.support:cardview-v7:22.2.+'
-    compile 'com.android.support:design:22.2.+'
+    compile 'com.android.support:appcompat-v7:24.1.+'
+    compile 'com.android.support:support-v4:24.1.+'
+    compile 'com.android.support:recyclerview-v7:24.1.+'
+    compile 'com.android.support:cardview-v7:24.1.+'
+    compile 'com.android.support:design:24.1.+'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+    // Testing
+    // Android JUnit Runner
+    androidTestCompile 'com.android.support.test:runner:0.5'
+
+// JUnit4 Rules
+    androidTestCompile 'com.android.support.test:rules:0.5'
+
+// Espresso core
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
+// Espresso-web for WebView support
+    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+// Espresso-idling-resource for synchronization with background jobs
+    androidTestCompile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
+// Espresso-intents for validation and stubbing of Intents
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+
+// UiAutomator
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }
