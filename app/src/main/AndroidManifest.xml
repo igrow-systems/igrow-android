@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".EvironmentalSensorListActivity"
+            android:name=".EnvironmentalSensorListActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,21 +26,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EvironmentalSensorDetailActivity"
+            android:name=".EnvironmentalSensorDetailActivity"
             android:label="@string/title_evironmentalsensor_detail"
-            android:parentActivityName=".EvironmentalSensorListActivity" >
+            android:parentActivityName=".EnvironmentalSensorListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EvironmentalSensorListActivity" />
+                android:value=".EnvironmentalSensorListActivity" />
         </activity>
         <activity
-            android:name=".EvironmentalSensorInitActivity"
+            android:name=".EnvironmentalSensorInitActivity"
             android:label="@string/title_evironmentalsensor_init">
             /*android:parentActivityName=".EvironmentalSensorListActivity"*/
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EvironmentalSensorListActivity" />
+                android:value=".EnvironmentalSensorListActivity" />
         </activity>
     </application>
+
+    <service android:description="BLE Service"
+        android:enabled="true"
+        android:exported="false"
+        android:icon="drawable resource"
+        android:label="string resource"
+        android:name="com.argusat.igrow.android.BluetoothLeService">
+        <!--android:isolatedProcess=["true" | "false"] -->
+        <!--        android:permission="string"
+        android:process="string" -->
+    </service>
 
 </manifest>
