@@ -45,6 +45,11 @@ dependencies {
     compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
 
     // Testing
+    // Required -- JUnit 4 framework
+    testCompile 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
+
     androidTestCompile 'com.android.support:appcompat-v7:25.0.1'
     androidTestCompile 'com.android.support:support-v4:25.0.1'
     androidTestCompile 'com.android.support:recyclerview-v7:25.0.1'

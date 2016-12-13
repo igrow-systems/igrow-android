@@ -45,7 +45,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_environmentalsensor_list);
 
-        if (findViewById(R.id.evironmentalsensor_detail_container) != null) {
+        if (findViewById(R.id.environmentalsensor_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
@@ -55,7 +55,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
             ((EnvironmentalSensorListFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.evironmentalsensor_list))
+                    .findFragmentById(R.id.environmentalsensor_list))
                     .setActivateOnItemClick(true);
         }
 
@@ -78,7 +78,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
             EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.evironmentalsensor_detail_container, fragment)
+                    .replace(R.id.environmentalsensor_detail_container, fragment)
                     .commit();
 
         } else {

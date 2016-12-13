@@ -43,7 +43,7 @@ public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
             EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.evironmentalsensor_detail_container, fragment)
+                    .add(R.id.environmentalsensor_detail_container, fragment)
                     .commit();
         }
     }
