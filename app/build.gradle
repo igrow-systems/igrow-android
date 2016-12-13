@@ -36,8 +36,15 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
 
-    // Testing
+    // Mapbox
+    // TODO: add support for MapBox in a separate branch
+    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:4.1.1@aar'){
+        transitive=true
+    }
+    // osmdroid
+    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
 
+    // Testing
     androidTestCompile 'com.android.support:appcompat-v7:25.0.1'
     androidTestCompile 'com.android.support:support-v4:25.0.1'
     androidTestCompile 'com.android.support:recyclerview-v7:25.0.1'
@@ -46,20 +53,21 @@ dependencies {
     // Android JUnit Runner
     androidTestCompile 'com.android.support.test:runner:0.5'
 
-// JUnit4 Rules
+    // JUnit4 Rules
     androidTestCompile 'com.android.support.test:rules:0.5'
 
-// Espresso core
+    // Espresso core
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
+    // Espresso-contrib for DatePicker, RecyclerView, Drawer actions,
+    //                      Accessibility checks, CountingIdlingResource
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
-// Espresso-web for WebView support
+    // Espresso-web for WebView support
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
-// Espresso-idling-resource for synchronization with background jobs
+    // Espresso-idling-resource for synchronization with background jobs
     androidTestCompile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
-// Espresso-intents for validation and stubbing of Intents
+    // Espresso-intents for validation and stubbing of Intents
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
 
-// UiAutomator
+    // UiAutomator
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }

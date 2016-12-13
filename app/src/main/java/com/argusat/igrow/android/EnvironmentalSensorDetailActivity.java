@@ -58,7 +58,7 @@ public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, EvironmentalSensorListActivity.class));
+            navigateUpTo(new Intent(this, EnvironmentalSensorListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
