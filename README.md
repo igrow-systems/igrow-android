@@ -1,4 +1,6 @@
-# README #
+
+# igrow-android
+iGrow Systems Android App
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
