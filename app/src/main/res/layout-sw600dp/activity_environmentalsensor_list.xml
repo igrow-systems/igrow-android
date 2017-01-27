@@ -17,7 +17,7 @@
         android:layout_height="match_parent"/>
 
     <!--<fragment android:id="@+id/evironmentalsensor_list"
-        android:name="com.argusat.igrow.EvironmentalSensorListFragment" android:layout_width="0dp"
+        android:name="com.argusat.igrow.EnvironmentalSensorListFragment" android:layout_width="0dp"
         android:layout_height="match_parent" android:layout_weight="1"
         tools:layout="@android:layout/list_content" />-->
 

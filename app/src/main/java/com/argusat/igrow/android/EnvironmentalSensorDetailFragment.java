@@ -10,10 +10,10 @@ import android.widget.TextView;
 /**
  * A fragment representing a single EvironmentalSensor detail screen.
  * This fragment is either contained in a {@link EvironmentalSensorListActivity}
- * in two-pane mode (on tablets) or a {@link EvironmentalSensorDetailActivity}
+ * in two-pane mode (on tablets) or a {@link EnvironmentalSensorDetailActivity}
  * on handsets.
  */
-public class EvironmentalSensorDetailFragment extends Fragment {
+public class EnvironmentalSensorDetailFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -29,7 +29,7 @@ public class EvironmentalSensorDetailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public EvironmentalSensorDetailFragment() {
+    public EnvironmentalSensorDetailFragment() {
     }
 
     @Override

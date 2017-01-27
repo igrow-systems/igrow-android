@@ -21,4 +21,11 @@
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
+
+    <!-- Service definitions -->
+    <string name="service_ble_description">Bluetooth Low Energy Service</string>
+    <string name="service_ble_label">BLE Service</string>
+
+    <!-- Init Environmental Sensor -->
+    <string name="title_evironmentalsensor_init">Environmental Sensor Init</string>
 </resources>

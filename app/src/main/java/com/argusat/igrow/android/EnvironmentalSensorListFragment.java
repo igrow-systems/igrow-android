@@ -1,24 +1,23 @@
 package com.argusat.igrow.android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.argusat.igrow.android.DummyContent;
-
 /**
  * A list fragment representing a list of EnvironmentalSensors. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
- * currently being viewed in a {@link EvironmentalSensorDetailFragment}.
+ * currently being viewed in a {@link EnvironmentalSensorDetailFragment}.
  * <p/>
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class EvironmentalSensorListFragment extends ListFragment {
+public class EnvironmentalSensorListFragment extends ListFragment {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -63,7 +62,7 @@ public class EvironmentalSensorListFragment extends ListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public EvironmentalSensorListFragment() {
+    public EnvironmentalSensorListFragment() {
     }
 
     @Override
@@ -90,8 +89,10 @@ public class EvironmentalSensorListFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity = getActivity();
 
         // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {
