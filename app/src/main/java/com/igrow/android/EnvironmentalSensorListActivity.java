@@ -43,9 +43,9 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.argusat.igrow.android.R.layout.activity_environmentalsensor_list);
+        setContentView(com.igrow.android.R.layout.activity_environmentalsensor_list);
 
-        if (findViewById(com.argusat.igrow.android.R.id.environmentalsensor_detail_container) != null) {
+        if (findViewById(com.igrow.android.R.id.environmentalsensor_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
@@ -55,7 +55,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
             ((EnvironmentalSensorListFragment) getSupportFragmentManager()
-                    .findFragmentById(com.argusat.igrow.android.R.id.environmentalsensor_list))
+                    .findFragmentById(com.igrow.android.R.id.environmentalsensor_list))
                     .setActivateOnItemClick(true);
         }
 
@@ -78,7 +78,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
             EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(com.argusat.igrow.android.R.id.environmentalsensor_detail_container, fragment)
+                    .replace(com.igrow.android.R.id.environmentalsensor_detail_container, fragment)
                     .commit();
 
         } else {

@@ -47,11 +47,11 @@ public class EnvironmentalSensorDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(com.argusat.igrow.android.R.layout.fragment_environmentalsensor_detail, container, false);
+        View rootView = inflater.inflate(com.igrow.android.R.layout.fragment_environmentalsensor_detail, container, false);
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            ((TextView) rootView.findViewById(com.argusat.igrow.android.R.id.evironmentalsensor_detail)).setText(mItem.content);
+            ((TextView) rootView.findViewById(com.igrow.android.R.id.evironmentalsensor_detail)).setText(mItem.content);
         }
 
         return rootView;

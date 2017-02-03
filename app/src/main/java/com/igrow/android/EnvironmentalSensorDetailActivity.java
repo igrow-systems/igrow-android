@@ -20,7 +20,7 @@ public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.argusat.igrow.android.R.layout.activity_environmentalsensor_detail);
+        setContentView(com.igrow.android.R.layout.activity_environmentalsensor_detail);
 
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -43,7 +43,7 @@ public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
             EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(com.argusat.igrow.android.R.id.environmentalsensor_detail_container, fragment)
+                    .add(com.igrow.android.R.id.environmentalsensor_detail_container, fragment)
                     .commit();
         }
     }

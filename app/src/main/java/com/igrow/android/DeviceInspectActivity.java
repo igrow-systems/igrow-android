@@ -51,13 +51,13 @@ public class DeviceInspectActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(com.argusat.igrow.android.R.layout.activity_environmentalsensor_detail);
+        setContentView(com.igrow.android.R.layout.activity_environmentalsensor_detail);
 
         //tvTemperature = (TextView) findViewById(R.id.tvTemperature);
         //tvHumidity = (TextView) findViewById(R.id.tvHumidity);
         //tvIrradiance = (TextView) findViewById(R.id.tvIrradiance);
 
-        mChart = (LineChart) findViewById(com.argusat.igrow.android.R.id.chart1);
+        mChart = (LineChart) findViewById(com.igrow.android.R.id.chart1);
         // if enabled, the chart will always start at zero on the y-axis
 
         // no description text
@@ -101,7 +101,7 @@ public class DeviceInspectActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(com.argusat.igrow.android.R.menu.gatt_services, menu);
+        getMenuInflater().inflate(com.igrow.android.R.menu.gatt_services, menu);
         return true;
     }
 

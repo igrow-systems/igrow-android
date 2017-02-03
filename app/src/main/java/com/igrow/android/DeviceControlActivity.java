@@ -97,11 +97,11 @@ public class DeviceControlActivity extends Activity {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
-                updateConnectionState(com.argusat.igrow.android.R.string.connected);
+                updateConnectionState(com.igrow.android.R.string.connected);
                 invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
-                updateConnectionState(com.argusat.igrow.android.R.string.disconnected);
+                updateConnectionState(com.igrow.android.R.string.disconnected);
                 invalidateOptionsMenu();
                 clearUI();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
@@ -149,24 +149,24 @@ public class DeviceControlActivity extends Activity {
 
     private void clearUI() {
         mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
-        mDataField.setText(com.argusat.igrow.android.R.string.no_data);
+        mDataField.setText(com.igrow.android.R.string.no_data);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.argusat.igrow.android.R.layout.gatt_services_characteristics);
+        setContentView(com.igrow.android.R.layout.gatt_services_characteristics);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
         // Sets up UI references.
-        ((TextView) findViewById(com.argusat.igrow.android.R.id.device_address)).setText(mDeviceAddress);
-        mGattServicesList = (ExpandableListView) findViewById(com.argusat.igrow.android.R.id.gatt_services_list);
+        ((TextView) findViewById(com.igrow.android.R.id.device_address)).setText(mDeviceAddress);
+        mGattServicesList = (ExpandableListView) findViewById(com.igrow.android.R.id.gatt_services_list);
         mGattServicesList.setOnChildClickListener(servicesListClickListner);
-        mConnectionState = (TextView) findViewById(com.argusat.igrow.android.R.id.connection_state);
-        mDataField = (TextView) findViewById(com.argusat.igrow.android.R.id.data_value);
+        mConnectionState = (TextView) findViewById(com.igrow.android.R.id.connection_state);
+        mDataField = (TextView) findViewById(com.igrow.android.R.id.data_value);
 
         getActionBar().setTitle(mDeviceName);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -199,13 +199,13 @@ public class DeviceControlActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(com.argusat.igrow.android.R.menu.gatt_services, menu);
+        getMenuInflater().inflate(com.igrow.android.R.menu.gatt_services, menu);
         if (mConnected) {
-            menu.findItem(com.argusat.igrow.android.R.id.menu_connect).setVisible(false);
-            menu.findItem(com.argusat.igrow.android.R.id.menu_disconnect).setVisible(true);
+            menu.findItem(com.igrow.android.R.id.menu_connect).setVisible(false);
+            menu.findItem(com.igrow.android.R.id.menu_disconnect).setVisible(true);
         } else {
-            menu.findItem(com.argusat.igrow.android.R.id.menu_connect).setVisible(true);
-            menu.findItem(com.argusat.igrow.android.R.id.menu_disconnect).setVisible(false);
+            menu.findItem(com.igrow.android.R.id.menu_connect).setVisible(true);
+            menu.findItem(com.igrow.android.R.id.menu_disconnect).setVisible(false);
         }
         return true;
     }
@@ -213,10 +213,10 @@ public class DeviceControlActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case com.argusat.igrow.android.R.id.menu_connect:
+            case com.igrow.android.R.id.menu_connect:
                 mBluetoothLeService.connect(mDeviceAddress);
                 return true;
-            case com.argusat.igrow.android.R.id.menu_disconnect:
+            case com.igrow.android.R.id.menu_disconnect:
                 mBluetoothLeService.disconnect();
                 return true;
             case android.R.id.home:
@@ -247,8 +247,8 @@ public class DeviceControlActivity extends Activity {
     private void displayGattServices(List<BluetoothGattService> gattServices) {
         if (gattServices == null) return;
         String uuid = null;
-        String unknownServiceString = getResources().getString(com.argusat.igrow.android.R.string.unknown_service);
-        String unknownCharaString = getResources().getString(com.argusat.igrow.android.R.string.unknown_characteristic);
+        String unknownServiceString = getResources().getString(com.igrow.android.R.string.unknown_service);
+        String unknownCharaString = getResources().getString(com.igrow.android.R.string.unknown_characteristic);
         ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
         ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
                 = new ArrayList<ArrayList<HashMap<String, String>>>();

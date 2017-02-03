@@ -32,7 +32,7 @@ public class EnvironmentalSensorListAdapter extends RecyclerView.Adapter<Environ
                                                    int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(com.argusat.igrow.android.R.layout.listitem_device, parent, false);
+                .inflate(com.igrow.android.R.layout.listitem_device, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder((TextView)v);
