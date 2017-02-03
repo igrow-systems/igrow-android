@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="osmdroid-android-5.5">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/org.osmdroid/osmdroid-android/5.5/release/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/org.osmdroid/osmdroid-android/5.5/release/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

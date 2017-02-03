@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.argusat.igrow.android" >
+    package="com.igrow.android" >
 
     <!-- Declare this required feature if you want to make the app available to BLE-capable
     devices only.  If you want to make your app available to devices that don't support BLE,
@@ -22,7 +22,7 @@
         android:exported="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/service_ble_label"
-        android:name="com.argusat.igrow.android.BluetoothLeService">
+        android:name="com.igrow.android.BluetoothLeService">
     </service>
 
     <application

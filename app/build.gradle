@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.argusat.igrow.android"
+        applicationId "com.igrow.android"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
