@@ -20,8 +20,16 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+    mavenLocal()  // Add Maven local repository for igrow-api-java
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Our local API dependencies
+    compile 'com.igrow:igrow-api-java:1.0-SNAPSHOT'
 
     // Google Dagger
     compile 'com.google.dagger:dagger:2.8'

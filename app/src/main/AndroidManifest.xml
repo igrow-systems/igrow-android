@@ -25,6 +25,14 @@
         android:name="com.igrow.android.BluetoothLeService">
     </service>
 
+    <service android:description="@string/service_ble_scan_description"
+        android:enabled="true"
+        android:exported="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/service_ble_scan_label"
+        android:name="com.igrow.android.BluetoothLeScanService">
+    </service>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
