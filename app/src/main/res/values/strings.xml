@@ -26,6 +26,10 @@
     <string name="service_ble_description">Bluetooth Low Energy Service</string>
     <string name="service_ble_label">BLE Service</string>
 
+    <!-- Service definitions -->
+    <string name="service_ble_scan_description">Bluetooth Low Energy Scan Service</string>
+    <string name="service_ble_scan_label">BLE Scan Service</string>
+
     <!-- Init Environmental Sensor -->
     <string name="title_evironmentalsensor_init">Environmental Sensor Init</string>
 </resources>
