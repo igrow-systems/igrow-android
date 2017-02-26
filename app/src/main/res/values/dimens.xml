@@ -4,4 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="igrow_logo_top_margin">100dp</dimen>
+
+    <dimen name="fab_margin">24dp</dimen>
 </resources>

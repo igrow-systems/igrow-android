@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">iGrow</string>
-    <string name="title_environmentalsensor_detail">Environmental Sensor Detail</string>
-    <string name="title_environmentalsensor_list">Environmental Sensor List</string>
+
+    <string name="title_environmentalsensor_detail">Sensor Detail</string>
+    <string name="title_environmentalsensor_list">Environmental Sensors</string>
+
+    <!-- Init Environmental Sensor -->
+    <string name="title_environmentalsensor_init">New Environmental Sensor</string>
 
     <string name="ble_not_supported">BLE is not supported</string>
     <string name="label_data">Data:</string>
@@ -31,12 +35,12 @@
     <string name="service_ble_scan_description">Bluetooth Low Energy Scan Service</string>
     <string name="service_ble_scan_label">BLE Scan Service</string>
 
-    <!-- Init Environmental Sensor -->
-    <string name="title_environmentalsensor_init">Environmental Sensor Init</string>
+
+    <!-- Sign-in Activity -->
     <string name="title_activity_login">Sign in</string>
 
     <!-- Sign-in title -->
-    <string name="signin_title_text">Google Sign-In\niGrow Systems</string>
+    <string name="signin_title_text">iGrow Systems</string>
     <!-- Sign-in status messages -->
     <string name="signed_in_fmt">Signed in as: %s</string>
     <string name="signed_in">Signed in</string>

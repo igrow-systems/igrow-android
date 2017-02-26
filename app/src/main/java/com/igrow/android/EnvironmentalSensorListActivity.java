@@ -3,6 +3,7 @@ package com.igrow.android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 
@@ -16,15 +17,15 @@ import android.support.v7.widget.RecyclerView;
  * item details side-by-side using two vertical panes.
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
- * {@link EnvironmentalSensorListFragment} and the item details
+ * {@link EnvironmentalSensorRecyclerViewFragment} and the item details
  * (if present) is a {@link EnvironmentalSensorDetailFragment}.
  * <p/>
  * This activity also implements the required
- * {@link EnvironmentalSensorListFragment.Callbacks} interface
+ * {@link EnvironmentalSensorRecyclerViewFragment.Callbacks} interface
  * to listen for item selections.
  */
 public class EnvironmentalSensorListActivity extends FragmentActivity
-        implements EnvironmentalSensorListFragment.Callbacks {
+        implements EnvironmentalSensorRecyclerViewFragment.Callbacks {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -45,6 +46,13 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(com.igrow.android.R.layout.activity_environmentalsensor_list);
 
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            EnvironmentalSensorRecyclerViewFragment fragment = new EnvironmentalSensorRecyclerViewFragment();
+            transaction.replace(R.id.environmentalsensor_fragment, fragment);
+            transaction.commit();
+        }
+
         if (findViewById(com.igrow.android.R.id.environmentalsensor_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
@@ -54,9 +62,9 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            ((EnvironmentalSensorListFragment) getSupportFragmentManager()
-                    .findFragmentById(com.igrow.android.R.id.environmentalsensor_list))
-                    .setActivateOnItemClick(true);
+//            ((EnvironmentalSensorRecyclerViewFragment) getSupportFragmentManager()
+//                    .findFragmentById(com.igrow.android.R.id.environmentalsensor_list))
+//                    .setActivateOnItemClick(true);
         }
 
 
@@ -64,7 +72,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
     }
 
     /**
-     * Callback method from {@link EnvironmentalSensorListFragment.Callbacks}
+     * Callback method from {@link EnvironmentalSensorRecyclerViewFragment.Callbacks}
      * indicating that the item with the given ID was selected.
      */
     @Override

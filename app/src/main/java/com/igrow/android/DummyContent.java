@@ -25,9 +25,9 @@ public class DummyContent {
 
     static {
         // Add 3 sample items.
-        addItem(new DummyItem("1", "Item 1"));
-        addItem(new DummyItem("2", "Item 2"));
-        addItem(new DummyItem("3", "Item 3"));
+        addItem(new DummyItem("1", "Greenhouse"));
+        addItem(new DummyItem("2", "Rear wall"));
+        addItem(new DummyItem("3", "Cold frame"));
     }
 
     private static void addItem(DummyItem item) {
@@ -41,6 +41,7 @@ public class DummyContent {
     public static class DummyItem {
         public String id;
         public String content;
+
 
         public DummyItem(String id, String content) {
             this.id = id;

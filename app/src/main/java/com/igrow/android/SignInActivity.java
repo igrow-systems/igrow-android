@@ -30,6 +30,8 @@ public class SignInActivity extends AppCompatActivity implements
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
+    public final static String EXTRA_SENSOR_LIST = "com.igrow.android.EXTRA_SENSOR_LIST";
+
     private GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
@@ -118,6 +120,14 @@ public class SignInActivity extends AppCompatActivity implements
             GoogleSignInAccount acct = result.getSignInAccount();
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             updateUI(true);
+
+            // Construct an intent to start the 'main' sensor list Acitivity
+            Intent intent = new Intent(this, EnvironmentalSensorListActivity.class);
+            //EditText editText = (EditText) findViewById(R.id.edit_message);
+            //String message = editText.getText().toString();
+            //intent.putExtra(EXTRA_MESSAGE, message);
+            startActivity(intent);
+
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);

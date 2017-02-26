@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 /**
  * A fragment representing a single EvironmentalSensor detail screen.
- * This fragment is either contained in a {@link EvironmentalSensorListActivity}
+ * This fragment is either contained in a {@link EnvironmentalSensorListActivity}
  * in two-pane mode (on tablets) or a {@link EnvironmentalSensorDetailActivity}
  * on handsets.
  */

@@ -10,7 +10,7 @@ import android.view.MenuItem;
  * An activity representing a single EvironmentalSensor detail screen. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link EvironmentalSensorListActivity}.
+ * in a {@link EnvironmentalSensorListActivity}.
  * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link EnvironmentalSensorDetailFragment}.
