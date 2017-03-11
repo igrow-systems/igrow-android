@@ -286,8 +286,8 @@ public class DeviceScanActivity extends ListActivity {
             if (view == null) {
                 view = mInflator.inflate(com.igrow.android.R.layout.listitem_device, null);
                 viewHolder = new ViewHolder();
-                viewHolder.deviceAddress = (TextView) view.findViewById(com.igrow.android.R.id.device_address);
-                viewHolder.deviceName = (TextView) view.findViewById(com.igrow.android.R.id.device_name);
+                viewHolder.deviceAddress = (TextView) view.findViewById(R.id.textview_device_address);
+                viewHolder.deviceName = (TextView) view.findViewById(R.id.textview_device_name);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,8 @@ public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
     protected RecyclerView mRecyclerView;
+
+    protected RecyclerView.LayoutManager mLayoutManager;
 
     protected List<EnvironmentalSensor> mSensorList;
 
@@ -88,12 +91,16 @@ public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_environmentalsensor_recyclerview, container, false);
         rootView.setTag(TAG);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.environmentalsensor_fragment_recyclerview);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.scrollToPosition(0);
 
         mListAdapter = new EnvironmentalSensorListAdapter(new EnvironmentalSensorListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(DummyContent.DummyItem item) {
-
+                mCallbacks.onItemSelected(item.id);
             }
         });
         // Set CustomAdapter as the adapter for RecyclerView.

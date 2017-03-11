@@ -44,16 +44,16 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.igrow.android.R.layout.activity_environmentalsensor_list);
+        setContentView(R.layout.activity_environmentalsensor_list);
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             EnvironmentalSensorRecyclerViewFragment fragment = new EnvironmentalSensorRecyclerViewFragment();
-            transaction.replace(R.id.environmentalsensor_fragment, fragment);
+            transaction.replace(R.id.environmentalsensor_list_fragment, fragment);
             transaction.commit();
         }
 
-        if (findViewById(com.igrow.android.R.id.environmentalsensor_detail_container) != null) {
+        if (findViewById(R.id.environmentalsensor_detail_fragment) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
@@ -86,7 +86,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
             EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(com.igrow.android.R.id.environmentalsensor_detail_container, fragment)
+                    .replace(R.id.environmentalsensor_detail_fragment, fragment)
                     .commit();
 
         } else {

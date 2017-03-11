@@ -1,15 +1,10 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/environmentalsensor_list"
-    android:name="com.igrow.android.EnvironmentalSensorRecyclerViewFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    tools:context=".EnvironmentalSensorListActivity" tools:layout="@android:layout/list_content">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/environmentalsensor_fragment"
+        android:id="@+id/environmentalsensor_list_fragment"
         android:layout_weight="2"
         android:layout_width="match_parent"
         android:layout_height="0px" />
@@ -22,4 +17,4 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add_circle_white_24dp" />
 
-</fragment>
+</LinearLayout>
