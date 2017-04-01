@@ -6,8 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -18,11 +21,13 @@ import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -44,6 +49,8 @@ public class EnvironmentalSensorDetailFragment extends Fragment {
      * The dummy content this fragment is presenting.
      */
     private DummyContent.DummyItem mItem;
+    
+    private CombinedChart mCombinedChart;
 
 
     private final int itemcount = 12;
@@ -65,8 +72,6 @@ public class EnvironmentalSensorDetailFragment extends Fragment {
             // to load content from a content provider.
             mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
-
-        initChart();
     }
 
     @Override
@@ -76,42 +81,45 @@ public class EnvironmentalSensorDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            ((TextView) rootView.findViewById(com.igrow.android.R.id.fragment_environmentalsensor_detail)).setText(mItem.content);
+            mCombinedChart = ((CombinedChart) rootView.findViewById(com.igrow.android.R.id.environmentalsensor_detail_chart));
+            
+            initChart();
         }
 
         return rootView;
     }
 
+
     protected void initChart() {
-        /*        holder.mCombinedChart.getDescription().setEnabled(false);
-        holder.mCombinedChart.setBackgroundColor(Color.WHITE);
-        holder.mCombinedChart.setDrawGridBackground(false);
-        holder.mCombinedChart.setDrawBarShadow(false);
-        holder.mCombinedChart.setHighlightFullBarEnabled(false);
+        mCombinedChart.getDescription().setEnabled(false);
+        mCombinedChart.setBackgroundColor(Color.WHITE);
+        mCombinedChart.setDrawGridBackground(false);
+        mCombinedChart.setDrawBarShadow(false);
+        mCombinedChart.setHighlightFullBarEnabled(false);
 
         // draw bars behind lines
-        holder.mCombinedChart.setDrawOrder(new CombinedChart.DrawOrder[]{
+        mCombinedChart.setDrawOrder(new CombinedChart.DrawOrder[]{
                 CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.BUBBLE,
                 CombinedChart.DrawOrder.CANDLE, CombinedChart.DrawOrder.LINE,
                 CombinedChart.DrawOrder.SCATTER
         });
 
-        Legend l = holder.mCombinedChart.getLegend();
+        Legend l = mCombinedChart.getLegend();
         l.setWordWrapEnabled(true);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
 
-        YAxis rightAxis = holder.mCombinedChart.getAxisRight();
+        YAxis rightAxis = mCombinedChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        YAxis leftAxis = holder.mCombinedChart.getAxisLeft();
+        YAxis leftAxis = mCombinedChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        XAxis xAxis = holder.mCombinedChart.getXAxis();
+        XAxis xAxis = mCombinedChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setAxisMinimum(0f);
         xAxis.setGranularity(1f);
@@ -133,8 +141,8 @@ public class EnvironmentalSensorDetailFragment extends Fragment {
 
         xAxis.setAxisMaximum(data.getXMax() + 0.25f);
 
-        holder.mCombinedChart.setData(data);
-        holder.mCombinedChart.invalidate();*/
+        mCombinedChart.setData(data);
+        mCombinedChart.invalidate();
     }
 
     // Create mock data sets
