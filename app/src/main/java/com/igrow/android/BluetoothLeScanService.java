@@ -1,10 +1,10 @@
 package com.igrow.android;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
@@ -27,6 +27,8 @@ public class BluetoothLeScanService extends Service {
 
     private BluetoothAdapter mBluetoothAdapter;
 
+    private BluetoothLeScanProxy mBluetoothLeScanProxy;
+
     private BluetoothGatt mBluetoothGatt;
 
     // Stops scanning after 10 seconds.
@@ -39,19 +41,6 @@ public class BluetoothLeScanService extends Service {
 
     private AlarmManager mAlarmManager;
 
-    // Device scan callback.
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
-                @Override
-                public void onLeScan(final BluetoothDevice device, int rssi,
-                                     byte[] scanRecord) {
-
-                    EnvironmentalSensor sensor = new EnvironmentalSensor();
-                    // TODO: pass the device back out by broadcasting Intent
-                    //mLeDeviceMap.put(device.getAddress(), sensor);
-                    //mLeDevice.notifyDataSetChanged();
-                }
-            };
 
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
@@ -86,10 +75,40 @@ public class BluetoothLeScanService extends Service {
         sendBroadcast(intent);
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        initialize();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        start();
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
     }
 
     /**
@@ -123,6 +142,7 @@ public class BluetoothLeScanService extends Service {
         return true;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void start() {
         // Stops scanning after a pre-defined scan period.
 
@@ -133,19 +153,19 @@ public class BluetoothLeScanService extends Service {
         mAlarmManager.set(AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + SCAN_INTERVAL, pendingIntent);
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && mBluetoothLeScanProxy == null) {
+            mBluetoothLeScanProxy = new BluetoothLeScanL18Proxy(mBluetoothAdapter);
+        } else if (mBluetoothLeScanProxy == null) {
+            mBluetoothLeScanProxy = new BluetoothLeScanL21Proxy(mBluetoothAdapter);
+        }
 
         mScanning = true;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-        {
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
-        }
+        mBluetoothLeScanProxy.startLeScan();
     }
 
     public void stop() {
         mScanning = false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        }
+        mBluetoothLeScanProxy.stopLeScan();
     }
 
     /**

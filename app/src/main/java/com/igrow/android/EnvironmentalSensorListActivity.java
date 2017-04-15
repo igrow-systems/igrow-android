@@ -67,6 +67,8 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
 //                    .setActivateOnItemClick(true);
         }
 
+        Intent intent = new Intent(this, BluetoothLeScanService.class);
+        startService(intent);
 
         // TODO: If exposing deep links into your app, handle intents here.
     }

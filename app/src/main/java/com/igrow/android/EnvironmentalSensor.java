@@ -11,11 +11,39 @@
 
 package com.igrow.android;
 
+import android.bluetooth.BluetoothDevice;
+import android.location.Location;
+
+import com.igrow.model.ObservationCollection;
+
 /**
  * Created by jsr on 30/05/16.
  */
-public class EnvironmentalSensor {
+public abstract class EnvironmentalSensor {
 
+    private String mFullName;
+
+    private int mTimestamp;
+
+    private Location mLocation;
+
+    private ObservationCollection mObservationCollection;
+
+    public abstract BluetoothDevice getBluetoothDevice();
+
+    public abstract int getRSSI();
+
+    public abstract int getTimestamp();
+
+    public String getFullName() {
+        return mFullName;
+    }
+
+    public Location getLocation() { return mLocation; }
+
+    public ObservationCollection getObservationCollection() {
+        return mObservationCollection;
+    }
 
 
 }
