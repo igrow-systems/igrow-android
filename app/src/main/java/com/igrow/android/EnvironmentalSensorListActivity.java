@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 
 
 /**
@@ -33,13 +31,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
      */
     private boolean mTwoPane;
 
-
-
-    private CardView mCardView;
-
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private RecyclerView.Adapter mAdapter;
+    private EnvironmentalSensorCollection mSensors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +41,7 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             EnvironmentalSensorRecyclerViewFragment fragment = new EnvironmentalSensorRecyclerViewFragment();
+            fragment.setDataSource(mSensors);
             transaction.replace(R.id.environmentalsensor_list_fragment, fragment);
             transaction.commit();
         }

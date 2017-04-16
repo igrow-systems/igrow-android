@@ -1,6 +1,5 @@
 package com.igrow.android;
 
-import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -32,10 +31,10 @@ public class BluetoothLeScanService extends Service {
     private BluetoothGatt mBluetoothGatt;
 
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 5000;
+    private static final long SCAN_PERIOD = 20000;
 
     // Scans every 5 minutes.
-    private static final long SCAN_INTERVAL = 300000;
+    private static final long SCAN_INTERVAL = 30000;
 
     private boolean mScanning = false;
 
@@ -142,7 +141,6 @@ public class BluetoothLeScanService extends Service {
         return true;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void start() {
         // Stops scanning after a pre-defined scan period.
 
@@ -160,11 +158,13 @@ public class BluetoothLeScanService extends Service {
         }
 
         mScanning = true;
+        Log.d(TAG, "startLeScan()");
         mBluetoothLeScanProxy.startLeScan();
     }
 
     public void stop() {
         mScanning = false;
+        Log.d(TAG, "stopLeScan()");
         mBluetoothLeScanProxy.stopLeScan();
     }
 
