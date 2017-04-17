@@ -1,9 +1,14 @@
 package com.igrow.android;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+
+import static com.igrow.android.BluetoothLeScanService.ACTION_SCAN_UPDATE;
 
 
 /**
@@ -32,6 +37,14 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
     private boolean mTwoPane;
 
     private EnvironmentalSensorCollection mSensors;
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +79,22 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
         // TODO: If exposing deep links into your app, handle intents here.
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_SCAN_UPDATE);
+        registerReceiver(mBroadcastReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(mBroadcastReceiver);
+    }
+
     /**
      * Callback method from {@link EnvironmentalSensorRecyclerViewFragment.Callbacks}
      * indicating that the item with the given ID was selected.
@@ -90,6 +119,19 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
             Intent detailIntent = new Intent(this, EnvironmentalSensorDetailActivity.class);
             detailIntent.putExtra(EnvironmentalSensorDetailFragment.ARG_ITEM_ID, id);
             startActivity(detailIntent);
+        }
+    }
+
+    public void sensorScanUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
+        if (EnvironmentalSensorCollection.ITEM_MAP.containsKey(sensorScanUpdate.getAddress())) {
+            EnvironmentalSensor sensor = EnvironmentalSensorCollection.ITEM_MAP.get(sensorScanUpdate.getAddress());
+            sensor.setRSSI(sensorScanUpdate.getRSSI());
+        } else {
+            EnvironmentalSensor sensor = new EnvironmentalSensor.EnvironmentalSensorBuilder()
+                    .setAddress(sensorScanUpdate.getAddress())
+                    .setFullName("Unknown Sensor")
+                    .setRssi(sensorScanUpdate.getRSSI()).build();
+            EnvironmentalSensorCollection.addItem(sensor);
         }
     }
 }

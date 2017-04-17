@@ -8,7 +8,7 @@ import android.util.Log;
  * Created by jsr on 14/04/2017.
  */
 
-public class BluetoothLeScanL18Proxy implements BluetoothLeScanProxy {
+public class BluetoothLeScanL18Proxy extends BluetoothLeScanProxy {
 
     private final static String TAG = BluetoothLeScanL18Proxy.class.getSimpleName();
 
@@ -20,10 +20,10 @@ public class BluetoothLeScanL18Proxy implements BluetoothLeScanProxy {
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {
 
-                    EnvironmentalSensor sensor = new EnvironmentalSensorL18();
-                    // TODO: pass the device back out by broadcasting Intent
-                    //mLeDeviceMap.put(device.getAddress(), sensor);
-                    //mLeDevice.notifyDataSetChanged();
+                    EnvironmentalSensorBLEScanUpdate sensorScanUpdate = new EnvironmentalSensorBLEScanUpdate(device.getAddress(), rssi);
+                    if (mCallback != null) {
+                        mCallback.onUpdate(sensorScanUpdate);
+                    }
                     Log.i(TAG, String.format("RSSI: %d Found: %s", rssi, device.toString()));
                 }
             };
@@ -42,4 +42,5 @@ public class BluetoothLeScanL18Proxy implements BluetoothLeScanProxy {
     public void stopLeScan() {
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
     }
+
 }

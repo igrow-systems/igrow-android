@@ -4,10 +4,20 @@ package com.igrow.android;
  * Created by jsr on 14/04/2017.
  */
 
-public interface BluetoothLeScanProxy {
+public abstract class BluetoothLeScanProxy {
 
-    void startLeScan();
+    protected OnUpdateCallback mCallback;
 
-    void stopLeScan();
+    interface OnUpdateCallback {
+        void onUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate);
+    }
+
+    abstract void startLeScan();
+
+    abstract void stopLeScan();
+
+    void setOnUpdateCallback(OnUpdateCallback callback) {
+        mCallback = callback;
+    }
 
 }

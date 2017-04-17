@@ -18,7 +18,7 @@ import static android.bluetooth.le.ScanSettings.SCAN_MODE_LOW_LATENCY;
  * Created by jsr on 14/04/2017.
  */
 
-public class BluetoothLeScanL21Proxy implements BluetoothLeScanProxy {
+public class BluetoothLeScanL21Proxy extends BluetoothLeScanProxy {
 
     private BluetoothLeScanner mBluetoothLeScanner;
 

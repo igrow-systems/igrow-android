@@ -18,9 +18,15 @@ import android.util.Log;
  * Created by jsr on 14/12/2016.
  */
 
-public class BluetoothLeScanService extends Service {
+public class BluetoothLeScanService extends Service implements BluetoothLeScanProxy.OnUpdateCallback {
 
-    private final static String TAG = BluetoothLeService.class.getSimpleName();
+    private final static String TAG = BluetoothLeScanService.class.getSimpleName();
+
+    public final static String ACTION_SCAN_UPDATE =
+            "com.igrow.android.ACTION_SCAN_UPDATE";
+
+    public final static String EXTRA_UPDATE_PARCELABLE =
+            "com.igrow.android.EXTRA_UPDATE_PARCELABLE";
 
     private BluetoothManager mBluetoothManager;
 
@@ -30,20 +36,26 @@ public class BluetoothLeScanService extends Service {
 
     private BluetoothGatt mBluetoothGatt;
 
-    // Stops scanning after 10 seconds.
+    // Stops scanning after 20 seconds.
     private static final long SCAN_PERIOD = 20000;
 
-    // Scans every 5 minutes.
+    // Scans every 30 seconds.
     private static final long SCAN_INTERVAL = 30000;
 
     private boolean mScanning = false;
 
     private AlarmManager mAlarmManager;
 
-
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
         sendBroadcast(intent);
+    }
+
+    private void broadcastUpdate(final EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
+        final Intent intent = new Intent(ACTION_SCAN_UPDATE);
+        intent.putExtra(EXTRA_UPDATE_PARCELABLE, sensorScanUpdate);
+        sendBroadcast(intent);
+        Log.d(TAG, "Broadcast Intent: " + ACTION_SCAN_UPDATE);
     }
 
     private void broadcastUpdate(final String action,
@@ -66,9 +78,10 @@ public class BluetoothLeScanService extends Service {
             final byte[] data = characteristic.getValue();
             if (data != null && data.length > 0) {
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
+                for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(BluetoothLeService.EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+                intent.putExtra(BluetoothLeService.EXTRA_DATA, new String(data)
+                        + "\n" + stringBuilder.toString());
             }
         }
         sendBroadcast(intent);
@@ -157,6 +170,7 @@ public class BluetoothLeScanService extends Service {
             mBluetoothLeScanProxy = new BluetoothLeScanL21Proxy(mBluetoothAdapter);
         }
 
+
         mScanning = true;
         Log.d(TAG, "startLeScan()");
         mBluetoothLeScanProxy.startLeScan();
@@ -178,5 +192,10 @@ public class BluetoothLeScanService extends Service {
         }
         mBluetoothGatt.close();
         mBluetoothGatt = null;
+    }
+
+    @Override
+    public void onUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
+        broadcastUpdate(sensorScanUpdate);
     }
 }
