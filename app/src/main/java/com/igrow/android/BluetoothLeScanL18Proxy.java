@@ -20,11 +20,12 @@ public class BluetoothLeScanL18Proxy extends BluetoothLeScanProxy {
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {
 
+                    Log.d(TAG, String.format("RSSI: %d Found: %s", rssi, device.toString()));
+
                     EnvironmentalSensorBLEScanUpdate sensorScanUpdate = new EnvironmentalSensorBLEScanUpdate(device.getAddress(), rssi);
                     if (mCallback != null) {
                         mCallback.onUpdate(sensorScanUpdate);
                     }
-                    Log.i(TAG, String.format("RSSI: %d Found: %s", rssi, device.toString()));
                 }
             };
 

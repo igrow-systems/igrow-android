@@ -56,6 +56,10 @@ public class EnvironmentalSensorListAdapter
         mListener = listener;
     }
 
+    public void invalidate() {
+        notifyDataSetChanged();
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public EnvironmentalSensorListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -80,7 +84,7 @@ public class EnvironmentalSensorListAdapter
 
         // - replace the contents of the view with that element
         holder.mNameTextView.setText(item.getFullName());
-        holder.mAddressTextView.setText(item.getBluetoothDevice().getAddress());
+        holder.mAddressTextView.setText(item.getAddress());
 
 
 

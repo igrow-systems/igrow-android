@@ -46,6 +46,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EnvironmentalSensorListActivity" />
+            <!--<intent-filter>
+                <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
+            </intent-filter> -->
         </activity>
         <activity
             android:name=".EnvironmentalSensorDetailActivity"

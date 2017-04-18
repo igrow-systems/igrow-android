@@ -22,7 +22,7 @@ import android.widget.ListView;
  */
 public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
 
-    private static final String TAG = "EnvironmentalSensorRecyclerViewFragment";
+    private static final String TAG = EnvironmentalSensorRecyclerViewFragment.class.getSimpleName();
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
@@ -79,7 +79,7 @@ public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
         mListAdapter = new EnvironmentalSensorListAdapter(mSensors, new EnvironmentalSensorListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(EnvironmentalSensor item) {
-                mCallbacks.onItemSelected(item.getBluetoothDevice().getAddress());
+                mCallbacks.onItemSelected(item.getAddress());
             }
         });
         // Set CustomAdapter as the adapter for RecyclerView.
@@ -131,7 +131,10 @@ public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
     }
 
     public void setDataSource(EnvironmentalSensorCollection sensors) {
-
+        mSensors = sensors;
+        if (mListAdapter != null) {
+            mListAdapter.invalidate();
+        }
     }
 
     /**

@@ -23,12 +23,12 @@ public class EnvironmentalSensorCollection {
 
     public static void addItem(EnvironmentalSensor item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.getBluetoothDevice().getAddress(), item);
+        ITEM_MAP.put(item.getAddress(), item);
     }
 
     public static void removeItem(EnvironmentalSensor item) {
         ITEMS.remove(item);
-        ITEM_MAP.remove(item.getBluetoothDevice().getAddress());
+        ITEM_MAP.remove(item.getAddress());
     }
 
 }

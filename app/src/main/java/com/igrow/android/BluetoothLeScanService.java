@@ -169,7 +169,7 @@ public class BluetoothLeScanService extends Service implements BluetoothLeScanPr
         } else if (mBluetoothLeScanProxy == null) {
             mBluetoothLeScanProxy = new BluetoothLeScanL21Proxy(mBluetoothAdapter);
         }
-
+        mBluetoothLeScanProxy.setOnUpdateCallback(this);
 
         mScanning = true;
         Log.d(TAG, "startLeScan()");
