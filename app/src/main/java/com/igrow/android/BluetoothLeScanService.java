@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
@@ -19,43 +18,44 @@ import android.util.Log;
  * Created by jsr on 14/12/2016.
  */
 
-public class BluetoothLeScanService extends Service {
+public class BluetoothLeScanService extends Service implements BluetoothLeScanProxy.OnUpdateCallback {
 
-    private final static String TAG = BluetoothLeService.class.getSimpleName();
+    private final static String TAG = BluetoothLeScanService.class.getSimpleName();
+
+    public final static String ACTION_SCAN_UPDATE =
+            "com.igrow.android.ACTION_SCAN_UPDATE";
+
+    public final static String EXTRA_UPDATE_PARCELABLE =
+            "com.igrow.android.EXTRA_UPDATE_PARCELABLE";
 
     private BluetoothManager mBluetoothManager;
 
     private BluetoothAdapter mBluetoothAdapter;
 
+    private BluetoothLeScanProxy mBluetoothLeScanProxy;
+
     private BluetoothGatt mBluetoothGatt;
 
-    // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 5000;
+    // Stops scanning after 20 seconds.
+    private static final long SCAN_PERIOD = 20000;
 
-    // Scans every 5 minutes.
-    private static final long SCAN_INTERVAL = 300000;
+    // Scans every 30 seconds.
+    private static final long SCAN_INTERVAL = 30000;
 
     private boolean mScanning = false;
 
     private AlarmManager mAlarmManager;
 
-    // Device scan callback.
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
-                @Override
-                public void onLeScan(final BluetoothDevice device, int rssi,
-                                     byte[] scanRecord) {
-
-                    EnvironmentalSensor sensor = new EnvironmentalSensor();
-                    // TODO: pass the device back out by broadcasting Intent
-                    //mLeDeviceMap.put(device.getAddress(), sensor);
-                    //mLeDevice.notifyDataSetChanged();
-                }
-            };
-
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
         sendBroadcast(intent);
+    }
+
+    private void broadcastUpdate(final EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
+        final Intent intent = new Intent(ACTION_SCAN_UPDATE);
+        intent.putExtra(EXTRA_UPDATE_PARCELABLE, sensorScanUpdate);
+        sendBroadcast(intent);
+        Log.d(TAG, "Broadcast Intent: " + ACTION_SCAN_UPDATE);
     }
 
     private void broadcastUpdate(final String action,
@@ -78,18 +78,49 @@ public class BluetoothLeScanService extends Service {
             final byte[] data = characteristic.getValue();
             if (data != null && data.length > 0) {
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
+                for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(BluetoothLeService.EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+                intent.putExtra(BluetoothLeService.EXTRA_DATA, new String(data)
+                        + "\n" + stringBuilder.toString());
             }
         }
         sendBroadcast(intent);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        initialize();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        start();
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
     }
 
     /**
@@ -133,19 +164,22 @@ public class BluetoothLeScanService extends Service {
         mAlarmManager.set(AlarmManager.RTC_WAKEUP,
                 System.currentTimeMillis() + SCAN_INTERVAL, pendingIntent);
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && mBluetoothLeScanProxy == null) {
+            mBluetoothLeScanProxy = new BluetoothLeScanL18Proxy(mBluetoothAdapter);
+        } else if (mBluetoothLeScanProxy == null) {
+            mBluetoothLeScanProxy = new BluetoothLeScanL21Proxy(mBluetoothAdapter);
+        }
+        mBluetoothLeScanProxy.setOnUpdateCallback(this);
 
         mScanning = true;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-        {
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
-        }
+        Log.d(TAG, "startLeScan()");
+        mBluetoothLeScanProxy.startLeScan();
     }
 
     public void stop() {
         mScanning = false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        }
+        Log.d(TAG, "stopLeScan()");
+        mBluetoothLeScanProxy.stopLeScan();
     }
 
     /**
@@ -158,5 +192,10 @@ public class BluetoothLeScanService extends Service {
         }
         mBluetoothGatt.close();
         mBluetoothGatt = null;
+    }
+
+    @Override
+    public void onUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
+        broadcastUpdate(sensorScanUpdate);
     }
 }

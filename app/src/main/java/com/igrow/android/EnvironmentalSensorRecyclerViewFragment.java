@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.util.List;
-
 /**
  * A list fragment representing a list of EnvironmentalSensors. This fragment
  * also supports tablet devices by allowing list items to be given an
@@ -24,44 +22,12 @@ import java.util.List;
  */
 public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
 
-    private static final String TAG = "EnvironmentalSensorRecyclerViewFragment";
+    private static final String TAG = EnvironmentalSensorRecyclerViewFragment.class.getSimpleName();
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
      */
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
-    /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
-     */
-    private Callbacks mCallbacks = sDummyCallbacks;
-
-    /**
-     * The current activated item position. Only used on tablets.
-     */
-    private int mActivatedPosition = ListView.INVALID_POSITION;
-
-    protected RecyclerView mRecyclerView;
-
-    protected RecyclerView.LayoutManager mLayoutManager;
-
-    protected List<EnvironmentalSensor> mSensorList;
-
-    protected EnvironmentalSensorListAdapter mListAdapter;
-
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
-    public interface Callbacks {
-        /**
-         * Callback for when an item has been selected.
-         */
-        public void onItemSelected(String id);
-    }
-
     /**
      * A dummy implementation of the {@link Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
@@ -71,6 +37,19 @@ public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
         public void onItemSelected(String id) {
         }
     };
+    protected RecyclerView mRecyclerView;
+    protected RecyclerView.LayoutManager mLayoutManager;
+    protected EnvironmentalSensorCollection mSensors;
+    protected EnvironmentalSensorListAdapter mListAdapter;
+    /**
+     * The fragment's current callback object, which is notified of list item
+     * clicks.
+     */
+    private Callbacks mCallbacks = sDummyCallbacks;
+    /**
+     * The current activated item position. Only used on tablets.
+     */
+    private int mActivatedPosition = ListView.INVALID_POSITION;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -97,10 +76,10 @@ public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.scrollToPosition(0);
 
-        mListAdapter = new EnvironmentalSensorListAdapter(new EnvironmentalSensorListAdapter.OnItemClickListener() {
+        mListAdapter = new EnvironmentalSensorListAdapter(mSensors, new EnvironmentalSensorListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(DummyContent.DummyItem item) {
-                mCallbacks.onItemSelected(item.id);
+            public void onItemClick(EnvironmentalSensor item) {
+                mCallbacks.onItemSelected(item.getAddress());
             }
         });
         // Set CustomAdapter as the adapter for RecyclerView.
@@ -149,6 +128,25 @@ public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
             // Serialize and persist the activated item position.
             outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
         }
+    }
+
+    public void setDataSource(EnvironmentalSensorCollection sensors) {
+        mSensors = sensors;
+        if (mListAdapter != null) {
+            mListAdapter.invalidate();
+        }
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callbacks {
+        /**
+         * Callback for when an item has been selected.
+         */
+        public void onItemSelected(String id);
     }
 
 }

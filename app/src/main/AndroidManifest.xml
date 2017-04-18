@@ -19,22 +19,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
-    <service
-        android:name=".BluetoothLeService"
-        android:description="@string/service_ble_description"
-        android:enabled="true"
-        android:exported="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/service_ble_label" />
-    <service
-        android:name=".BluetoothLeScanService"
-        android:description="@string/service_ble_scan_description"
-        android:enabled="true"
-        android:exported="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/service_ble_scan_label" />
-
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -62,6 +46,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EnvironmentalSensorListActivity" />
+            <!--<intent-filter>
+                <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
+            </intent-filter> -->
         </activity>
         <activity
             android:name=".EnvironmentalSensorDetailActivity"
@@ -79,6 +66,22 @@
                 android:value=".EnvironmentalSensorListActivity" />
         </activity>
         <activity android:name=".MainActivity"></activity>
+
+        <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
+        <service
+            android:name=".BluetoothLeService"
+            android:description="@string/service_ble_description"
+            android:enabled="true"
+            android:exported="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/service_ble_label" />
+        <service
+            android:name=".BluetoothLeScanService"
+            android:description="@string/service_ble_scan_description"
+            android:enabled="true"
+            android:exported="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/service_ble_scan_label" />
     </application>
 
 </manifest>

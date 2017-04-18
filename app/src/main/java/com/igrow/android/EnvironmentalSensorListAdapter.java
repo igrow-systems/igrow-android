@@ -11,10 +11,10 @@ public class EnvironmentalSensorListAdapter
         extends RecyclerView.Adapter<EnvironmentalSensorListAdapter.ViewHolder> {
 
     public interface OnItemClickListener {
-        void onItemClick(DummyContent.DummyItem item);
+        void onItemClick(EnvironmentalSensor item);
     }
 
-    private DummyContent mDataset;
+    private EnvironmentalSensorCollection mDataset;
 
     protected OnItemClickListener mListener;
 
@@ -33,7 +33,7 @@ public class EnvironmentalSensorListAdapter
             mAddressTextView = (TextView)v.findViewById(R.id.textview_device_address);
         }
 
-        public void bind(final DummyContent.DummyItem item, final OnItemClickListener listener) {
+        public void bind(final EnvironmentalSensor item, final OnItemClickListener listener) {
 
             mNameTextView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -50,9 +50,14 @@ public class EnvironmentalSensorListAdapter
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public EnvironmentalSensorListAdapter(OnItemClickListener listener) {
-        mDataset = new DummyContent();
+    public EnvironmentalSensorListAdapter(EnvironmentalSensorCollection dataSet,
+                                          OnItemClickListener listener) {
+        mDataset = dataSet;
         mListener = listener;
+    }
+
+    public void invalidate() {
+        notifyDataSetChanged();
     }
 
     // Create new views (invoked by the layout manager)
@@ -64,7 +69,6 @@ public class EnvironmentalSensorListAdapter
                 .inflate(com.igrow.android.R.layout.listitem_device, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
-        //CombinedChart c = (CombinedChart)v.findViewById(R.id.chart);
         ViewHolder vh = new ViewHolder((LinearLayout) v);
         return vh;
     }
@@ -73,14 +77,14 @@ public class EnvironmentalSensorListAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
-        DummyContent.DummyItem item = mDataset.ITEMS.get(position);
+        EnvironmentalSensor item = mDataset.ITEMS.get(position);
 
         // - bind this ViewHolder to the event listener
         holder.bind(item, mListener);
 
         // - replace the contents of the view with that element
-        holder.mNameTextView.setText(item.content);
-        holder.mAddressTextView.setText(item.content);
+        holder.mNameTextView.setText(item.getFullName());
+        holder.mAddressTextView.setText(item.getAddress());
 
 
 
