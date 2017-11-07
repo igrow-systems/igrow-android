@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="com.igrow:igrow-api-java:1.0-SNAPSHOT@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/igrow/igrow-api-java/1.0-SNAPSHOT/igrow-api-java-1.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

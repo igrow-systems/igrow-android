@@ -7,7 +7,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.2"
 
     dataBinding {
         enabled = true
@@ -51,6 +51,10 @@ android {
 repositories {
     jcenter()
     mavenLocal()  // Add Maven local repository for igrow-api-java
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
 }
 
 dependencies {
@@ -58,7 +62,7 @@ dependencies {
 
     // As we allow running on API level >=19 , need to patch the
     // classloader on the target, which this library does for us.
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.2'
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-android
     compile group: 'org.slf4j', name: 'slf4j-android', version: '1.7.22'
