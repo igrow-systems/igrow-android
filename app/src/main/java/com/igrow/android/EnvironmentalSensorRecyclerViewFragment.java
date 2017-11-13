@@ -67,7 +67,8 @@ public class EnvironmentalSensorRecyclerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_environmentalsensor_recyclerview, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_environmentalsensor_recyclerview,
+                container, false);
         rootView.setTag(TAG);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.environmentalsensor_fragment_recyclerview);

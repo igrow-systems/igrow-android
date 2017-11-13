@@ -3,6 +3,7 @@
 
     <string name="title_environmentalsensor_detail">Sensor Detail</string>
     <string name="title_environmentalsensor_list">Environmental Sensors</string>
+    <string name="title_environmentalsensor_list_scan">Scan Environmental Sensors</string>
 
     <!-- Init Environmental Sensor -->
     <string name="title_environmentalsensor_init">New Environmental Sensor</string>
@@ -28,11 +29,11 @@
     <string name="menu_stop">Stop</string>
 
     <!-- Service definitions -->
-    <string name="service_ble_description">Bluetooth Low Energy Service</string>
+    <string name="service_ble_description">iGrow Bluetooth Low Energy Service</string>
     <string name="service_ble_label">BLE Service</string>
 
     <!-- Service definitions -->
-    <string name="service_ble_scan_description">Bluetooth Low Energy Scan Service</string>
+    <string name="service_ble_scan_description">iGrow Bluetooth Low Energy Scan Service</string>
     <string name="service_ble_scan_label">BLE Scan Service</string>
 
 

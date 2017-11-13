@@ -7,8 +7,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -25,8 +27,18 @@ public class BluetoothLeScanService extends Service implements BluetoothLeScanPr
     public final static String ACTION_SCAN_UPDATE =
             "com.igrow.android.ACTION_SCAN_UPDATE";
 
+    public final static String ACTION_ERROR_NOT_INITIALIZED =
+            "com.igrow.android.ACTION_ERROR_NOT_INITIALIZED";
+
     public final static String EXTRA_UPDATE_PARCELABLE =
             "com.igrow.android.EXTRA_UPDATE_PARCELABLE";
+
+    public final static String ACTION_ALARM_PERIOD =
+            "com.igrow.android.ACTION_ALARM_PERIOD";
+
+    private int REQUEST_ALARM_SCAN_PERIOD = 1;
+
+    private int REQUEST_ALARM_SCAN_INTERVAL = 2;
 
     private BluetoothManager mBluetoothManager;
 
@@ -36,15 +48,32 @@ public class BluetoothLeScanService extends Service implements BluetoothLeScanPr
 
     private BluetoothGatt mBluetoothGatt;
 
-    // Stops scanning after 20 seconds.
-    private static final long SCAN_PERIOD = 20000;
+    // Stops scanning after 5 seconds.
+    private static final long SCAN_PERIOD = 3000;
 
-    // Scans every 30 seconds.
-    private static final long SCAN_INTERVAL = 30000;
+    // Scans every 60 seconds.
+    private static final long SCAN_INTERVAL = 10000;
 
-    private boolean mScanning = false;
+    private boolean mIsScanning = false;
+
+    private boolean mIsInitialized = false;
 
     private AlarmManager mAlarmManager;
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Received Broadcast Intent: "
+                    + intent.toString());
+
+            switch (intent.getAction()) {
+                case ACTION_ALARM_PERIOD:
+                    stopScan();
+                    break;
+            }
+
+        }
+    };
 
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
@@ -91,13 +120,22 @@ public class BluetoothLeScanService extends Service implements BluetoothLeScanPr
     public void onCreate() {
         super.onCreate();
 
-        initialize();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_ALARM_PERIOD);
+        registerReceiver(mBroadcastReceiver, filter);
+
+        mIsInitialized = initialize();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        start();
+        if (mIsInitialized) {
+            startScan();
+        } else {
+            broadcastUpdate(ACTION_ERROR_NOT_INITIALIZED);
+            stopSelf();
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -105,6 +143,8 @@ public class BluetoothLeScanService extends Service implements BluetoothLeScanPr
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        unregisterReceiver(mBroadcastReceiver);
     }
 
     @Nullable
@@ -143,6 +183,10 @@ public class BluetoothLeScanService extends Service implements BluetoothLeScanPr
         if (mBluetoothAdapter == null) {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
+        } else {
+            if (!mBluetoothAdapter.isEnabled()) {
+                return false;
+            }
         }
 
         mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -151,19 +195,6 @@ public class BluetoothLeScanService extends Service implements BluetoothLeScanPr
             return false;
         }
 
-        return true;
-    }
-
-    public void start() {
-        // Stops scanning after a pre-defined scan period.
-
-        Intent alarmIntent = new Intent(BluetoothLeScanService.this,
-                BluetoothLeScanService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(BluetoothLeScanService.this,
-                1, alarmIntent, 0);
-        mAlarmManager.set(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + SCAN_INTERVAL, pendingIntent);
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && mBluetoothLeScanProxy == null) {
             mBluetoothLeScanProxy = new BluetoothLeScanL18Proxy(mBluetoothAdapter);
         } else if (mBluetoothLeScanProxy == null) {
@@ -171,15 +202,47 @@ public class BluetoothLeScanService extends Service implements BluetoothLeScanPr
         }
         mBluetoothLeScanProxy.setOnUpdateCallback(this);
 
-        mScanning = true;
-        Log.d(TAG, "startLeScan()");
-        mBluetoothLeScanProxy.startLeScan();
+        return true;
     }
 
-    public void stop() {
-        mScanning = false;
-        Log.d(TAG, "stopLeScan()");
-        mBluetoothLeScanProxy.stopLeScan();
+    public void startScan() {
+
+        if (mIsScanning) {
+            Log.d(TAG, "Call to startScan() when already started.");
+        } else {
+            Intent intervalAlarmIntent = new Intent(BluetoothLeScanService.this,
+                    BluetoothLeScanService.class);
+
+            PendingIntent intervalPendingIntent = PendingIntent.getService(BluetoothLeScanService.this,
+                    REQUEST_ALARM_SCAN_INTERVAL, intervalAlarmIntent, 0);
+
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + SCAN_INTERVAL, intervalPendingIntent);
+
+            Intent periodAlarmIntent = new Intent();
+            periodAlarmIntent.setAction(ACTION_ALARM_PERIOD);
+
+            PendingIntent periodPendingIntent = PendingIntent.getBroadcast(this,
+                    REQUEST_ALARM_SCAN_PERIOD, periodAlarmIntent, 0);
+
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + SCAN_PERIOD, periodPendingIntent);
+
+            mBluetoothLeScanProxy.startLeScan();
+            Log.d(TAG, "startLeScan()");
+            mIsScanning = true;
+        }
+    }
+
+    public void stopScan() {
+
+        if (mIsScanning) {
+            mBluetoothLeScanProxy.stopLeScan();
+            Log.d(TAG, "stopLeScan()");
+            mIsScanning = false;
+        } else {
+            Log.d(TAG, "Call to stopScan() when already stopped.");
+        }
     }
 
     /**

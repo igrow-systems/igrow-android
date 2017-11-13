@@ -51,6 +51,17 @@
             </intent-filter> -->
         </activity>
         <activity
+            android:name=".EnvironmentalSensorListScanActivity"
+            android:label="@string/title_environmentalsensor_list_scan"
+            android:parentActivityName=".EnvironmentalSensorListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".EnvironmentalSensorListActivity" />
+            <!--<intent-filter>
+                <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
+            </intent-filter> -->
+        </activity>
+        <activity
             android:name=".EnvironmentalSensorDetailActivity"
             android:label="@string/title_environmentalsensor_detail"
             android:parentActivityName=".EnvironmentalSensorListActivity">
@@ -65,7 +76,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EnvironmentalSensorListActivity" />
         </activity>
-        <activity android:name=".MainActivity"></activity>
 
         <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
         <service

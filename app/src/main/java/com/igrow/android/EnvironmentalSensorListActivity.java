@@ -1,5 +1,6 @@
 package com.igrow.android;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 
+import static com.igrow.android.BluetoothLeScanService.ACTION_ERROR_NOT_INITIALIZED;
 import static com.igrow.android.BluetoothLeScanService.ACTION_SCAN_UPDATE;
 import static com.igrow.android.BluetoothLeScanService.EXTRA_UPDATE_PARCELABLE;
 
@@ -44,14 +47,31 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
 
     private EnvironmentalSensorRecyclerViewFragment mRecyclerViewFragment;
 
+    private int REQUEST_ENABLE_BT = 1;
+
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "Received Broadcast Intent: "
                     + intent.toString());
-            EnvironmentalSensorBLEScanUpdate sensorScanUpdate
-                    = intent.getParcelableExtra(EXTRA_UPDATE_PARCELABLE);
-            onSensorScanUpdate(sensorScanUpdate);
+
+            switch (intent.getAction()) {
+                case ACTION_ERROR_NOT_INITIALIZED:
+                    // Likely reason is that bluetooth is disabled so try to enable
+                    Intent intentBtEnabled = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    // The REQUEST_ENABLE_BT constant passed to startActivityForResult() is a
+                    // locally defined integer (which must be greater than 0), that the system
+                    // passes back to you in your onActivityResult()
+                    // implementation as the requestCode parameter.
+                    startActivityForResult(intentBtEnabled, REQUEST_ENABLE_BT);
+                    break;
+                case ACTION_SCAN_UPDATE:
+                    EnvironmentalSensorBLEScanUpdate sensorScanUpdate
+                            = intent.getParcelableExtra(EXTRA_UPDATE_PARCELABLE);
+                    onSensorScanUpdate(sensorScanUpdate);
+                    break;
+            }
+
         }
     };
 
@@ -83,9 +103,6 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
 //                    .setActivateOnItemClick(true);
         }
 
-        Intent intent = new Intent(this, BluetoothLeScanService.class);
-        startService(intent);
-
         // TODO: If exposing deep links into your app, handle intents here.
     }
 
@@ -94,8 +111,12 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
         super.onResume();
 
         IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_ERROR_NOT_INITIALIZED);
         filter.addAction(ACTION_SCAN_UPDATE);
         registerReceiver(mBroadcastReceiver, filter);
+
+        Intent intent = new Intent(this, BluetoothLeScanService.class);
+        startService(intent);
     }
 
     @Override
@@ -103,6 +124,25 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
         super.onPause();
 
         unregisterReceiver(mBroadcastReceiver);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_ENABLE_BT) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    // attempt to restart the service
+                    Intent intent = new Intent(this, BluetoothLeScanService.class);
+                    startService(intent);
+                    break;
+                case RESULT_CANCELED:
+                    // Inform the user that they can't interact with sensors if
+                    // bluetooth is disabled, only view existing data.
+                    break;
+            }
+        }
     }
 
     /**
@@ -133,17 +173,12 @@ public class EnvironmentalSensorListActivity extends FragmentActivity
     }
 
     private void onSensorScanUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
-        if (EnvironmentalSensorCollection.ITEM_MAP.containsKey(sensorScanUpdate.getAddress())) {
-            EnvironmentalSensor sensor = EnvironmentalSensorCollection.ITEM_MAP.get(sensorScanUpdate.getAddress());
-            sensor.setRSSI(sensorScanUpdate.getRSSI());
-            mRecyclerViewFragment.setDataSource(mSensors);
-        } else {
-            EnvironmentalSensor sensor = new EnvironmentalSensor.EnvironmentalSensorBuilder()
-                    .setAddress(sensorScanUpdate.getAddress())
-                    .setFullName("Unknown Sensor")
-                    .setRssi(sensorScanUpdate.getRSSI()).build();
-            EnvironmentalSensorCollection.addItem(sensor);
-            mRecyclerViewFragment.setDataSource(mSensors);
-        }
+
+
     }
+
+    public void onClick(View v) {
+
+    }
+
 }
