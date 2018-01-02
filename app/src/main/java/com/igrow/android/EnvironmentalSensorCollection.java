@@ -1,5 +1,7 @@
 package com.igrow.android;
 
+import com.igrow.android.data.EnvironmentalSensor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

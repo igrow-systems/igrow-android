@@ -40,53 +40,53 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EnvironmentalSensorListActivity"
+            android:name=".listsensors.EnvironmentalSensorListActivity"
             android:label="@string/title_environmentalsensor_list"
-            android:parentActivityName=".EnvironmentalSensorListActivity">
+            android:parentActivityName=".listsensors.EnvironmentalSensorListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EnvironmentalSensorListActivity" />
+                android:value=".listsensors.EnvironmentalSensorListActivity" />
             <!--<intent-filter>
                 <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
             </intent-filter> -->
         </activity>
         <activity
-            android:name=".EnvironmentalSensorListScanActivity"
+            android:name=".listsensors.EnvironmentalSensorListScanActivity"
             android:label="@string/title_environmentalsensor_list_scan"
-            android:parentActivityName=".EnvironmentalSensorListActivity">
+            android:parentActivityName=".listsensors.EnvironmentalSensorListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EnvironmentalSensorListActivity" />
+                android:value=".listsensors.EnvironmentalSensorListActivity" />
             <!--<intent-filter>
                 <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
             </intent-filter> -->
         </activity>
         <activity
-            android:name=".EnvironmentalSensorDetailActivity"
+            android:name=".sensordetail.EnvironmentalSensorDetailActivity"
             android:label="@string/title_environmentalsensor_detail"
-            android:parentActivityName=".EnvironmentalSensorListActivity">
+            android:parentActivityName=".listsensors.EnvironmentalSensorListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EnvironmentalSensorListActivity" />
+                android:value=".listsensors.EnvironmentalSensorListActivity" />
         </activity>
         <activity
-            android:name=".EnvironmentalSensorInitActivity"
+            android:name=".addeditsensor.EnvironmentalSensorInitActivity"
             android:label="@string/title_environmentalsensor_init">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EnvironmentalSensorListActivity" />
+                android:value=".listsensors.EnvironmentalSensorListActivity" />
         </activity>
 
         <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
         <service
-            android:name=".BluetoothLeService"
+            android:name=".bluetooth.BluetoothLeService"
             android:description="@string/service_ble_description"
             android:enabled="true"
             android:exported="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/service_ble_label" />
         <service
-            android:name=".BluetoothLeScanService"
+            android:name=".bluetooth.BluetoothLeScanService"
             android:description="@string/service_ble_scan_description"
             android:enabled="true"
             android:exported="false"

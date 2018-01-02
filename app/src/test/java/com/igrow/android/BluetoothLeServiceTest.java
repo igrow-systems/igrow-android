@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 
+import com.igrow.android.bluetooth.BluetoothLeService;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -3,7 +3,7 @@
     style="?android:attr/textAppearanceLarge" android:layout_width="match_parent"
     android:layout_height="match_parent" android:padding="16dp"
     android:orientation="vertical"
-    tools:context=".EnvironmentalSensorDetailFragment">
+    tools:context=".sensordetail.EnvironmentalSensorDetailFragment">
 
     <com.github.mikephil.charting.charts.CombinedChart
         android:id="@+id/environmentalsensor_detail_chart"

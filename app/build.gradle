@@ -16,7 +16,7 @@ android {
     defaultConfig {
         applicationId "com.igrow.android"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         // need multiDex enables as we pop the 0xffff number of
@@ -26,7 +26,7 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
@@ -64,76 +64,82 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // As we allow running on API level >=19 , need to patch the
     // classloader on the target, which this library does for us.
-    compile 'com.android.support:multidex:1.0.2'
+    implementation 'com.android.support:multidex:1.0.2'
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-android
-    compile group: 'org.slf4j', name: 'slf4j-android', version: '1.7.22'
+    implementation group: 'org.slf4j', name: 'slf4j-android', version: '1.7.22'
     // Our local API dependencies
-    compile 'com.igrow:igrow-api-java:1.0-SNAPSHOT'
+    implementation 'com.igrow:igrow-api-java:1.0-SNAPSHOT'
 
     // Google Sign-in
-    compile 'com.google.android.gms:play-services-auth:9.8.0'
+    implementation 'com.google.android.gms:play-services-auth:9.8.0'
 
     // Google Dagger
-    compile 'com.google.dagger:dagger:2.10'
+    implementation 'com.google.dagger:dagger:2.10'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
 
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
 
-    //compile 'org.greenrobot:eventbus:3.0.0'
+    //implementation 'org.greenrobot:eventbus:3.0.0'
 
-    compile 'com.android.support:appcompat-v7:27.0.0'
-    compile 'com.android.support:support-v4:27.0.0'
-    compile 'com.android.support:recyclerview-v7:27.0.0'
-    compile 'com.android.support:cardview-v7:27.0.0'
-    compile 'com.android.support:design:27.0.0'
+    // Room
+    implementation 'android.arch.persistence.room:runtime:1.0.0'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0'
 
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    // Lifecycle extensions
+    implementation 'android.arch.lifecycle:extensions:1.0.0'
+
+    implementation 'com.android.support:appcompat-v7:27.0.0'
+    implementation 'com.android.support:support-v4:27.0.0'
+    implementation 'com.android.support:recyclerview-v7:27.0.0'
+    implementation 'com.android.support:cardview-v7:27.0.0'
+    implementation 'com.android.support:design:27.0.0'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 
     // Mapbox
     // TODO: add support for MapBox in a separate branch
-    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:4.1.1@aar'){
+    implementation ('com.mapbox.mapboxsdk:mapbox-android-sdk:4.1.1@aar'){
         transitive=true
     }
     // osmdroid
-    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
+    implementation 'org.osmdroid:osmdroid-android:5.5:release@aar'
 
     // Testing
     // Required -- JUnit 4 framework
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
     // Optional -- Mockito framework
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
 
-    androidTestCompile 'com.android.support:appcompat-v7:27.0.0'
-    androidTestCompile 'com.android.support:support-v4:27.0.0'
-    androidTestCompile 'com.android.support:recyclerview-v7:27.0.0'
-    androidTestCompile 'com.android.support:cardview-v7:27.0.0'
-    androidTestCompile 'com.android.support:design:27.0.0'
+    androidTestImplementation 'com.android.support:appcompat-v7:27.0.0'
+    androidTestImplementation 'com.android.support:support-v4:27.0.0'
+    androidTestImplementation 'com.android.support:recyclerview-v7:27.0.0'
+    androidTestImplementation 'com.android.support:cardview-v7:27.0.0'
+    androidTestImplementation 'com.android.support:design:27.0.0'
     // Android JUnit Runner
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
 
     // JUnit4 Rules
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
 
     // Espresso core
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     // Espresso-contrib for DatePicker, RecyclerView, Drawer actions,
     //                      Accessibility checks, CountingIdlingResource
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
     // Espresso-web for WebView support
-    androidTestCompile 'com.android.support.test.espresso:espresso-web:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-web:3.0.1'
     // Espresso-idling-resource for synchronization with background jobs
-    androidTestCompile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
     // Espresso-intents for validation and stubbing of Intents
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
-
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
     // UiAutomator
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 
     testImplementation 'org.robolectric:robolectric:3.5.1'
 }
