@@ -18,7 +18,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.igrow.android.listsensors.EnvironmentalSensorListActivity;
+import com.igrow.android.sensors.EnvironmentalSensorsActivity;
 
 /**
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
@@ -123,7 +123,7 @@ public class SignInActivity extends AppCompatActivity implements
             updateUI(true);
 
             // Construct an intent to start the 'main' sensor list Acitivity
-            Intent intent = new Intent(this, EnvironmentalSensorListActivity.class);
+            Intent intent = new Intent(this, EnvironmentalSensorsActivity.class);
             //EditText editText = (EditText) findViewById(R.id.edit_message);
             //String message = editText.getText().toString();
             //intent.putExtra(EXTRA_MESSAGE, message);

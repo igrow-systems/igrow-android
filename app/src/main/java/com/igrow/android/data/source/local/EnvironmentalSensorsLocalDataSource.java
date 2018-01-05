@@ -51,11 +51,11 @@ public class EnvironmentalSensorsLocalDataSource implements EnvironmentalSensors
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<EnvironmentalSensor> EnvironmentalSensors = mEnvironmentalSensorsDao.getEnvironmentalSensors();
+                final List<EnvironmentalSensor> environmentalSensors = mEnvironmentalSensorsDao.getEnvironmentalSensors();
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        if (EnvironmentalSensors.isEmpty()) {
+                        if (environmentalSensors.isEmpty()) {
                             // This will be called if the table is new or just empty.
                             callback.onDataNotAvailable();
                         } else {
@@ -106,54 +106,6 @@ public class EnvironmentalSensorsLocalDataSource implements EnvironmentalSensors
             }
         };
         mAppExecutors.diskIO().execute(saveRunnable);
-    }
-
-    @Override
-    public void completeEnvironmentalSensor(@NonNull final EnvironmentalSensor environmentalSensor) {
-        Runnable completeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mEnvironmentalSensorsDao.updateCompleted(environmentalSensor.getId(), true);
-            }
-        };
-
-        mAppExecutors.diskIO().execute(completeRunnable);
-    }
-
-    @Override
-    public void completeEnvironmentalSensor(@NonNull String environmentalSensorId) {
-        // Not required for the local data source because the {@link EnvironmentalSensorsRepository} handles
-        // converting from a {@code environmentalSensorId} to a {@link environmentalSensor} using its cached data.
-    }
-
-    @Override
-    public void activateEnvironmentalSensor(@NonNull final EnvironmentalSensor environmentalSensor) {
-        Runnable activateRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mEnvironmentalSensorsDao.updateCompleted(environmentalSensor.getId(), false);
-            }
-        };
-        mAppExecutors.diskIO().execute(activateRunnable);
-    }
-
-    @Override
-    public void activateEnvironmentalSensor(@NonNull String environmentalSensorId) {
-        // Not required for the local data source because the {@link EnvironmentalSensorsRepository} handles
-        // converting from a {@code environmentalSensorId} to a {@link environmentalSensor} using its cached data.
-    }
-
-    @Override
-    public void clearCompletedEnvironmentalSensors() {
-        Runnable clearEnvironmentalSensorsRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mEnvironmentalSensorsDao.deleteCompletedEnvironmentalSensors();
-
-            }
-        };
-
-        mAppExecutors.diskIO().execute(clearEnvironmentalSensorsRunnable);
     }
 
     @Override

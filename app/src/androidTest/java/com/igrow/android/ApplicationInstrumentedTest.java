@@ -20,6 +20,6 @@ public class ApplicationInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.igrow.android", appContext.getPackageName());
+        assertEquals("com.igrow.android.mock", appContext.getPackageName());
     }
 }

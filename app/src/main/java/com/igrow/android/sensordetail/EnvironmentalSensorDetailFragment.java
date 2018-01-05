@@ -30,13 +30,13 @@ import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.igrow.android.DummyContent;
-import com.igrow.android.listsensors.EnvironmentalSensorListActivity;
+import com.igrow.android.sensors.EnvironmentalSensorsActivity;
 
 import java.util.ArrayList;
 
 /**
  * A fragment representing a single EvironmentalSensor detail screen.
- * This fragment is either contained in a {@link EnvironmentalSensorListActivity}
+ * This fragment is either contained in a {@link EnvironmentalSensorsActivity}
  * in two-pane mode (on tablets) or a {@link EnvironmentalSensorDetailActivity}
  * on handsets.
  */

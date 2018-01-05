@@ -71,4 +71,9 @@
     <!-- Rationale for asking for Contacts -->
     <string name="contacts_permission_rationale">Contacts access is needed in order to retrieve your email address.</string>
 
+    <!-- EnvironmentalSensorsActivity messages -->
+    <string name="successfully_saved_sensor_message">Sensor saved</string>
+    <string name="successfully_added_sensor_message">Sensor added</string>
+    <string name="successfully_deleted_sensor_message">Sensor deleted</string>
+
 </resources>

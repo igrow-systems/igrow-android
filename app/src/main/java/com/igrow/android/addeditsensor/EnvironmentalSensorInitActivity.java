@@ -18,7 +18,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 
 import com.igrow.android.R;
-import com.igrow.android.listsensors.EnvironmentalSensorRecyclerViewFragment;
+import com.igrow.android.sensors.EnvironmentalSensorsFragment;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
 
@@ -32,15 +32,15 @@ import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
  * item details side-by-side using two vertical panes.
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
- * {@link EnvironmentalSensorRecyclerViewFragment} and the item details
+ * {@link EnvironmentalSensorsFragment} and the item details
  * (if present) is a {@link EnvironmentalSensorDetailFragment}.
  * <p/>
  * This activity also implements the required
- * {@link EnvironmentalSensorRecyclerViewFragment.Callbacks} interface
+ * {@link EnvironmentalSensorsFragment.Callbacks} interface
  * to listen for item selections.
  */
 public class EnvironmentalSensorInitActivity extends FragmentActivity
-        implements EnvironmentalSensorRecyclerViewFragment.Callbacks {
+        implements EnvironmentalSensorsFragment.Callbacks {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -68,7 +68,7 @@ public class EnvironmentalSensorInitActivity extends FragmentActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-//            ((EnvironmentalSensorRecyclerViewFragment) getSupportFragmentManager()
+//            ((EnvironmentalSensorsFragment) getSupportFragmentManager()
 //                    .findFragmentById(com.igrow.android.R.id.environmentalsensor_list))
 //                    .setActivateOnItemClick(true);
         }
@@ -78,7 +78,7 @@ public class EnvironmentalSensorInitActivity extends FragmentActivity
     }
 
     /**
-     * Callback method from {@link EnvironmentalSensorRecyclerViewFragment.Callbacks}
+     * Callback method from {@link EnvironmentalSensorsFragment.Callbacks}
      * indicating that the item with the given ID was selected.
      */
     @Override

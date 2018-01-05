@@ -40,23 +40,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".listsensors.EnvironmentalSensorListActivity"
+            android:name=".sensors.EnvironmentalSensorsActivity"
             android:label="@string/title_environmentalsensor_list"
-            android:parentActivityName=".listsensors.EnvironmentalSensorListActivity">
+            android:parentActivityName=".sensors.EnvironmentalSensorsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".listsensors.EnvironmentalSensorListActivity" />
+                android:value=".sensors.EnvironmentalSensorsActivity" />
             <!--<intent-filter>
                 <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
             </intent-filter> -->
         </activity>
         <activity
-            android:name=".listsensors.EnvironmentalSensorListScanActivity"
+            android:name=".sensors.EnvironmentalSensorsScanActivity"
             android:label="@string/title_environmentalsensor_list_scan"
-            android:parentActivityName=".listsensors.EnvironmentalSensorListActivity">
+            android:parentActivityName=".sensors.EnvironmentalSensorsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".listsensors.EnvironmentalSensorListActivity" />
+                android:value=".sensors.EnvironmentalSensorsActivity" />
             <!--<intent-filter>
                 <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
             </intent-filter> -->
@@ -64,17 +64,17 @@
         <activity
             android:name=".sensordetail.EnvironmentalSensorDetailActivity"
             android:label="@string/title_environmentalsensor_detail"
-            android:parentActivityName=".listsensors.EnvironmentalSensorListActivity">
+            android:parentActivityName=".sensors.EnvironmentalSensorsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".listsensors.EnvironmentalSensorListActivity" />
+                android:value=".sensors.EnvironmentalSensorsActivity" />
         </activity>
         <activity
             android:name=".addeditsensor.EnvironmentalSensorInitActivity"
             android:label="@string/title_environmentalsensor_init">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".listsensors.EnvironmentalSensorListActivity" />
+                android:value=".sensors.EnvironmentalSensorsActivity" />
         </activity>
 
         <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />

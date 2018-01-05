@@ -18,6 +18,10 @@ buildscript {
     }
 }
 
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
 allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
@@ -30,4 +34,28 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 
+}
+
+ext {
+    // Sdk and tools
+    // Support library and architecture components support minSdk 14 and above.
+    minSdkVersion = 18
+    targetSdkVersion = 26
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.1'
+
+    // App dependencies
+    supportLibraryVersion = '27.0.2'
+    guavaVersion = '22.0-android'
+    junitVersion = '4.12'
+    mockitoVersion = '2.13.0'
+    powerMockitoVersion = '1.7.3'
+    hamcrestVersion = '1.3'
+    runnerVersion = '1.0.1'
+    rulesVersion = '1.0.1'
+    espressoVersion = '3.0.1'
+
+    // Architecture Components dependencies
+    roomVersion = "1.0.0"
+    archLifecycleVersion = "1.0.0"
 }

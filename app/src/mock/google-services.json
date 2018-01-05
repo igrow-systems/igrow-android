@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_number": "24159852847",
+    "project_id": "igrow-android"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:24159852847:android:f56d1224283ff3fd",
+        "android_client_info": {
+          "package_name": "com.igrow.android.mock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "24159852847-khs03j82rlpssfd7vmnp33t4j144esf6.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "24159852847-8rpvaq2uephq4h203sil0f97g6qibpdm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.igrow.android",
+            "certificate_hash": "f9080b95bd2f3aadb5d3fc286cce1aa22f2f4ed6"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtaGn1sjFiJlHRreIxJHjRL-m4h6QuTTs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-109315017-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

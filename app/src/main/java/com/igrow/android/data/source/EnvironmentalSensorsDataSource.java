@@ -32,16 +32,6 @@ public interface EnvironmentalSensorsDataSource {
 
     void saveEnvironmentalSensor(@NonNull EnvironmentalSensor environmentalSensor);
 
-    void completeEnvironmentalSensor(@NonNull EnvironmentalSensor environmentalSensor);
-
-    void completeEnvironmentalSensor(@NonNull String environmentalSensorId);
-
-    void activateEnvironmentalSensor(@NonNull EnvironmentalSensor environmentalSensor);
-
-    void activateEnvironmentalSensor(@NonNull String environmentalSensorId);
-
-    void clearCompletedEnvironmentalSensors();
-
     void refreshEnvironmentalSensors();
 
     void deleteAllEnvironmentalSensors();

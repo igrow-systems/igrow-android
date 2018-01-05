@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 iGrow Systems Limited. All rights reserved.
+ * Copyright 2018 iGrow Systems Limited. All rights reserved.
  *
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -17,6 +17,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.igrow.model.ObservationCollection;
 
@@ -24,10 +25,10 @@ import com.igrow.model.ObservationCollection;
  * Created by jsr on 30/05/16.
  */
 @Entity(tableName = "environmental_sensors",
-        indices = {@Index("address"),
-        @Index(value = {"address"}, unique = true)})
+        indices = {@Index(value = {"address"}, unique = true)})
 public class EnvironmentalSensor {
 
+    @NonNull
     @PrimaryKey
     @ColumnInfo(name = "address")
     private String mAddress;
@@ -39,9 +40,10 @@ public class EnvironmentalSensor {
     private int mRSSI;
 
     @ColumnInfo(name = "timestamp")
-    private int mTimestamp;
+    private long mTimestamp;
 
-    @ColumnInfo(name = "location")
+    //@ColumnInfo(name = "location")
+    @Ignore
     private Location mLocation;
 
     @Ignore
@@ -55,7 +57,7 @@ public class EnvironmentalSensor {
 
         private int rssi;
 
-        private int timestamp;
+        private long timestamp;
 
         private Location location;
 
@@ -96,7 +98,7 @@ public class EnvironmentalSensor {
         }
     }
 
-    public EnvironmentalSensor(String address, String fullName, int rssi, int timestamp,
+    public EnvironmentalSensor(String address, String fullName, int rssi, long timestamp,
                                Location location, ObservationCollection observationCollection) {
         this.mAddress = address;
         this.mFullName = fullName;
@@ -104,6 +106,13 @@ public class EnvironmentalSensor {
         this.mTimestamp = timestamp;
         this.mLocation = location;
         this.mObservationCollection = observationCollection;
+    }
+
+    /**
+     * satisfy the Room persistence framework
+     */
+    public EnvironmentalSensor() {
+
     }
 
     public String getId() { return mAddress; }
@@ -116,7 +125,7 @@ public class EnvironmentalSensor {
 
     public int getRSSI() { return mRSSI; }
 
-    public int getTimestamp() {
+    public long getTimestamp() {
         return mTimestamp;
     }
 
@@ -134,7 +143,7 @@ public class EnvironmentalSensor {
         this.mFullName = fullName;
     }
 
-    public void setTimestamp(int timestamp) {
+    public void setTimestamp(long timestamp) {
         this.mTimestamp = timestamp;
     }
 

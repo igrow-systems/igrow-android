@@ -29,47 +29,38 @@ public interface EnvironmentalSensorsDao {
     List<EnvironmentalSensor> getEnvironmentalSensors();
 
     /**
-     * Select a task by id.
+     * Select a environmental sensor by id.
      *
-     * @param taskId the task id.
-     * @return the task with taskId.
+     * @param sensorId the environmental sensor id.
+     * @return the environmental sensor with sensorId.
      */
-    @Query("SELECT * FROM environmental_sensors WHERE entryid = :taskId")
-    EnvironmentalSensor getEnvironmentalSensorById(String taskId);
+    @Query("SELECT * FROM environmental_sensors WHERE address = :sensorId")
+    EnvironmentalSensor getEnvironmentalSensorById(String sensorId);
 
     /**
-     * Insert a task in the database. If the task already exists, replace it.
+     * Insert a environmental sensor in the database. If the environmental sensor already exists, replace it.
      *
-     * @param task the task to be inserted.
+     * @param task the environmental sensor to be inserted.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertEnvironmentalSensor(EnvironmentalSensor task);
 
     /**
-     * Update a task.
+     * Update a environmental sensor.
      *
-     * @param task task to be updated
+     * @param task environmental sensor to be updated
      * @return the number of environmental sensors updated. This should always be 1.
      */
     @Update
     int updateEnvironmentalSensor(EnvironmentalSensor task);
 
     /**
-     * Update the complete status of a task
-     *
-     * @param sensorId    id of the task
-     * @param completed status to be updated
-     */
-    @Query("UPDATE environmental_sensors SET completed = :completed WHERE entryid = :sensorId")
-    void updateCompleted(String taskId, boolean completed);
-
-    /**
-     * Delete a task by id.
+     * Delete a environmental sensor by id.
      *
      * @return the number of environmental sensors deleted. This should always be 1.
      */
-    @Query("DELETE FROM environmental_sensors WHERE entryid = :taskId")
-    int deleteEnvironmentalSensorById(String taskId);
+    @Query("DELETE FROM environmental_sensors WHERE address = :sensorId")
+    int deleteEnvironmentalSensorById(String sensorId);
 
     /**
      * Delete all environmental sensors.
@@ -77,11 +68,4 @@ public interface EnvironmentalSensorsDao {
     @Query("DELETE FROM environmental_sensors")
     void deleteEnvironmentalSensors();
 
-    /**
-     * Delete all completed environmental sensors from the table.
-     *
-     * @return the number of environmental sensors deleted.
-     */
-    @Query("DELETE FROM environmental_sensors WHERE completed = 1")
-    int deleteCompletedEnvironmentalSensors();
 }

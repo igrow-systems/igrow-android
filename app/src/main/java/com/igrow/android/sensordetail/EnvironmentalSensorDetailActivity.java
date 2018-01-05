@@ -5,18 +5,24 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.igrow.android.listsensors.EnvironmentalSensorListActivity;
+import com.igrow.android.sensors.EnvironmentalSensorsActivity;
 
 /**
  * An activity representing a single EvironmentalSensor detail screen. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link EnvironmentalSensorListActivity}.
+ * in a {@link EnvironmentalSensorsActivity}.
  * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link EnvironmentalSensorDetailFragment}.
  */
 public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
+
+    public static final String EXTRA_SENSOR_ID = "SENSOR_ID";
+
+    public static final int DELETE_RESULT_OK = RESULT_FIRST_USER + 2;
+
+    public static final int EDIT_RESULT_OK = RESULT_FIRST_USER + 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +65,7 @@ public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, EnvironmentalSensorListActivity.class));
+            navigateUpTo(new Intent(this, EnvironmentalSensorsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
