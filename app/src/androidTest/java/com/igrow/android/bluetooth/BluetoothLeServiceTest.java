@@ -1,13 +1,17 @@
-package com.igrow.android;
+package com.igrow.android.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
+import android.support.test.filters.LargeTest;
+import android.support.test.rule.ServiceTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.igrow.android.bluetooth.BluetoothLeService;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,8 +20,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Created by jsr on 13/12/2016.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(AndroidJUnit4.class)
+@LargeTest
 public class BluetoothLeServiceTest {
+
+    @Rule
+    public final ServiceTestRule mServiceRule = new ServiceTestRule();
 
     @Mock
     BluetoothManager mBluetoothManager;

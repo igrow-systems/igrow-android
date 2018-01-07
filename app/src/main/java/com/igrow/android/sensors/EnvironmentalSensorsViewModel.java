@@ -5,7 +5,9 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.content.Context;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.databinding.ObservableList;
+import android.graphics.drawable.Drawable;
 
 import com.igrow.android.R;
 import com.igrow.android.SingleLiveEvent;
@@ -32,9 +34,15 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
 
     public final ObservableBoolean dataLoading = new ObservableBoolean(false);
 
+    public final ObservableField<String> currentFilteringLabel = new ObservableField<>();
+
+    public final ObservableField<String> noSensorsLabel = new ObservableField<>();
+
+    public final ObservableField<Drawable> noSensorIconRes = new ObservableField<>();
+
     public final ObservableBoolean empty = new ObservableBoolean(false);
 
-    public final ObservableBoolean tasksAddViewVisible = new ObservableBoolean();
+    public final ObservableBoolean sensorsAddViewVisible = new ObservableBoolean();
 
     //private MutableLiveData<List<EnvironmentalSensor>> mEnvironmentalSensorList;
 
@@ -43,6 +51,8 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
     private final ObservableBoolean mIsDataLoadingError = new ObservableBoolean(false);
 
     private final SnackbarMessage mSnackbarText = new SnackbarMessage();
+
+    private EnvironmentalSensorsFilterType mCurrentFiltering = EnvironmentalSensorsFilterType.ALL_SENSORS;
 
     private final SingleLiveEvent<String> mOpenEnvironmentalSensorEvent = new SingleLiveEvent<>();
 
@@ -63,6 +73,42 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
 
     public void loadEnvironmentalSensors(boolean forceUpdate) {
         loadEnvironmentalSensors(forceUpdate, true);
+    }
+
+    /**
+     * Sets the current task filtering type.
+     *
+     * @param requestType Can be {@link EnvironmentalSensorsFilterType#ALL_SENSORS},
+     *                    {@link EnvironmentalSensorsFilterType#COMPLETED_SENSORS}, or
+     *                    {@link EnvironmentalSensorsFilterType#ACTIVE_SENSORS}
+     */
+    public void setFiltering(EnvironmentalSensorsFilterType requestType) {
+        mCurrentFiltering = requestType;
+
+        // Depending on the filter type, set the filtering label, icon drawables, etc.
+        switch (requestType) {
+            case ALL_SENSORS:
+                currentFilteringLabel.set(mContext.getString(R.string.label_all));
+                noSensorsLabel.set(mContext.getResources().getString(R.string.no_sensors_all));
+                noSensorIconRes.set(mContext.getResources().getDrawable(
+                        R.drawable.ic_assignment_turned_in_24dp));
+                sensorsAddViewVisible.set(true);
+                break;
+            case ACTIVE_SENSORS:
+                currentFilteringLabel.set(mContext.getString(R.string.label_active));
+                noSensorsLabel.set(mContext.getResources().getString(R.string.no_sensors_active));
+                noSensorIconRes.set(mContext.getResources().getDrawable(
+                        R.drawable.ic_check_circle_24dp));
+                sensorsAddViewVisible.set(false);
+                break;
+//            case COMPLETED_SENSORS:
+//                currentFilteringLabel.set(mContext.getString(R.string.label_completed));
+//                noSensorsLabel.set(mContext.getResources().getString(R.string.no_sensors_completed));
+//                noSensorIconRes.set(mContext.getResources().getDrawable(
+//                        R.drawable.ic_verified_user_24dp));
+//                sensorsAddViewVisible.set(false);
+//                break;
+        }
     }
 
     SnackbarMessage getSnackbarMessage() {
@@ -142,6 +188,8 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
 //                            environmentalSensorsToShow.add(environmentalSensor);
 //                            break;
 //                    }
+                    environmentalSensorsToShow.add(environmentalSensor);
+                    sensorsAddViewVisible.set(true);
                 }
                 if (showLoadingUI) {
                     dataLoading.set(false);

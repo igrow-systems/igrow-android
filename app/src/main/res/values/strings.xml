@@ -76,4 +76,10 @@
     <string name="successfully_added_sensor_message">Sensor added</string>
     <string name="successfully_deleted_sensor_message">Sensor deleted</string>
 
+    <string name="no_sensors_all">No sensors</string>
+    <string name="no_sensors_active">No active sensors</string>
+
+    <string name="label_all">All</string>
+    <string name="label_active">Active</string>
+
 </resources>
