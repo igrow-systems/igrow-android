@@ -13,6 +13,9 @@ This README would normally document whatever steps are necessary to get your app
 ### How do I get set up? ###
 
 * Summary of set up
+
+Remember to add the local debug build signing key to the Google Services configuration otherwise sign-in will fail.
+
 * Configuration
 * Dependencies
 * Database configuration

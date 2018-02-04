@@ -7,7 +7,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion "$rootProject.ext.buildToolsVersion"
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.igrow.android"
@@ -36,10 +36,21 @@ android {
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
+
+        debug {
+            minifyEnabled false // TODO temporarily false due to dependency on play-services-base
+                                // - only debug Build Type affected
+            // Uses new built-in shrinker http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+        }
+
+        release {
+            minifyEnabled true
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
     }
 
@@ -118,7 +129,7 @@ dependencies {
     implementation 'com.igrow:igrow-api-java:1.0-SNAPSHOT'
 
     // Google Sign-in
-    implementation 'com.google.android.gms:play-services-auth:9.8.0'
+    implementation 'com.google.android.gms:play-services-auth:11.8.0'
 
     // Google Dagger
     implementation 'com.google.dagger:dagger:2.10'
