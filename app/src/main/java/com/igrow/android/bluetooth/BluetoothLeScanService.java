@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -28,8 +29,8 @@ public class BluetoothLeScanService extends Service
     public final static String ACTION_SCAN_UPDATE =
             "com.igrow.android.ACTION_SCAN_UPDATE";
 
-    public final static String ACTION_ERROR_NOT_INITIALIZED =
-            "com.igrow.android.ACTION_ERROR_NOT_INITIALIZED";
+    public final static String ERROR_NOT_INITIALIZED =
+            "com.igrow.android.ERROR_NOT_INITIALIZED";
 
     public final static String EXTRA_UPDATE_PARCELABLE =
             "com.igrow.android.EXTRA_UPDATE_PARCELABLE";
@@ -60,6 +61,9 @@ public class BluetoothLeScanService extends Service
     private boolean mIsInitialized = false;
 
     private AlarmManager mAlarmManager;
+
+    // Binder given to clients
+    private final IBinder mBinder = new LocalBinder();
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -136,7 +140,7 @@ public class BluetoothLeScanService extends Service
         if (mIsInitialized) {
             startScan();
         } else {
-            broadcastUpdate(ACTION_ERROR_NOT_INITIALIZED);
+            broadcastUpdate(ERROR_NOT_INITIALIZED);
         }
 
         return super.onStartCommand(intent, flags, startId);
@@ -149,10 +153,21 @@ public class BluetoothLeScanService extends Service
         unregisterReceiver(mBroadcastReceiver);
     }
 
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    public class LocalBinder extends Binder {
+        BluetoothLeScanService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return BluetoothLeScanService.this;
+        }
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
 
     @Override
@@ -239,9 +254,9 @@ public class BluetoothLeScanService extends Service
 
     public void stopScan() {
 
+        Log.d(TAG, "stopLeScan()");
         if (mIsScanning) {
             mBluetoothLeScanProxy.stopLeScan();
-            Log.d(TAG, "stopLeScan()");
             mIsScanning = false;
         } else {
             Log.d(TAG, "Call to stopScan() when already stopped.");
@@ -263,5 +278,10 @@ public class BluetoothLeScanService extends Service
     @Override
     public void onUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
         broadcastUpdate(sensorScanUpdate);
+    }
+
+
+    public boolean isInitialized() {
+        return mIsInitialized;
     }
 }

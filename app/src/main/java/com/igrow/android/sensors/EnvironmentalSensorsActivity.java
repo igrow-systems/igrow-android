@@ -21,7 +21,7 @@ import com.igrow.android.data.EnvironmentalSensor;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
 
-import static com.igrow.android.bluetooth.BluetoothLeScanService.ACTION_ERROR_NOT_INITIALIZED;
+import static com.igrow.android.bluetooth.BluetoothLeScanService.ERROR_NOT_INITIALIZED;
 import static com.igrow.android.bluetooth.BluetoothLeScanService.ACTION_SCAN_UPDATE;
 import static com.igrow.android.bluetooth.BluetoothLeScanService.EXTRA_UPDATE_PARCELABLE;
 
@@ -70,7 +70,7 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
                     + broadcastIntent.toString());
 
             switch (broadcastIntent.getAction()) {
-                case ACTION_ERROR_NOT_INITIALIZED:
+                case ERROR_NOT_INITIALIZED:
                     // explicitly stop the service here to avoid the
                     // service calling stopSelf() and the framework
                     // repeatedly attempting to resurrect the service
@@ -148,7 +148,7 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
         super.onStart();
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_ERROR_NOT_INITIALIZED);
+        filter.addAction(ERROR_NOT_INITIALIZED);
         filter.addAction(ACTION_SCAN_UPDATE);
 
         registerReceiver(mBroadcastReceiver, filter);
