@@ -16,14 +16,14 @@ import com.igrow.android.ViewModelFactory;
 import com.igrow.android.bluetooth.EnvironmentalSensorBLEScanUpdate;
 import com.igrow.android.EnvironmentalSensorCollection;
 import com.igrow.android.R;
-import com.igrow.android.bluetooth.BluetoothLeScanService;
+import com.igrow.android.bluetooth.BluetoothLeScanServiceImpl;
 import com.igrow.android.data.EnvironmentalSensor;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
 
-import static com.igrow.android.bluetooth.BluetoothLeScanService.ERROR_NOT_INITIALIZED;
-import static com.igrow.android.bluetooth.BluetoothLeScanService.ACTION_SCAN_UPDATE;
-import static com.igrow.android.bluetooth.BluetoothLeScanService.EXTRA_UPDATE_PARCELABLE;
+import static com.igrow.android.bluetooth.BluetoothLeScanServiceImpl.ERROR_NOT_INITIALIZED;
+import static com.igrow.android.bluetooth.BluetoothLeScanServiceImpl.ACTION_SCAN_UPDATE;
+import static com.igrow.android.bluetooth.BluetoothLeScanServiceImpl.EXTRA_UPDATE_PARCELABLE;
 
 
 /**
@@ -75,7 +75,7 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
                     // service calling stopSelf() and the framework
                     // repeatedly attempting to resurrect the service
                     Intent intent = new Intent(EnvironmentalSensorsActivity.this,
-                            BluetoothLeScanService.class);
+                            BluetoothLeScanServiceImpl.class);
                     stopService(intent);
                     mIsBluetoothLeScanServiceStarted = false;
                     // Likely reason is that bluetooth is disabled so try to enable
@@ -153,7 +153,7 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
 
         registerReceiver(mBroadcastReceiver, filter);
 
-        Intent intent = new Intent(this, BluetoothLeScanService.class);
+        Intent intent = new Intent(this, BluetoothLeScanServiceImpl.class);
         startService(intent);
         mIsBluetoothLeScanServiceStarted = true;
     }
@@ -162,7 +162,7 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
     protected void onStop() {
 
         Intent intent = new Intent(EnvironmentalSensorsActivity.this,
-                BluetoothLeScanService.class);
+                BluetoothLeScanServiceImpl.class);
         stopService(intent);
         mIsBluetoothLeScanServiceStarted = false;
 
@@ -194,7 +194,7 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
                 switch (resultCode) {
                     case RESULT_OK:
                         // attempt to restart the service
-                        Intent intent = new Intent(this, BluetoothLeScanService.class);
+                        Intent intent = new Intent(this, BluetoothLeScanServiceImpl.class);
                         startService(intent);
                         mIsBluetoothLeScanServiceStarted = true;
                         break;

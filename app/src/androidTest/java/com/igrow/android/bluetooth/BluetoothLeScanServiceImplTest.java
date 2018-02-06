@@ -11,18 +11,11 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.igrow.android.R;
-
-import org.aopalliance.instrument.Instrumentation;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.MockitoRule;
 //import org.powermock.api.mockito.PowerMockito;
 
 import java.util.concurrent.TimeoutException;
@@ -30,19 +23,18 @@ import java.util.concurrent.TimeoutException;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by jsr on 14/12/2016.
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class BluetoothLeScanServiceTest {
+public class BluetoothLeScanServiceImplTest {
 
     @Rule
     public final ServiceTestRule mServiceRule = new ServiceTestRule();
 
-    private BluetoothLeScanService mBluetoothLeScanService;
+    private BluetoothLeScanServiceImpl mBluetoothLeScanServiceImpl;
 
     @Mock
     private Context mContextMock;
@@ -102,7 +94,7 @@ public class BluetoothLeScanServiceTest {
 
         bindService();
 
-        boolean isServiceInitialized = mBluetoothLeScanService.isInitialized();
+        boolean isServiceInitialized = mBluetoothLeScanServiceImpl.isInitialized();
 
         if (isBluetoothEnabled) {
             // return bluetoothAdapter to its original state (we hope!)
@@ -128,7 +120,7 @@ public class BluetoothLeScanServiceTest {
 
         bindService();
 
-        boolean isServiceInitialized = mBluetoothLeScanService.isInitialized();
+        boolean isServiceInitialized = mBluetoothLeScanServiceImpl.isInitialized();
 
         if (!isBluetoothEnabled) {
             // return bluetoothAdapter to its original state (we hope!)
@@ -153,7 +145,7 @@ public class BluetoothLeScanServiceTest {
 
         // Create the service Intent.
         Intent serviceIntent =
-                new Intent(InstrumentationRegistry.getTargetContext(), BluetoothLeScanService.class);
+                new Intent(InstrumentationRegistry.getTargetContext(), BluetoothLeScanServiceImpl.class);
 
         // Data can be passed to the service via the Intent.
         //serviceIntent.putExtra(LocalService.SEED_KEY, 42L);
@@ -162,7 +154,7 @@ public class BluetoothLeScanServiceTest {
         IBinder binder = mServiceRule.bindService(serviceIntent);
 
         // Get the reference to the service, or you can call public methods on the binder directly.
-        mBluetoothLeScanService = ((BluetoothLeScanService.LocalBinder) binder).getService();
+        mBluetoothLeScanServiceImpl = ((BluetoothLeScanServiceImpl.LocalBinder) binder).getService();
 
         // Verify that the service is working correctly.
         assertThat(/*service.getRandomInt()*/ 333, is(any(Integer.class)));

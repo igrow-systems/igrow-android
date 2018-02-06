@@ -62,7 +62,7 @@ public class EnvironmentalSensorsScanActivityTest {
     @Before
     public void stubEnvironmentalSensorListScanActivityIntent() {
 
-        Instrumentation.ActivityResult result = createEnvironmentalSensorListScanActivityResultStub();
+        Instrumentation.ActivityResult result = createEnvironmentalSensorScanActivityResultStub();
 
         intending(allOf(hasComponent(new ComponentName(getTargetContext(),
                         EnvironmentalSensorsScanActivity.class)),
@@ -81,29 +81,16 @@ public class EnvironmentalSensorsScanActivityTest {
     }
 
     @Test
-    public void addNewSensor_addedToCollection() throws Exception {
+    public void collection_isUpdatedByScanService() throws Exception {
 
-        onView(ViewMatchers.withId(R.id.fab_environmentalsensor_list)).perform(click());
 
-        intended(allOf(hasComponent(new ComponentName(getTargetContext(),
-                        EnvironmentalSensorsScanActivity.class)),
-                hasAction(Intent.ACTION_PICK)));
 
     }
 
     @Test
     public void recyclerView_matchesCollection() throws Exception {
 
-//        RecyclerViewInteraction.
-//                <EnvironmentalSensor>onRecyclerView(withId(R.id.recyclerview_environmentalsensor))
-//                .withItems(items)
-//                .check(new RecyclerViewInteraction.ItemViewAssertion<EnvironmentalSensor>() {
-//                    @Override
-//                    public void check(EnvironmentalSensor item, View view, NoMatchingViewException e) {
-//                        matches(hasDescendant(withText(item.getAddress())))
-//                                .check(view, e);
-//                    }
-//                });
+
     }
 
     @Test
@@ -116,7 +103,7 @@ public class EnvironmentalSensorsScanActivityTest {
 
     }
 
-    private Instrumentation.ActivityResult createEnvironmentalSensorListScanActivityResultStub() {
+    private Instrumentation.ActivityResult createEnvironmentalSensorScanActivityResultStub() {
 
         Intent resultData = new Intent();
 

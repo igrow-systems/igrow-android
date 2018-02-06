@@ -1,8 +1,11 @@
 package com.igrow.android;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.ServiceConnection;
 import android.support.annotation.NonNull;
 
+import com.igrow.android.bluetooth.FakeBluetoothLeScanService;
 import com.igrow.android.data.FakeEnvironmentalSensorsRemoteDataSource;
 import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 import com.igrow.android.data.source.EnvironmentalSensorsRepository;
@@ -26,4 +29,20 @@ public class Injection {
                 EnvironmentalSensorsLocalDataSource.getInstance(new AppExecutors(),
                         database.environmentalSensorsDao()));
     }
+
+    public static void bindBluetoothLeScanService(@NonNull Context context, ServiceConnection connection, int bindFlags) {
+        checkNotNull(context);
+
+        // TODO the sequencing of calls from a client's perspective may not be as per the framework proper
+        connection.onServiceConnected(new ComponentName("com.igrow.android", "FakeBluetoothLeScanService"),
+                FakeBluetoothLeScanService.getInstance(context).getBinder());
+    }
+
+    public static void unbindBluetoothLeScanService(@NonNull Context context, ServiceConnection connection) {
+        checkNotNull(context);
+
+        // TODO the sequencing of calls from a client's perspective may not be as per the framework proper
+        connection.onServiceDisconnected(new ComponentName("com.igrow.android", "FakeBluetoothLeScanService"));
+    }
+
 }
