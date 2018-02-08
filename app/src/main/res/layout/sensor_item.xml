@@ -16,8 +16,8 @@
 
     <data>
         <variable
-            name="user"
-            type="com.igrow.android.EnvironmentalSensorUIWrapper" />
+            name="viewmodel"
+            type="com.igrow.android.sensor.EnvironmentalSensorViewModel" />
     </data>
 
     <LinearLayout
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="top"
-                android:text="name"
+                android:text="@{viewmodel.fullname}"
                 android:textSize="24dp" />
 
             <TextView
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="bottom"
-                android:text="FF:FF:FF:FF"
+                android:text="@{viewmodel.address}"
                 android:textSize="12dp" />
 
         </LinearLayout>
