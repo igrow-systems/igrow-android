@@ -6,7 +6,11 @@ import android.content.ServiceConnection;
 import android.support.annotation.NonNull;
 
 
+import com.igrow.android.bluetooth.BluetoothAdapter;
+import com.igrow.android.bluetooth.BluetoothLeScanProxy;
 import com.igrow.android.bluetooth.BluetoothLeScanService;
+import com.igrow.android.bluetooth.BluetoothManager;
+import com.igrow.android.bluetooth.BluetoothManagerProxy;
 import com.igrow.android.data.source.EnvironmentalSensorsRepository;
 import com.igrow.android.data.source.local.EnvironmentalSensorsLocalDataSource;
 import com.igrow.android.data.source.local.IGrowDatabase;
@@ -41,5 +45,21 @@ public class Injection {
         checkNotNull(context);
 
         context.unbindService(connection);
+    }
+
+    public static BluetoothManager provideBluetoothManager(@NonNull Context context) {
+        android.bluetooth.BluetoothManager bluetoothManager
+                = (android.bluetooth.BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        return new BluetoothManagerProxy(bluetoothManager);
+    }
+
+    public static BluetoothAdapter provideBluetoothAdapter(@NonNull Context context) {
+        android.bluetooth.BluetoothManager bluetoothManager
+                = (android.bluetooth.BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        return new BluetoothManagerProxy(bluetoothManager).getAdapter();
+    }
+
+    public static BluetoothLeScanProxy provideBluetoothLeScanProxy(BluetoothAdapter bluetoothAdapter) {
+        return BluetoothLeScanProxy.create(bluetoothAdapter);
     }
 }

@@ -1,7 +1,6 @@
 package com.igrow.android.bluetooth;
 
 import android.annotation.TargetApi;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;

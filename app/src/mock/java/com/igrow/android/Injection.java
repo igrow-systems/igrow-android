@@ -5,7 +5,13 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.support.annotation.NonNull;
 
+import com.igrow.android.bluetooth.BluetoothAdapter;
+import com.igrow.android.bluetooth.BluetoothLeScanProxy;
+import com.igrow.android.bluetooth.BluetoothManager;
+import com.igrow.android.bluetooth.FakeBluetoothAdapter;
+import com.igrow.android.bluetooth.FakeBluetoothLeScanProxy;
 import com.igrow.android.bluetooth.FakeBluetoothLeScanService;
+import com.igrow.android.bluetooth.FakeBluetoothManager;
 import com.igrow.android.data.FakeEnvironmentalSensorsRemoteDataSource;
 import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 import com.igrow.android.data.source.EnvironmentalSensorsRepository;
@@ -45,4 +51,17 @@ public class Injection {
         connection.onServiceDisconnected(new ComponentName("com.igrow.android", "FakeBluetoothLeScanService"));
     }
 
+    public static BluetoothManager provideBluetoothManager(@NonNull Context context) {
+        return new FakeBluetoothManager();
+    }
+
+    public static BluetoothAdapter provideBluetoothAdapter(@NonNull Context context) {
+        android.bluetooth.BluetoothManager bluetoothManager
+                = (android.bluetooth.BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        return new FakeBluetoothAdapter();
+    }
+
+    public static BluetoothLeScanProxy provideBluetoothLeScanProxy(BluetoothAdapter bluetoothAdapter) {
+        return new FakeBluetoothLeScanProxy();
+    }
 }

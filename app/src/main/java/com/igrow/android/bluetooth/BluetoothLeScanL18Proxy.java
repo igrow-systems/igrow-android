@@ -1,6 +1,5 @@
 package com.igrow.android.bluetooth;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
@@ -20,8 +19,8 @@ public class BluetoothLeScanL18Proxy extends BluetoothLeScanProxy {
 
     private BluetoothAdapter mBluetoothAdapter;
     // Device scan callback.
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
+    private android.bluetooth.BluetoothAdapter.LeScanCallback mLeScanCallback =
+            new android.bluetooth.BluetoothAdapter.LeScanCallback() {
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {

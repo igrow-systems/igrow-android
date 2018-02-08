@@ -3,19 +3,17 @@ package com.igrow.android.bluetooth;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.igrow.android.Injection;
 
 /**
  * Created by jsr on 14/12/2016.
@@ -166,7 +164,8 @@ public class BluetoothLeScanServiceImpl extends Service
         // For API level 18 and above, get a reference to BluetoothAdapter through
         // BluetoothManager.
         if (mBluetoothManager == null) {
-            mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+            mBluetoothManager = Injection.provideBluetoothManager(this);
             if (mBluetoothManager == null) {
                 Log.e(TAG, "Unable to initialize BluetoothManager.");
                 return false;
@@ -189,10 +188,8 @@ public class BluetoothLeScanServiceImpl extends Service
             return false;
         }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && mBluetoothLeScanProxy == null) {
-            mBluetoothLeScanProxy = new BluetoothLeScanL18Proxy(mBluetoothAdapter);
-        } else if (mBluetoothLeScanProxy == null) {
-            mBluetoothLeScanProxy = new BluetoothLeScanL21Proxy(mBluetoothAdapter);
+        if (mBluetoothLeScanProxy == null) {
+            mBluetoothLeScanProxy = Injection.provideBluetoothLeScanProxy(mBluetoothAdapter);
         }
         mBluetoothLeScanProxy.setOnUpdateCallback(this);
 
