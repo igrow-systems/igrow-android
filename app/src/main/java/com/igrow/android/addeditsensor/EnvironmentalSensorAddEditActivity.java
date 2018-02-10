@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 
+import com.igrow.android.R;
 import com.igrow.android.sensors.EnvironmentalSensorsFragment;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
@@ -60,7 +61,7 @@ public class EnvironmentalSensorAddEditActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.igrow.android.R.layout.fragment_environmentalsensor_list);
+        setContentView(R.layout.activity_environmentalsensor_list);
 
         if (findViewById(com.igrow.android.R.id.environmentalsensor_detail_fragment) != null) {
             // The detail container view will be present only in the

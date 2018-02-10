@@ -57,7 +57,7 @@ public class EnvironmentalSensorInitActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.igrow.android.R.layout.fragment_environmentalsensor_list);
+        setContentView(com.igrow.android.R.layout.activity_environmentalsensor_list);
 
         if (findViewById(R.id.environmentalsensor_detail_fragment) != null) {
             // The detail container view will be present only in the
