@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.example.android.architecture.blueprints.todoapp.util;
+package com.igrow.android.util;
 
 import android.support.design.widget.Snackbar;
 import android.view.View;
