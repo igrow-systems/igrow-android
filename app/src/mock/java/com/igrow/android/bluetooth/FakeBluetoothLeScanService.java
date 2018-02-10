@@ -74,10 +74,14 @@ public class FakeBluetoothLeScanService extends Service implements BluetoothLeSc
                             intent.putExtra(EXTRA_UPDATE_PARCELABLE, sensorScanUpdate);
                             mContext.sendBroadcast(intent);
                             currentIndex++;
-                            if (currentIndex >= TEST_ADDRESSES.length - 1) {
+                            if (currentIndex >= TEST_ADDRESSES.length) {
                                 currentIndex = 0;
                             }
-
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ie) {
+                                mScanning = false;
+                            }
                         }
                     }
                 });

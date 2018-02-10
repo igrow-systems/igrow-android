@@ -28,6 +28,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Injection {
 
+    // TODO: The following allow implementations from a mocking
+    // framework to be set by test code.  This could be
+    // fixed long term by having DI not in this form of
+    // static methods but a runtime implementation.
+    private static BluetoothManager mBluetoothManagerMock = null;
+
+    private static BluetoothAdapter mBluetoothAdapterMock = null;
+
+    private static BluetoothLeScanProxy mBluetoothLeScanProxyMock = null;
+
     public static EnvironmentalSensorsRepository provideEnvironmentalSensorsRepository(@NonNull Context context) {
         checkNotNull(context);
         IGrowDatabase database = IGrowDatabase.getInstance(context);
@@ -51,17 +61,41 @@ public class Injection {
         connection.onServiceDisconnected(new ComponentName("com.igrow.android", "FakeBluetoothLeScanService"));
     }
 
+    public static void setBluetoothManagerMock(BluetoothManager bluetoothManagerMock) {
+        Injection.mBluetoothManagerMock = bluetoothManagerMock;
+    }
+
+    public static void setBluetoothAdapterMock(BluetoothAdapter bluetoothAdapterMock) {
+        Injection.mBluetoothAdapterMock = bluetoothAdapterMock;
+    }
+
+    public static void setBluetoothLeScanProxyMock(BluetoothLeScanProxy bluetoothLeScanProxyMock) {
+        Injection.mBluetoothLeScanProxyMock = bluetoothLeScanProxyMock;
+    }
+
     public static BluetoothManager provideBluetoothManager(@NonNull Context context) {
-        return new FakeBluetoothManager();
+        if (mBluetoothManagerMock == null) {
+            return new FakeBluetoothManager();
+        } else {
+            return mBluetoothManagerMock;
+        }
     }
 
     public static BluetoothAdapter provideBluetoothAdapter(@NonNull Context context) {
-        android.bluetooth.BluetoothManager bluetoothManager
-                = (android.bluetooth.BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        return new FakeBluetoothAdapter();
+        if (mBluetoothAdapterMock == null) {
+            android.bluetooth.BluetoothManager bluetoothManager
+                    = (android.bluetooth.BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+            return new FakeBluetoothAdapter();
+        } else {
+            return mBluetoothAdapterMock;
+        }
     }
 
     public static BluetoothLeScanProxy provideBluetoothLeScanProxy(BluetoothAdapter bluetoothAdapter) {
-        return new FakeBluetoothLeScanProxy();
+        if (mBluetoothLeScanProxyMock == null) {
+            return new FakeBluetoothLeScanProxy();
+        } else {
+            return mBluetoothLeScanProxyMock;
+        }
     }
 }
