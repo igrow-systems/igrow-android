@@ -21,7 +21,7 @@
     </data>
 
     <LinearLayout
-        android:id="@+id/listitem_device"
+        android:id="@+id/sensor_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

@@ -7,6 +7,8 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.VisibleForTesting;
 
 import com.igrow.android.data.source.EnvironmentalSensorsRepository;
+import com.igrow.android.sensor.EnvironmentalSensorViewModel;
+import com.igrow.android.sensors.EnvironmentalSensorsScanViewModel;
 import com.igrow.android.sensors.EnvironmentalSensorsViewModel;
 
 /**
@@ -56,13 +58,13 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         if (modelClass.isAssignableFrom(EnvironmentalSensorsViewModel.class)) {
             //noinspection unchecked
             return (T) new EnvironmentalSensorsViewModel(mApplication, mEnvironmentalSensorsRepository);
-        } /*else if (modelClass.isAssignableFrom(TaskDetailViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(EnvironmentalSensorsScanViewModel.class)) {
             //noinspection unchecked
-            return (T) new TaskDetailViewModel(mApplication, mEnvironmentalSensorsRepository);
-        } else if (modelClass.isAssignableFrom(AddEditTaskViewModel.class)) {
+            return (T) new EnvironmentalSensorsScanViewModel(mApplication, mEnvironmentalSensorsRepository);
+        } else if (modelClass.isAssignableFrom(EnvironmentalSensorViewModel.class)) {
             //noinspection unchecked
-            return (T) new AddEditTaskViewModel(mApplication, mEnvironmentalSensorsRepository);
-        } else if (modelClass.isAssignableFrom(EnvironmentalSensorsViewModel.class)) {
+            return (T) new EnvironmentalSensorViewModel();
+        } /*else if (modelClass.isAssignableFrom(EnvironmentalSensorsViewModel.class)) {
             //noinspection unchecked
             return (T) new EnvironmentalSensorsViewModel(mApplication, mEnvironmentalSensorsRepository);
         }*/

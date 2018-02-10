@@ -17,7 +17,7 @@ import com.igrow.android.Injection;
 import com.igrow.android.ViewModelFactory;
 import com.igrow.android.bluetooth.BluetoothLeScanService;
 import com.igrow.android.bluetooth.EnvironmentalSensorBLEScanUpdate;
-import com.igrow.android.EnvironmentalSensorCollection;
+import com.igrow.android.sensor.EnvironmentalSensorCollection;
 import com.igrow.android.R;
 import com.igrow.android.bluetooth.LocalBinder;
 import com.igrow.android.data.EnvironmentalSensor;
@@ -63,7 +63,7 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
 
     private boolean mBluetoothLeScanServiceBound = false;
 
-    private EnvironmentalSensorsViewModel mViewModel;
+    private EnvironmentalSensorsScanViewModel mViewModel;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -91,7 +91,6 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             mRecyclerViewFragment = new EnvironmentalSensorsFragment();
-            mRecyclerViewFragment.setDataSource(null);
             transaction.replace(R.id.fragment_environmentalsensor_list, mRecyclerViewFragment);
             transaction.commit();
         }
@@ -111,12 +110,12 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
         }
     }
 
-    public static EnvironmentalSensorsViewModel obtainViewModel(FragmentActivity activity) {
+    public static EnvironmentalSensorsScanViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
         ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
 
-        EnvironmentalSensorsViewModel viewModel =
-                ViewModelProviders.of(activity, factory).get(EnvironmentalSensorsViewModel.class);
+        EnvironmentalSensorsScanViewModel viewModel =
+                ViewModelProviders.of(activity, factory).get(EnvironmentalSensorsScanViewModel.class);
 
         return viewModel;
     }
@@ -136,16 +135,12 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_SCAN_UPDATE);
         registerReceiver(mBroadcastReceiver, filter);
-
-        mBluetoothLeScanService.startScan();
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        mBluetoothLeScanService.stopScan();
 
         unregisterReceiver(mBroadcastReceiver);
 
@@ -155,6 +150,7 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
     protected void onStop() {
         super.onStop();
 
+        mBluetoothLeScanService.stopScan();
         // unbind the BLEScanService via the rudimentary flavourful DI
         Injection.unbindBluetoothLeScanService(this, mConnection);
         // set bound = false to indicate to the activity that
@@ -191,18 +187,9 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
     }
 
     private void onSensorScanUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
-        if (EnvironmentalSensorCollection.ITEM_MAP.containsKey(sensorScanUpdate.getAddress())) {
-            EnvironmentalSensor sensor = EnvironmentalSensorCollection.ITEM_MAP.get(sensorScanUpdate.getAddress());
-            sensor.setRSSI(sensorScanUpdate.getRSSI());
-            //mRecyclerViewFragment.setDataSource(mSensors);
-        } else {
-            EnvironmentalSensor sensor = new EnvironmentalSensor.EnvironmentalSensorBuilder()
-                    .setAddress(sensorScanUpdate.getAddress())
-                    .setFullName("Unknown Sensor")
-                    .setRssi(sensorScanUpdate.getRSSI()).build();
-            EnvironmentalSensorCollection.addItem(sensor);
-            //mRecyclerViewFragment.setDataSource(mSensors);
-        }
+
+        mViewModel.handleEnvironmentalSensorUpdate(sensorScanUpdate);
+
     }
 
     /** Defines callbacks for service binding, passed to bindService() */
@@ -215,6 +202,8 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
             LocalBinder binder = (LocalBinder) service;
             mBluetoothLeScanService = binder.getService();
             mBluetoothLeScanServiceBound = true;
+
+            mBluetoothLeScanService.startScan();
         }
 
         @Override

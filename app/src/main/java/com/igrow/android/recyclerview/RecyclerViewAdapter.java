@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.common.reflect.TypeToken;
+import com.igrow.android.BR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ public abstract class RecyclerViewAdapter<ITEM_T, VIEW_MODEL_T extends ItemViewM
 
         try {
             VIEW_MODEL_T viewModel = (VIEW_MODEL_T) type.getRawType().newInstance();
+
+            binding.setVariable(BR.viewmodel, viewModel);
 
             viewHolder = new ItemViewHolder<>(binding.getRoot(), binding, viewModel);
 

@@ -14,14 +14,21 @@ public class EnvironmentalSensorViewModel extends ItemViewModel<EnvironmentalSen
 
     public MutableLiveData<EnvironmentalSensor> sensor;
 
-    public MutableLiveData<String> fullname;
+    public MutableLiveData<String> fullname = new MutableLiveData<>();
 
-    public MutableLiveData<String> address;
+    public MutableLiveData<String> address = new MutableLiveData<>();
 
-    public MutableLiveData<Integer> rssi;
+    public MutableLiveData<Integer> rssi = new MutableLiveData<>();
+
+    public EnvironmentalSensorViewModel() {
+        sensor = new MutableLiveData<>();
+    }
 
     @Override
     public void setItem(EnvironmentalSensor item) {
         sensor.setValue(item);
+        fullname.setValue(item.getFullName());
+        address.setValue(item.getAddress());
+        rssi.setValue(item.getRSSI());
     }
 }

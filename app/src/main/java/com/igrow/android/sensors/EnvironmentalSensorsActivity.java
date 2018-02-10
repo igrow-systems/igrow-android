@@ -14,7 +14,7 @@ import android.view.View;
 
 import com.igrow.android.ViewModelFactory;
 import com.igrow.android.bluetooth.EnvironmentalSensorBLEScanUpdate;
-import com.igrow.android.EnvironmentalSensorCollection;
+import com.igrow.android.sensor.EnvironmentalSensorCollection;
 import com.igrow.android.R;
 import com.igrow.android.bluetooth.BluetoothLeScanServiceImpl;
 import com.igrow.android.data.EnvironmentalSensor;
@@ -104,7 +104,7 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
 
         // TODO: If exposing deep links into your app, handle intents here.
 
-        setupViewFragment(savedInstanceState);
+        //setupViewFragment(savedInstanceState);
 
         mViewModel = obtainViewModel(this);
     }
@@ -113,7 +113,6 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             mRecyclerViewFragment = new EnvironmentalSensorsFragment();
-            mRecyclerViewFragment.setDataSource(null);
             transaction.replace(R.id.fragment_environmentalsensor_list, mRecyclerViewFragment);
             transaction.commit();
         }
@@ -153,18 +152,18 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
 
         registerReceiver(mBroadcastReceiver, filter);
 
-        Intent intent = new Intent(this, BluetoothLeScanServiceImpl.class);
-        startService(intent);
-        mIsBluetoothLeScanServiceStarted = true;
+        //Intent intent = new Intent(this, BluetoothLeScanServiceImpl.class);
+        //startService(intent);
+        //mIsBluetoothLeScanServiceStarted = true;
     }
 
     @Override
     protected void onStop() {
 
-        Intent intent = new Intent(EnvironmentalSensorsActivity.this,
-                BluetoothLeScanServiceImpl.class);
-        stopService(intent);
-        mIsBluetoothLeScanServiceStarted = false;
+        //Intent intent = new Intent(EnvironmentalSensorsActivity.this,
+        //        BluetoothLeScanServiceImpl.class);
+        //stopService(intent);
+        //mIsBluetoothLeScanServiceStarted = false;
 
         unregisterReceiver(mBroadcastReceiver);
 
@@ -217,7 +216,6 @@ public class EnvironmentalSensorsActivity extends FragmentActivity
                                         .setFullName("Unknown Sensor")
                                         .setRssi(0).build();
                         EnvironmentalSensorCollection.addItem(sensor);
-                        mRecyclerViewFragment.setDataSource(null);
                         break;
                     case RESULT_CANCELED:
                         // do nothing for now

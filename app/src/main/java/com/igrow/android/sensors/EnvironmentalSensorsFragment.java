@@ -1,10 +1,12 @@
 package com.igrow.android.sensors;
 
 import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.igrow.android.EnvironmentalSensorCollection;
+import com.igrow.android.SnackbarMessage;
+import com.igrow.android.databinding.SensorsFragBinding;
 import com.igrow.android.R;
 import com.igrow.android.data.EnvironmentalSensor;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
+import com.igrow.android.util.SnackbarUtils;
+
+import java.util.ArrayList;
 
 /**
  * A list fragment representing a list of EnvironmentalSensors. This fragment
@@ -49,11 +55,11 @@ public class EnvironmentalSensorsFragment extends Fragment {
 
     protected RecyclerView.LayoutManager mLayoutManager;
 
-    protected EnvironmentalSensorsViewModel mViewModel;
+    protected EnvironmentalSensorsScanViewModel mViewModel;
 
-    protected EnvironmentalSensorCollection mSensors;
+    protected SensorsFragBinding mSensorsFragBinding;
 
-    protected EnvironmentalSensorsListAdapter mListAdapter;
+    protected EnvironmentalSensorsRecyclerViewAdapter mListAdapter;
     /**
      * The fragment's current callback object, which is notified of list item
      * clicks.
@@ -80,6 +86,70 @@ public class EnvironmentalSensorsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         //String userId = getArguments().getString(UID_KEY);
 
+
+        setupSnackbar();
+
+        setupFab();
+
+        setupListAdapter();
+
+        //setupRefreshLayout();
+
+    }
+
+
+    private void setupSnackbar() {
+        mViewModel.getSnackbarMessage().observe(this, new SnackbarMessage.SnackbarObserver() {
+            @Override
+            public void onNewMessage(@StringRes int snackbarMessageResourceId) {
+                SnackbarUtils.showSnackbar(getView(), getString(snackbarMessageResourceId));
+            }
+        });
+    }
+
+    private void setupFab() {
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_environmentalsensor_list);
+
+        //fab.setImageResource(R.drawable.ic_add);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mTasksViewModel.addNewTask();
+//            }
+//        });
+    }
+
+    private void setupListAdapter() {
+
+        mRecyclerView = mSensorsFragBinding.sensorsRecyclerview;
+
+        mViewModel.sensors.addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<EnvironmentalSensor>>() {
+            @Override
+            public void onChanged(ObservableList<EnvironmentalSensor> environmentalSensors) {
+                mViewModel.getAdapter().setItems(mViewModel.sensors);
+            }
+
+            @Override
+            public void onItemRangeChanged(ObservableList<EnvironmentalSensor> environmentalSensors, int i, int i1) {
+
+            }
+
+            @Override
+            public void onItemRangeInserted(ObservableList<EnvironmentalSensor> environmentalSensors, int i, int i1) {
+                mViewModel.getAdapter().setItems(mViewModel.sensors);
+            }
+
+            @Override
+            public void onItemRangeMoved(ObservableList<EnvironmentalSensor> environmentalSensors, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onItemRangeRemoved(ObservableList<EnvironmentalSensor> environmentalSensors, int i, int i1) {
+
+            }
+        });
     }
 
     @Override
@@ -92,29 +162,16 @@ public class EnvironmentalSensorsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.recyclerview_environmentalsensor,
-                container, false);
-        rootView.setTag(TAG);
+        mSensorsFragBinding = SensorsFragBinding.inflate(inflater, container, false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_environmentalsensor);
+        mViewModel = EnvironmentalSensorsScanActivity.obtainViewModel(getActivity());
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(0);
+        mSensorsFragBinding.setViewmodel(mViewModel);
 
-        mListAdapter = new EnvironmentalSensorsListAdapter(mSensors,
-                new EnvironmentalSensorsListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(EnvironmentalSensor item) {
-                mCallbacks.onItemSelected(item.getAddress());
-            }
-        });
-        // Set CustomAdapter as the adapter for RecyclerView.
-        mRecyclerView.setAdapter(mListAdapter);
+        setHasOptionsMenu(true);
 
-        mViewModel = EnvironmentalSensorsActivity.obtainViewModel(getActivity());
+        return mSensorsFragBinding.getRoot();
 
-        return rootView;
     }
 
     @Override
@@ -143,6 +200,12 @@ public class EnvironmentalSensorsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mViewModel.start();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
 
@@ -156,13 +219,6 @@ public class EnvironmentalSensorsFragment extends Fragment {
         if (mActivatedPosition != ListView.INVALID_POSITION) {
             // Serialize and persist the activated item position.
             outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
-        }
-    }
-
-    public void setDataSource(EnvironmentalSensorCollection sensors) {
-        mSensors = sensors;
-        if (mListAdapter != null) {
-            mListAdapter.invalidate();
         }
     }
 
