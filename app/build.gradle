@@ -136,8 +136,8 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
 
     // RxJava
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
+    //implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    //implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
 
     //implementation 'org.greenrobot:eventbus:3.0.0'
 
@@ -221,6 +221,7 @@ dependencies {
     //androidTestImplementation "org.powermock:powermock-classloading-xstream:$rootProject.ext.powerMockitoVersion"
 
     testImplementation 'org.robolectric:robolectric:3.5.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
