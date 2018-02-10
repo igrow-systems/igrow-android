@@ -14,9 +14,7 @@ public interface BluetoothAdapter {
 
     boolean	cancelDiscovery();
 
-    static boolean	checkBluetoothAddress(String address) {};
-
-    void	closeProfileProxy(int profile, BluetoothProfile proxy);
+    void closeProfileProxy(int profile, BluetoothProfile proxy);
 
     boolean	disable();
 
@@ -29,8 +27,6 @@ public interface BluetoothAdapter {
     BluetoothLeScanner getBluetoothLeScanner();
 
     Set<BluetoothDevice> getBondedDevices();
-
-    static BluetoothAdapter	getDefaultAdapter() {};
 
     int	getLeMaximumAdvertisingDataLength();
 
