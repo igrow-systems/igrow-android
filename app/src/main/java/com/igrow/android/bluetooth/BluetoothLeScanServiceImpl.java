@@ -114,10 +114,6 @@ public class BluetoothLeScanServiceImpl extends Service
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_ALARM_PERIOD);
         registerReceiver(mBroadcastReceiver, filter);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (!mIsInitialized) {
             mIsInitialized = initialize();
@@ -128,6 +124,12 @@ public class BluetoothLeScanServiceImpl extends Service
         } else {
             broadcastUpdate(ERROR_NOT_INITIALIZED);
         }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+
 
         return super.onStartCommand(intent, flags, startId);
     }
