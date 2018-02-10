@@ -284,7 +284,7 @@ public class DeviceScanActivity extends ListActivity {
             ViewHolder viewHolder;
             // General ListView optimization code.
             if (view == null) {
-                view = mInflator.inflate(com.igrow.android.R.layout.listitem_device, null);
+                view = mInflator.inflate(com.igrow.android.R.layout.sensor_item, null);
                 viewHolder = new ViewHolder();
                 viewHolder.deviceAddress = (TextView) view.findViewById(R.id.textview_device_address);
                 viewHolder.deviceName = (TextView) view.findViewById(R.id.textview_device_name);
