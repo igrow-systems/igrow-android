@@ -87,7 +87,7 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/service_ble_label" />
         <service
-            android:name=".bluetooth.BluetoothLeScanService"
+            android:name=".bluetooth.BluetoothLeScanServiceImpl"
             android:description="@string/service_ble_scan_description"
             android:enabled="true"
             android:exported="false"
