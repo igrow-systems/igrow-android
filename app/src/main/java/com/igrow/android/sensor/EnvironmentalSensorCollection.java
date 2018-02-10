@@ -1,4 +1,4 @@
-package com.igrow.android;
+package com.igrow.android.sensor;
 
 import com.igrow.android.data.EnvironmentalSensor;
 
