@@ -82,4 +82,6 @@
     <string name="label_all">All</string>
     <string name="label_active">Active</string>
 
+    <string name="no_sensors_add">Add a sensor +</string>
+
 </resources>
