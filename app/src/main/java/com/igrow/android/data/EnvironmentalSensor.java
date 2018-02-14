@@ -16,20 +16,29 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Strings;
+import com.igrow.android.data.source.local.IGrowTypeConverters;
 import com.igrow.model.ObservationCollection;
+
+import java.util.UUID;
 
 /**
  * Created by jsr on 30/05/16.
  */
 @Entity(tableName = "environmental_sensors",
         indices = {@Index(value = {"address"}, unique = true)})
+//@TypeConverters({IGrowTypeConverters.class})
 public class EnvironmentalSensor {
 
     @NonNull
     @PrimaryKey
+    @ColumnInfo(name = "id")
+    private UUID mSensorId;
+
     @ColumnInfo(name = "address")
     private String mAddress;
 
@@ -51,6 +60,8 @@ public class EnvironmentalSensor {
 
     public static class EnvironmentalSensorBuilder {
 
+        private UUID sensorid;
+
         private String address;
 
         private String fullName;
@@ -62,6 +73,11 @@ public class EnvironmentalSensor {
         private Location location;
 
         private ObservationCollection observationCollection;
+
+        public EnvironmentalSensorBuilder setId(UUID sensorId) {
+            this.sensorid = sensorId;
+            return this;
+        }
 
         public EnvironmentalSensorBuilder setAddress(String address) {
             this.address = address;
@@ -94,12 +110,28 @@ public class EnvironmentalSensor {
         }
 
         public EnvironmentalSensor build() {
-            return new EnvironmentalSensor(address, fullName, rssi, timestamp, location, observationCollection);
+            if (sensorid == null) {
+                return new EnvironmentalSensor(address, fullName, rssi, timestamp, location, observationCollection);
+            } else {
+                return new EnvironmentalSensor(sensorid, address, fullName, rssi, timestamp, location, observationCollection);
+            }
         }
     }
 
     public EnvironmentalSensor(String address, String fullName, int rssi, long timestamp,
                                Location location, ObservationCollection observationCollection) {
+        this.mSensorId = UUID.randomUUID();
+        this.mAddress = address;
+        this.mFullName = fullName;
+        this.mRSSI = rssi;
+        this.mTimestamp = timestamp;
+        this.mLocation = location;
+        this.mObservationCollection = observationCollection;
+    }
+
+    public EnvironmentalSensor(UUID sensorId, String address, String fullName, int rssi, long timestamp,
+                               Location location, ObservationCollection observationCollection) {
+        this.mSensorId = sensorId;
         this.mAddress = address;
         this.mFullName = fullName;
         this.mRSSI = rssi;
@@ -115,7 +147,7 @@ public class EnvironmentalSensor {
 
     }
 
-    public String getId() { return mAddress; }
+    public UUID getSensorId() { return mSensorId; }
 
     public String getAddress() { return mAddress; }
 
@@ -134,6 +166,8 @@ public class EnvironmentalSensor {
     public ObservationCollection getObservationCollection() {
         return mObservationCollection;
     }
+
+    public void setSensorId(UUID sensorId) { mSensorId = sensorId; }
 
     public void setAddress(String address) {
         this.mAddress = address;
@@ -157,6 +191,11 @@ public class EnvironmentalSensor {
 
     public void setObservationCollection(ObservationCollection observationCollection) {
         this.mObservationCollection = observationCollection;
+    }
+
+    public boolean isEmpty() {
+        return Strings.isNullOrEmpty(mAddress)
+                && Strings.isNullOrEmpty(mFullName);
     }
 
 }

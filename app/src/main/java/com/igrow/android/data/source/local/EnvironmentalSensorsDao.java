@@ -10,6 +10,7 @@ import android.arch.persistence.room.Update;
 import com.igrow.android.data.EnvironmentalSensor;
 
 import java.util.List;
+import java.util.UUID;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
@@ -34,8 +35,8 @@ public interface EnvironmentalSensorsDao {
      * @param sensorId the environmental sensor id.
      * @return the environmental sensor with sensorId.
      */
-    @Query("SELECT * FROM environmental_sensors WHERE address = :sensorId")
-    EnvironmentalSensor getEnvironmentalSensorById(String sensorId);
+    @Query("SELECT * FROM environmental_sensors WHERE id = :sensorId")
+    EnvironmentalSensor getEnvironmentalSensorById(UUID sensorId);
 
     /**
      * Insert a environmental sensor in the database. If the environmental sensor already exists, replace it.
@@ -59,8 +60,8 @@ public interface EnvironmentalSensorsDao {
      *
      * @return the number of environmental sensors deleted. This should always be 1.
      */
-    @Query("DELETE FROM environmental_sensors WHERE address = :sensorId")
-    int deleteEnvironmentalSensorById(String sensorId);
+    @Query("DELETE FROM environmental_sensors WHERE id = :sensorId")
+    int deleteEnvironmentalSensorById(UUID sensorId);
 
     /**
      * Delete all environmental sensors.

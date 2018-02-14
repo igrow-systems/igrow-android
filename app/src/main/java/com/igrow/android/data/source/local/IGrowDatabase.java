@@ -4,6 +4,7 @@ package com.igrow.android.data.source.local;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.igrow.android.data.EnvironmentalSensor;
@@ -13,6 +14,7 @@ import com.igrow.android.data.EnvironmentalSensor;
  */
 
 @Database(entities = {EnvironmentalSensor.class}, version = 1)
+@TypeConverters({IGrowTypeConverters.class})
 public abstract class IGrowDatabase extends RoomDatabase {
 
     private static IGrowDatabase INSTANCE;

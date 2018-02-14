@@ -1,20 +1,16 @@
 package com.igrow.android.data.source;
 
-import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.igrow.android.data.source.local.EnvironmentalSensorsDao;
 import com.igrow.android.data.EnvironmentalSensor;
 import com.igrow.android.util.EspressoIdlingResource;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
+import java.util.UUID;
 
 import javax.inject.Singleton;
 
@@ -36,7 +32,7 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
-    Map<String, EnvironmentalSensor> mCachedEnvironmentalSensors;
+    Map<UUID, EnvironmentalSensor> mCachedEnvironmentalSensors;
 
     /**
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
@@ -129,7 +125,7 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
         if (mCachedEnvironmentalSensors == null) {
             mCachedEnvironmentalSensors = new LinkedHashMap<>();
         }
-        mCachedEnvironmentalSensors.put(environmentalSensor.getId(), environmentalSensor);
+        mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
     }
 
     /**
@@ -140,11 +136,11 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
      * get the data.
      */
     @Override
-    public void getEnvironmentalSensor(@NonNull final String environmentalSensorId, @NonNull final GetEnvironmentalSensorCallback callback) {
-        checkNotNull(environmentalSensorId);
+    public void getEnvironmentalSensor(@NonNull final UUID sensorId, @NonNull final GetEnvironmentalSensorCallback callback) {
+        checkNotNull(sensorId);
         checkNotNull(callback);
 
-        EnvironmentalSensor cachedEnvironmentalSensor = getEnvironmentalSensorWithId(environmentalSensorId);
+        EnvironmentalSensor cachedEnvironmentalSensor = getEnvironmentalSensorWithId(sensorId);
 
         // Respond immediately with cache if available
         if (cachedEnvironmentalSensor != null) {
@@ -157,14 +153,14 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
         // Load from server/persisted if needed.
 
         // Is the environmentalSensor in the local data source? If not, query the network.
-        mEnvironmentalSensorsLocalDataSource.getEnvironmentalSensor(environmentalSensorId, new GetEnvironmentalSensorCallback() {
+        mEnvironmentalSensorsLocalDataSource.getEnvironmentalSensor(sensorId, new GetEnvironmentalSensorCallback() {
             @Override
             public void onEnvironmentalSensorLoaded(EnvironmentalSensor environmentalSensor) {
                 // Do in memory cache update to keep the app UI up to date
                 if (mCachedEnvironmentalSensors == null) {
                     mCachedEnvironmentalSensors = new LinkedHashMap<>();
                 }
-                mCachedEnvironmentalSensors.put(environmentalSensor.getId(), environmentalSensor);
+                mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
 
                 EspressoIdlingResource.decrement(); // Set app as idle.
 
@@ -173,7 +169,7 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
 
             @Override
             public void onDataNotAvailable() {
-                mEnvironmentalSensorsRemoteDataSource.getEnvironmentalSensor(environmentalSensorId, new GetEnvironmentalSensorCallback() {
+                mEnvironmentalSensorsRemoteDataSource.getEnvironmentalSensor(sensorId, new GetEnvironmentalSensorCallback() {
                     @Override
                     public void onEnvironmentalSensorLoaded(EnvironmentalSensor environmentalSensor) {
                         if (environmentalSensor == null) {
@@ -184,7 +180,7 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
                         if (mCachedEnvironmentalSensors == null) {
                             mCachedEnvironmentalSensors = new LinkedHashMap<>();
                         }
-                        mCachedEnvironmentalSensors.put(environmentalSensor.getId(), environmentalSensor);
+                        mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
                         EspressoIdlingResource.decrement(); // Set app as idle.
 
                         callback.onEnvironmentalSensorLoaded(environmentalSensor);
@@ -218,11 +214,11 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
     }
 
     @Override
-    public void deleteEnvironmentalSensor(@NonNull String environmentalSensorId) {
-        mEnvironmentalSensorsRemoteDataSource.deleteEnvironmentalSensor(checkNotNull(environmentalSensorId));
-        mEnvironmentalSensorsLocalDataSource.deleteEnvironmentalSensor(checkNotNull(environmentalSensorId));
+    public void deleteEnvironmentalSensor(@NonNull UUID sensorId) {
+        mEnvironmentalSensorsRemoteDataSource.deleteEnvironmentalSensor(checkNotNull(sensorId));
+        mEnvironmentalSensorsLocalDataSource.deleteEnvironmentalSensor(checkNotNull(sensorId));
 
-        mCachedEnvironmentalSensors.remove(environmentalSensorId);
+        mCachedEnvironmentalSensors.remove(sensorId);
     }
 
     private void getEnvironmentalSensorsFromRemoteDataSource(@NonNull final LoadEnvironmentalSensorsCallback callback) {
@@ -251,7 +247,7 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
         }
         mCachedEnvironmentalSensors.clear();
         for (EnvironmentalSensor environmentalSensor : environmentalSensors) {
-            mCachedEnvironmentalSensors.put(environmentalSensor.getId(), environmentalSensor);
+            mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
         }
         mCacheIsDirty = false;
     }
@@ -264,7 +260,7 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
     }
 
     @Nullable
-    private EnvironmentalSensor getEnvironmentalSensorWithId(@NonNull String id) {
+    private EnvironmentalSensor getEnvironmentalSensorWithId(@NonNull UUID id) {
         checkNotNull(id);
         if (mCachedEnvironmentalSensors == null || mCachedEnvironmentalSensors.isEmpty()) {
             return null;

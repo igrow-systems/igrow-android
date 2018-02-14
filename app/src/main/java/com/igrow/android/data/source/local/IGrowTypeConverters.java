@@ -3,12 +3,13 @@ package com.igrow.android.data.source.local;
 import android.arch.persistence.room.TypeConverter;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by jsr on 3/01/18.
  */
 
-public class TypeConverters {
+public class IGrowTypeConverters {
 
     @TypeConverter
     public Date fromTimestamp(Long value) {
@@ -24,5 +25,13 @@ public class TypeConverters {
         }
     }
 
-    //public Location
+    @TypeConverter
+    public UUID fromString(String value) {
+        return value == null ? null : UUID.fromString(value);
+    }
+
+    @TypeConverter
+    public String uuidToString(UUID uuid) {
+        return uuid == null ? null : uuidToString(uuid);
+    }
 }

@@ -8,6 +8,7 @@ import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 import com.igrow.android.util.AppExecutors;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -74,11 +75,11 @@ public class EnvironmentalSensorsLocalDataSource implements EnvironmentalSensors
      * found.
      */
     @Override
-    public void getEnvironmentalSensor(@NonNull final String environmentalSensorId, @NonNull final GetEnvironmentalSensorCallback callback) {
+    public void getEnvironmentalSensor(@NonNull final UUID sensorId, @NonNull final GetEnvironmentalSensorCallback callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final EnvironmentalSensor environmentalSensor = mEnvironmentalSensorsDao.getEnvironmentalSensorById(environmentalSensorId);
+                final EnvironmentalSensor environmentalSensor = mEnvironmentalSensorsDao.getEnvironmentalSensorById(sensorId);
 
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
@@ -127,11 +128,11 @@ public class EnvironmentalSensorsLocalDataSource implements EnvironmentalSensors
     }
 
     @Override
-    public void deleteEnvironmentalSensor(@NonNull final String environmentalSensorId) {
+    public void deleteEnvironmentalSensor(@NonNull final UUID sensorId) {
         Runnable deleteRunnable = new Runnable() {
             @Override
             public void run() {
-                mEnvironmentalSensorsDao.deleteEnvironmentalSensorById(environmentalSensorId);
+                mEnvironmentalSensorsDao.deleteEnvironmentalSensorById(sensorId);
             }
         };
 

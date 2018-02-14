@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.igrow.android.data.EnvironmentalSensor;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by jsr on 2/01/18.
@@ -28,7 +29,7 @@ public interface EnvironmentalSensorsDataSource {
 
     void getEnvironmentalSensors(@NonNull LoadEnvironmentalSensorsCallback callback);
 
-    void getEnvironmentalSensor(@NonNull String environmentalSensorId, @NonNull GetEnvironmentalSensorCallback callback);
+    void getEnvironmentalSensor(@NonNull UUID sensorId, @NonNull GetEnvironmentalSensorCallback callback);
 
     void saveEnvironmentalSensor(@NonNull EnvironmentalSensor environmentalSensor);
 
@@ -36,5 +37,5 @@ public interface EnvironmentalSensorsDataSource {
 
     void deleteAllEnvironmentalSensors();
 
-    void deleteEnvironmentalSensor(@NonNull String environmentalSensorId);
+    void deleteEnvironmentalSensor(@NonNull UUID environmentalSensorId);
 }

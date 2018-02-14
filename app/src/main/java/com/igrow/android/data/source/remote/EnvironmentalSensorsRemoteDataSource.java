@@ -25,6 +25,7 @@ import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Implementation of the data source that adds a latency simulating network.
@@ -35,7 +36,7 @@ public class EnvironmentalSensorsRemoteDataSource implements EnvironmentalSensor
 
     private static final int SERVICE_LATENCY_IN_MILLIS = 2000;
 
-    private final static Map<String, EnvironmentalSensor> ENVIRONMENTAL_SENSORS_SERVICE_DATA;
+    private final static Map<UUID, EnvironmentalSensor> ENVIRONMENTAL_SENSORS_SERVICE_DATA;
 
     static {
         ENVIRONMENTAL_SENSORS_SERVICE_DATA = new LinkedHashMap<>(2);
@@ -70,8 +71,11 @@ public class EnvironmentalSensorsRemoteDataSource implements EnvironmentalSensor
 
     private static void addEnvironmentalSensor(String address, String fullName) {
         EnvironmentalSensor newEnvironmentalSensor = new EnvironmentalSensor.EnvironmentalSensorBuilder()
-                .setAddress(address).setFullName(fullName).build();
-        ENVIRONMENTAL_SENSORS_SERVICE_DATA.put(newEnvironmentalSensor.getId(), newEnvironmentalSensor);
+                .setId(UUID.randomUUID())
+                .setAddress(address)
+                .setFullName(fullName)
+                .build();
+        ENVIRONMENTAL_SENSORS_SERVICE_DATA.put(newEnvironmentalSensor.getSensorId(), newEnvironmentalSensor);
     }
 
     /**
@@ -97,8 +101,8 @@ public class EnvironmentalSensorsRemoteDataSource implements EnvironmentalSensor
      * returns an error.
      */
     @Override
-    public void getEnvironmentalSensor(@NonNull String environmentalSensorsId, final @NonNull GetEnvironmentalSensorCallback callback) {
-        final EnvironmentalSensor environmentalSensors = ENVIRONMENTAL_SENSORS_SERVICE_DATA.get(environmentalSensorsId);
+    public void getEnvironmentalSensor(@NonNull UUID sensorId, final @NonNull GetEnvironmentalSensorCallback callback) {
+        final EnvironmentalSensor environmentalSensors = ENVIRONMENTAL_SENSORS_SERVICE_DATA.get(sensorId);
 
         // Simulate network by delaying the execution.
         Handler handler = new Handler();
@@ -112,7 +116,7 @@ public class EnvironmentalSensorsRemoteDataSource implements EnvironmentalSensor
 
     @Override
     public void saveEnvironmentalSensor(@NonNull EnvironmentalSensor environmentalSensors) {
-        ENVIRONMENTAL_SENSORS_SERVICE_DATA.put(environmentalSensors.getId(), environmentalSensors);
+        ENVIRONMENTAL_SENSORS_SERVICE_DATA.put(environmentalSensors.getSensorId(), environmentalSensors);
     }
 
     @Override
@@ -127,7 +131,7 @@ public class EnvironmentalSensorsRemoteDataSource implements EnvironmentalSensor
     }
 
     @Override
-    public void deleteEnvironmentalSensor(@NonNull String environmentalSensorsId) {
-        ENVIRONMENTAL_SENSORS_SERVICE_DATA.remove(environmentalSensorsId);
+    public void deleteEnvironmentalSensor(@NonNull UUID sensorId) {
+        ENVIRONMENTAL_SENSORS_SERVICE_DATA.remove(sensorId);
     }
 }
