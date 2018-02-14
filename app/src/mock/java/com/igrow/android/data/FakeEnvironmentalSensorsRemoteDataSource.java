@@ -6,9 +6,9 @@ import android.support.annotation.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by jsr on 3/01/18.
@@ -18,7 +18,7 @@ public class FakeEnvironmentalSensorsRemoteDataSource implements EnvironmentalSe
 
         private static FakeEnvironmentalSensorsRemoteDataSource INSTANCE;
 
-        private static final Map<String, EnvironmentalSensor> TASKS_SERVICE_DATA = new LinkedHashMap<>();
+        private static final Map<UUID, EnvironmentalSensor> TASKS_SERVICE_DATA = new LinkedHashMap<>();
 
         // Prevent direct instantiation.
         private FakeEnvironmentalSensorsRemoteDataSource() {}
@@ -36,14 +36,14 @@ public class FakeEnvironmentalSensorsRemoteDataSource implements EnvironmentalSe
         }
 
         @Override
-        public void getEnvironmentalSensor(@NonNull String environmentalSensorId, @NonNull GetEnvironmentalSensorCallback callback) {
-            EnvironmentalSensor environmentalSensor = TASKS_SERVICE_DATA.get(environmentalSensorId);
+        public void getEnvironmentalSensor(@NonNull UUID sensorId, @NonNull GetEnvironmentalSensorCallback callback) {
+            EnvironmentalSensor environmentalSensor = TASKS_SERVICE_DATA.get(sensorId);
             callback.onEnvironmentalSensorLoaded(environmentalSensor);
         }
 
         @Override
         public void saveEnvironmentalSensor(@NonNull EnvironmentalSensor environmentalSensor) {
-            TASKS_SERVICE_DATA.put(environmentalSensor.getId(), environmentalSensor);
+            TASKS_SERVICE_DATA.put(environmentalSensor.getSensorId(), environmentalSensor);
         }
 
         public void refreshEnvironmentalSensors() {
@@ -52,8 +52,8 @@ public class FakeEnvironmentalSensorsRemoteDataSource implements EnvironmentalSe
         }
 
         @Override
-        public void deleteEnvironmentalSensor(@NonNull String environmentalSensorId) {
-            TASKS_SERVICE_DATA.remove(environmentalSensorId);
+        public void deleteEnvironmentalSensor(@NonNull UUID sensorId) {
+            TASKS_SERVICE_DATA.remove(sensorId);
         }
 
         @Override
@@ -65,7 +65,7 @@ public class FakeEnvironmentalSensorsRemoteDataSource implements EnvironmentalSe
         public void addEnvironmentalSensors(EnvironmentalSensor... environmentalSensors) {
             if (environmentalSensors != null) {
                 for (EnvironmentalSensor environmentalSensor : environmentalSensors) {
-                    TASKS_SERVICE_DATA.put(environmentalSensor.getId(), environmentalSensor);
+                    TASKS_SERVICE_DATA.put(environmentalSensor.getSensorId(), environmentalSensor);
                 }
             }
         }
