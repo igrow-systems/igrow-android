@@ -39,7 +39,7 @@ android {
 
         debug {
             minifyEnabled false // TODO temporarily false due to dependency on play-services-base
-                                // - only debug Build Type affected
+            // - only debug Build Type affected
             // Uses new built-in shrinker http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
             useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -81,7 +81,6 @@ android {
 
     testOptions {
         unitTests {
-
 
 
             all {
@@ -133,6 +132,8 @@ dependencies {
 
     // Google Dagger
     implementation 'com.google.dagger:dagger:2.10'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:support-v4:27.0.2'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
 
     // RxJava
