@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 iGrow Systems Limited. All rights reserved.
+ * Copyright 2018 iGrow Systems Limited. All rights reserved.
  *
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -11,100 +11,104 @@
 
 package com.igrow.android.addeditsensor;
 
-import android.content.Intent;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.igrow.android.R;
-import com.igrow.android.sensors.EnvironmentalSensorsFragment;
-import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
-import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
+import com.igrow.android.ViewModelFactory;
+import com.igrow.android.util.ActivityUtils;
 
 
 /**
- * An activity representing a list of EnvironmentalSensors. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link EnvironmentalSensorDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- * <p/>
- * The activity makes heavy use of fragments. The list of items is a
- * {@link EnvironmentalSensorsFragment} and the item details
- * (if present) is a {@link EnvironmentalSensorDetailFragment}.
- * <p/>
- * This activity also implements the required
- * {@link EnvironmentalSensorsFragment.Callbacks} interface
- * to listen for item selections.
+ * An activity started when adding or editing an EnvironmentalSensor.
+ *
  */
-public class EnvironmentalSensorAddEditActivity extends FragmentActivity
-        implements EnvironmentalSensorsFragment.Callbacks {
+public class EnvironmentalSensorAddEditActivity extends AppCompatActivity
+        implements AddEditSensorNavigator {
 
     public static final int REQUEST_CODE = 1;
 
     public static final int ADD_EDIT_RESULT_OK = RESULT_FIRST_USER + 1;
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
-
-    private CardView mCardView;
-
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private RecyclerView.Adapter mAdapter;
+    @Override
+    public void onSensorSaved() {
+        setResult(ADD_EDIT_RESULT_OK);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_environmentalsensor_list);
-
-        if (findViewById(com.igrow.android.R.id.environmentalsensor_detail_fragment) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-large and
-            // res/values-sw600dp). If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-
-            // In two-pane mode, list items should be given the
-            // 'activated' state when touched.
-//            ((EnvironmentalSensorsFragment) getSupportFragmentManager()
-//                    .findFragmentById(com.igrow.android.R.id.environmentalsensor_list))
-//                    .setActivateOnItemClick(true);
-        }
-
+        setContentView(R.layout.add_edit_sensor_act);
 
         // TODO: If exposing deep links into your app, handle intents here.
+
+        // Set up the toolbar.
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
+        EnvironmentalSensorAddEditFragment addEditSensorFragment = obtainViewFragment();
+
+        ActivityUtils.replaceFragmentInActivity(getSupportFragmentManager(),
+                addEditSensorFragment, R.id.contentFrame);
+
+        subscribeToNavigationChanges();
     }
 
-    /**
-     * Callback method from {@link EnvironmentalSensorsFragment.Callbacks}
-     * indicating that the item with the given ID was selected.
-     */
-    @Override
-    public void onItemSelected(String id) {
-        if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(EnvironmentalSensorDetailFragment.ARG_ITEM_ID, id);
-            EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(com.igrow.android.R.id.environmentalsensor_detail_fragment, fragment)
-                    .commit();
+    private void subscribeToNavigationChanges() {
+        EnvironmentalSensorAddEditViewModel viewModel = obtainViewModel(this);
 
-        } else {
-            // In single-pane mode, simply start the detail activity
-            // for the selected item ID.
-            Intent detailIntent = new Intent(this, EnvironmentalSensorDetailActivity.class);
-            detailIntent.putExtra(EnvironmentalSensorDetailFragment.ARG_ITEM_ID, id);
-            startActivity(detailIntent);
+        // The activity observes the navigation events in the ViewModel
+        viewModel.getSensorUpdatedEvent().observe(this, new Observer<Void>() {
+            @Override
+            public void onChanged(@Nullable Void _) {
+                EnvironmentalSensorAddEditActivity.this.onSensorSaved();
+            }
+        });
+    }
+
+    public static EnvironmentalSensorAddEditViewModel obtainViewModel(FragmentActivity activity) {
+        // Use a Factory to inject dependencies into the ViewModel
+        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
+
+        return ViewModelProviders.of(activity, factory).get(EnvironmentalSensorAddEditViewModel.class);
+    }
+
+    @NonNull
+    private EnvironmentalSensorAddEditFragment obtainViewFragment() {
+        // View Fragment
+        EnvironmentalSensorAddEditFragment addEditTaskFragment = (EnvironmentalSensorAddEditFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.contentFrame);
+
+        if (addEditTaskFragment == null) {
+            addEditTaskFragment = EnvironmentalSensorAddEditFragment.newInstance();
+
+            if (getIntent().getStringExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_EDIT_SENSOR_ID) != null) {
+                // Send the sensor ID to the fragment
+                Bundle bundle = new Bundle();
+                bundle.putString(EnvironmentalSensorAddEditFragment.ARGUMENT_EDIT_SENSOR_ID,
+                        getIntent().getStringExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_EDIT_SENSOR_ID));
+                addEditTaskFragment.setArguments(bundle);
+            } else {
+                // send the address and name
+                Bundle bundle = new Bundle();
+                bundle.putString(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_ADDRESS,
+                        getIntent().getStringExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_ADDRESS));
+                bundle.putString(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_NAME,
+                        getIntent().getStringExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_NAME));
+                addEditTaskFragment.setArguments(bundle);
+            }
         }
+        return addEditTaskFragment;
     }
 }

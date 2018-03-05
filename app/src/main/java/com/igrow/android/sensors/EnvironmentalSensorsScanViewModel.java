@@ -51,8 +51,6 @@ public class EnvironmentalSensorsScanViewModel extends RecyclerViewViewModel {
 
     public final ObservableBoolean sensorsAddViewVisible = new ObservableBoolean();
 
-    //private MutableLiveData<List<EnvironmentalSensor>> mEnvironmentalSensorList;
-
     private final EnvironmentalSensorsRepository mEnvironmentalSensorsRepository;
 
     private final ObservableBoolean mIsDataLoadingError = new ObservableBoolean(false);
@@ -61,27 +59,32 @@ public class EnvironmentalSensorsScanViewModel extends RecyclerViewViewModel {
 
     private EnvironmentalSensorsFilterType mCurrentFiltering = EnvironmentalSensorsFilterType.ALL_SENSORS;
 
-    private final SingleLiveEvent<String> mOpenEnvironmentalSensorEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<EnvironmentalSensorAddSensorEventArgs> mAddEnvironmentalSensorEvent = new SingleLiveEvent<>();
 
     private final SingleLiveEvent<Void> mNewEnvironmentalSensorEvent = new SingleLiveEvent<>();
 
     private final SingleLiveEvent<Void> mUpdateEnvironmentalSensorEvent = new SingleLiveEvent<>();
 
+    private final EnvironmentalSensorsRecyclerViewAdapter mAdapter;
+
     private final Context mContext;
 
-    private final EnvironmentalSensorsRecyclerViewAdapter mAdapter;
+    private int mCurrentSelectionIndex;
 
     @Inject
     public EnvironmentalSensorsScanViewModel(Application context, EnvironmentalSensorsRepository environmentalSensorsRepository) {
         super(context);
         this.mContext = context.getApplicationContext();
         this.mEnvironmentalSensorsRepository = environmentalSensorsRepository;
-        this.mAdapter = new EnvironmentalSensorsRecyclerViewAdapter(new ArrayList<EnvironmentalSensor>(0),
+        this.mAdapter = new EnvironmentalSensorsRecyclerViewAdapter(new ArrayList<>(0),
                 new EnvironmentalSensorsRecyclerViewAdapter.OnItemClickListener() {
                     @Override
-                    public void onItemClick(EnvironmentalSensor item) {
-                        mOpenEnvironmentalSensorEvent.call();
-                        //mCallbacks.onItemSelected(item.getAddress());
+                    public void onItemClick(EnvironmentalSensor sensor) {
+                        mCurrentSelectionIndex = sensors.indexOf(sensor);
+                        EnvironmentalSensorAddSensorEventArgs eventArgs = new EnvironmentalSensorAddSensorEventArgs(
+                                sensor.getAddress(),
+                                sensor.getFullName());
+                        mAddEnvironmentalSensorEvent.setValue(eventArgs);
                     }
                 });
     }
@@ -109,14 +112,14 @@ public class EnvironmentalSensorsScanViewModel extends RecyclerViewViewModel {
             case ALL_SENSORS:
                 currentFilteringLabel.set(mContext.getString(R.string.label_all));
                 noSensorsLabel.set(mContext.getResources().getString(R.string.no_sensors_all));
-                noSensorIconRes.set(mContext.getResources().getDrawable(
+                noSensorIconRes.set(getApplication().getApplicationContext().getResources().getDrawable(
                         R.drawable.ic_assignment_turned_in_24dp));
                 sensorsAddViewVisible.set(true);
                 break;
             case ACTIVE_SENSORS:
                 currentFilteringLabel.set(mContext.getString(R.string.label_active));
                 noSensorsLabel.set(mContext.getResources().getString(R.string.no_sensors_active));
-                noSensorIconRes.set(mContext.getResources().getDrawable(
+                noSensorIconRes.set(getApplication().getApplicationContext().getResources().getDrawable(
                         R.drawable.ic_check_circle_24dp));
                 sensorsAddViewVisible.set(false);
                 break;
@@ -134,8 +137,8 @@ public class EnvironmentalSensorsScanViewModel extends RecyclerViewViewModel {
         return mSnackbarText;
     }
 
-    SingleLiveEvent<String> getOpenEnvironmentalSensorEvent() {
-        return mOpenEnvironmentalSensorEvent;
+    SingleLiveEvent<EnvironmentalSensorAddSensorEventArgs> getAddEnvironmentalSensorEvent() {
+        return mAddEnvironmentalSensorEvent;
     }
 
     SingleLiveEvent<Void> getNewEnvironmentalSensorEvent() {

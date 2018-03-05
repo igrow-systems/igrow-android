@@ -1,5 +1,6 @@
 package com.igrow.android.sensors;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -9,18 +10,19 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.igrow.android.Injection;
 import com.igrow.android.ViewModelFactory;
+import com.igrow.android.addeditsensor.EnvironmentalSensorAddEditActivity;
+import com.igrow.android.addeditsensor.EnvironmentalSensorAddEditFragment;
 import com.igrow.android.bluetooth.BluetoothLeScanService;
 import com.igrow.android.bluetooth.EnvironmentalSensorBLEScanUpdate;
-import com.igrow.android.sensor.EnvironmentalSensorCollection;
 import com.igrow.android.R;
 import com.igrow.android.bluetooth.LocalBinder;
-import com.igrow.android.data.EnvironmentalSensor;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
 
@@ -37,15 +39,11 @@ import static com.igrow.android.bluetooth.BluetoothLeScanServiceImpl.EXTRA_UPDAT
  * item details side-by-side using two vertical panes.
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
- * {@link EnvironmentalSensorsFragment} and the item details
+ * {@link EnvironmentalSensorsScanFragment} and the item details
  * (if present) is a {@link EnvironmentalSensorDetailFragment}.
  * <p/>
- * This activity also implements the required
- * {@link EnvironmentalSensorsFragment.Callbacks} interface
- * to listen for item selections.
  */
-public class EnvironmentalSensorsScanActivity extends FragmentActivity
-        implements EnvironmentalSensorsFragment.Callbacks {
+public class EnvironmentalSensorsScanActivity extends FragmentActivity {
 
     private final static String TAG = EnvironmentalSensorsScanActivity.class.getSimpleName();
 
@@ -57,7 +55,7 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
      */
     private boolean mTwoPane;
 
-    private EnvironmentalSensorsFragment mRecyclerViewFragment;
+    private EnvironmentalSensorsScanFragment mRecyclerViewFragment;
 
     private BluetoothLeScanService mBluetoothLeScanService;
 
@@ -80,22 +78,31 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_environmentalsensor_scan_list);
+        setContentView(R.layout.environmentalsensors_scan_act);
 
         setupViewFragment(savedInstanceState);
         // TODO: If exposing deep links into your app, handle intents here.
         mViewModel = obtainViewModel(this);
+
+        mViewModel.getAddEnvironmentalSensorEvent().observe(this, new Observer<EnvironmentalSensorAddSensorEventArgs>() {
+            @Override
+            public void onChanged(@Nullable EnvironmentalSensorAddSensorEventArgs addSensorEventArgs) {
+                onItemSelected(
+                        addSensorEventArgs.getAddress(),
+                        addSensorEventArgs.getName());
+            }
+        });
     }
 
     void setupViewFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            mRecyclerViewFragment = new EnvironmentalSensorsFragment();
+            mRecyclerViewFragment = EnvironmentalSensorsScanFragment.newInstance();
             transaction.replace(R.id.fragment_environmentalsensor_list, mRecyclerViewFragment);
             transaction.commit();
         }
 
-        if (findViewById(R.id.environmentalsensor_detail_fragment) != null) {
+        if (findViewById(R.id.sensor_detail_frag) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
@@ -104,8 +111,8 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-//            ((EnvironmentalSensorsFragment) getSupportFragmentManager()
-//                    .findFragmentById(com.igrow.android.R.id.fragment_environmentalsensor_detail))
+//            ((EnvironmentalSensorsScanFragment) getSupportFragmentManager()
+//                    .findFragmentById(com.igrow.android.R.id.sensor_detail_frag))
 //                    .setActivateOnItemClick(true);
         }
     }
@@ -159,30 +166,27 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
         mBluetoothLeScanServiceBound = false;
     }
 
-    /**
-     * Callback method from {@link EnvironmentalSensorsFragment.Callbacks}
-     * indicating that the item with the given ID was selected.
-     */
-    @Override
-    public void onItemSelected(String id) {
+    private void onItemSelected(String address, String name) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(EnvironmentalSensorDetailFragment.ARG_ITEM_ID, id);
+            arguments.putString(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_ADDRESS, address);
+            arguments.putString(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_NAME, name);
             EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.environmentalsensor_detail_fragment, fragment)
+                    .replace(R.id.fragment_environmentalsensor_list, fragment)
                     .commit();
 
         } else {
-            // In single-pane mode, simply start the detail activity
-            // for the selected item ID.
-            Intent detailIntent = new Intent(this, EnvironmentalSensorDetailActivity.class);
-            detailIntent.putExtra(EnvironmentalSensorDetailFragment.ARG_ITEM_ID, id);
-            startActivity(detailIntent);
+            // In single-pane mode, simply start the add/edit activity
+            // for the selected item address and name.
+            Intent addIntent = new Intent(this, EnvironmentalSensorAddEditActivity.class);
+            addIntent.putExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_ADDRESS, address);
+            addIntent.putExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_NAME, name);
+            startActivityForResult(addIntent, EnvironmentalSensorAddEditActivity.REQUEST_CODE);
         }
     }
 
@@ -190,6 +194,11 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity
 
         mViewModel.handleEnvironmentalSensorUpdate(sensorScanUpdate);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mViewModel.handleActivityResult(requestCode, resultCode);
     }
 
     /** Defines callbacks for service binding, passed to bindService() */

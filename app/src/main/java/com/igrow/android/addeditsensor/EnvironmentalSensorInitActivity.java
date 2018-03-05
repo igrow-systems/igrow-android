@@ -18,7 +18,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 
 import com.igrow.android.R;
-import com.igrow.android.sensors.EnvironmentalSensorsFragment;
+import com.igrow.android.sensors.EnvironmentalSensorsScanFragment;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
 
@@ -32,15 +32,11 @@ import com.igrow.android.sensordetail.EnvironmentalSensorDetailFragment;
  * item details side-by-side using two vertical panes.
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
- * {@link EnvironmentalSensorsFragment} and the item details
+ * {@link EnvironmentalSensorsScanFragment} and the item details
  * (if present) is a {@link EnvironmentalSensorDetailFragment}.
  * <p/>
- * This activity also implements the required
- * {@link EnvironmentalSensorsFragment.Callbacks} interface
- * to listen for item selections.
  */
-public class EnvironmentalSensorInitActivity extends FragmentActivity
-        implements EnvironmentalSensorsFragment.Callbacks {
+public class EnvironmentalSensorInitActivity extends FragmentActivity {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -57,9 +53,9 @@ public class EnvironmentalSensorInitActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.igrow.android.R.layout.activity_environmentalsensor_list);
+        setContentView(com.igrow.android.R.layout.environmentalsensors_act);
 
-        if (findViewById(R.id.environmentalsensor_detail_fragment) != null) {
+        if (findViewById(R.id.sensor_detail_frag) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
@@ -68,7 +64,7 @@ public class EnvironmentalSensorInitActivity extends FragmentActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-//            ((EnvironmentalSensorsFragment) getSupportFragmentManager()
+//            ((EnvironmentalSensorsScanFragment) getSupportFragmentManager()
 //                    .findFragmentById(com.igrow.android.R.id.environmentalsensor_list))
 //                    .setActivateOnItemClick(true);
         }
@@ -77,29 +73,24 @@ public class EnvironmentalSensorInitActivity extends FragmentActivity
         // TODO: If exposing deep links into your app, handle intents here.
     }
 
-    /**
-     * Callback method from {@link EnvironmentalSensorsFragment.Callbacks}
-     * indicating that the item with the given ID was selected.
-     */
-    @Override
     public void onItemSelected(String id) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(EnvironmentalSensorDetailFragment.ARG_ITEM_ID, id);
+            arguments.putString(EnvironmentalSensorDetailFragment.ARGUMENT_SENSOR_ID, id);
             EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.environmentalsensor_detail_fragment, fragment)
+                    .replace(R.id.sensor_detail_frag, fragment)
                     .commit();
 
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Intent detailIntent = new Intent(this, EnvironmentalSensorDetailActivity.class);
-            detailIntent.putExtra(EnvironmentalSensorDetailFragment.ARG_ITEM_ID, id);
+            detailIntent.putExtra(EnvironmentalSensorDetailFragment.ARGUMENT_SENSOR_ID, id);
             startActivity(detailIntent);
         }
     }

@@ -1,13 +1,14 @@
 package com.igrow.android.sensors;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.content.Context;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableList;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.igrow.android.R;
 import com.igrow.android.SingleLiveEvent;
@@ -16,10 +17,13 @@ import com.igrow.android.addeditsensor.EnvironmentalSensorAddEditActivity;
 import com.igrow.android.data.EnvironmentalSensor;
 import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 import com.igrow.android.data.source.EnvironmentalSensorsRepository;
+import com.igrow.android.recyclerview.RecyclerViewAdapter;
+import com.igrow.android.recyclerview.RecyclerViewViewModel;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -27,7 +31,7 @@ import javax.inject.Inject;
  * Created by jsr on 2/01/18.
  */
 
-public class EnvironmentalSensorsViewModel extends AndroidViewModel {
+public class EnvironmentalSensorsViewModel extends RecyclerViewViewModel {
 
     // These observable fields will update Views automatically
     public final ObservableList<EnvironmentalSensor> sensors = new ObservableArrayList<>();
@@ -44,8 +48,6 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
 
     public final ObservableBoolean sensorsAddViewVisible = new ObservableBoolean();
 
-    //private MutableLiveData<List<EnvironmentalSensor>> mEnvironmentalSensorList;
-
     private final EnvironmentalSensorsRepository mEnvironmentalSensorsRepository;
 
     private final ObservableBoolean mIsDataLoadingError = new ObservableBoolean(false);
@@ -54,9 +56,11 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
 
     private EnvironmentalSensorsFilterType mCurrentFiltering = EnvironmentalSensorsFilterType.ALL_SENSORS;
 
-    private final SingleLiveEvent<String> mOpenEnvironmentalSensorEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<UUID> mOpenEnvironmentalSensorEvent = new SingleLiveEvent<>();
 
     private final SingleLiveEvent<Void> mNewEnvironmentalSensorEvent = new SingleLiveEvent<>();
+
+    private final EnvironmentalSensorsRecyclerViewAdapter mAdapter;
 
     private final Context mContext;
 
@@ -65,6 +69,14 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
         super(context);
         this.mContext = context.getApplicationContext();
         this.mEnvironmentalSensorsRepository = environmentalSensorsRepository;
+        this.mAdapter = new EnvironmentalSensorsRecyclerViewAdapter(new ArrayList<>(0),
+                new EnvironmentalSensorsRecyclerViewAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(EnvironmentalSensor sensor) {
+                        // do stuff
+                        openEnvironmentalSensor(sensor.getSensorId());
+                    }
+                });
     }
 
     public void start() {
@@ -115,7 +127,7 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
         return mSnackbarText;
     }
 
-    SingleLiveEvent<String> getOpenEnvironmentalSensorEvent() {
+    SingleLiveEvent<UUID> getOpenEnvironmentalSensorEvent() {
         return mOpenEnvironmentalSensorEvent;
     }
 
@@ -134,6 +146,13 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
         mNewEnvironmentalSensorEvent.call();
     }
 
+    /**
+     * Called by the Data Binding library and the RecyclerView's click listener.
+     */
+    public void openEnvironmentalSensor(UUID id) {
+        mOpenEnvironmentalSensorEvent.setValue(id);
+    }
+
     void handleActivityResult(int requestCode, int resultCode) {
         if (EnvironmentalSensorAddEditActivity.REQUEST_CODE == requestCode) {
             switch (resultCode) {
@@ -148,6 +167,13 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
                     break;
             }
         }
+    }
+
+    /**
+     * Called by the Data Binding library and the FAB's click listener.
+     */
+    public void addNewSensor() {
+        mNewEnvironmentalSensorEvent.call();
     }
 
     /**
@@ -206,5 +232,15 @@ public class EnvironmentalSensorsViewModel extends AndroidViewModel {
                 mIsDataLoadingError.set(true);
             }
         });
+    }
+
+    @Override
+    protected RecyclerViewAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    @Override
+    protected RecyclerView.LayoutManager createLayoutManager() {
+        return new LinearLayoutManager(mContext);
     }
 }

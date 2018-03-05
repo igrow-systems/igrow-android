@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="com.igrow.android.sensors.EnvironmentalSensorsScanViewModel" />
+            type="com.igrow.android.sensors.EnvironmentalSensorsViewModel" />
 
     </data>
 

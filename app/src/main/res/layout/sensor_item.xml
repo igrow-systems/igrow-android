@@ -18,6 +18,10 @@
         <variable
             name="viewmodel"
             type="com.igrow.android.sensor.EnvironmentalSensorViewModel" />
+
+        <variable
+            name="listener"
+            type="com.igrow.android.recyclerview.ItemUserActionsListener" />
     </data>
 
     <LinearLayout
@@ -28,7 +32,8 @@
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="16dp">
+        android:paddingTop="16dp"
+        android:onClick="@{() -> listener.onClick()}">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -41,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="top"
-                android:text="@{viewmodel.fullname}"
+                android:text="@{viewmodel.sensor.getFullName()}"
                 android:textSize="24dp" />
 
             <TextView
@@ -50,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="bottom"
-                android:text="@{viewmodel.address}"
+                android:text="@{viewmodel.sensor.getAddress()}"
                 android:textSize="12dp" />
 
         </LinearLayout>
