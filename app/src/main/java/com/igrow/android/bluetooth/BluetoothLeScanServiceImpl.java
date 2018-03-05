@@ -92,7 +92,7 @@ public class BluetoothLeScanServiceImpl extends Service
 
             final int temperature = characteristic.getIntValue(format, 1);
             Log.d(TAG, String.format("Received temperature: %d", temperature));
-            intent.putExtra(BluetoothLeService.EXTRA_DATA, String.valueOf(temperature));
+            intent.putExtra(BluetoothLeServiceImpl.EXTRA_DATA, String.valueOf(temperature));
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
@@ -100,7 +100,7 @@ public class BluetoothLeScanServiceImpl extends Service
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(BluetoothLeService.EXTRA_DATA, new String(data)
+                intent.putExtra(BluetoothLeServiceImpl.EXTRA_DATA, new String(data)
                         + "\n" + stringBuilder.toString());
             }
         }
