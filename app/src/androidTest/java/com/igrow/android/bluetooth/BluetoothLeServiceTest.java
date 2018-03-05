@@ -7,8 +7,6 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.igrow.android.bluetooth.BluetoothLeService;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,16 +35,16 @@ public class BluetoothLeServiceTest {
     @Mock
     BluetoothGatt mBluetoothGatt;
 
-    BluetoothLeService mBluetoothLeService;
+    BluetoothLeServiceImpl mBluetoothLeServiceImpl;
 
     @Before
     public void setUp() throws Exception {
-        mBluetoothLeService = new BluetoothLeService();
+        mBluetoothLeServiceImpl = new BluetoothLeServiceImpl();
     }
 
     @After
     public void tearDown() throws Exception {
-        mBluetoothLeService.close();
+        mBluetoothLeServiceImpl.close();
     }
 
     @Test
