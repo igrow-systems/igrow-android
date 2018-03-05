@@ -3,8 +3,10 @@ package com.igrow.android.sensordetail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.igrow.android.R;
 import com.igrow.android.sensors.EnvironmentalSensorsActivity;
 
 /**
@@ -18,8 +20,6 @@ import com.igrow.android.sensors.EnvironmentalSensorsActivity;
  */
 public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
 
-    public static final String EXTRA_SENSOR_ID = "SENSOR_ID";
-
     public static final int DELETE_RESULT_OK = RESULT_FIRST_USER + 2;
 
     public static final int EDIT_RESULT_OK = RESULT_FIRST_USER + 3;
@@ -27,8 +27,11 @@ public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.igrow.android.R.layout.activity_environmentalsensor_detail);
+        setContentView(com.igrow.android.R.layout.sensor_detail_act);
 
+        // Set up the toolbar.
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -45,12 +48,12 @@ public class EnvironmentalSensorDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(EnvironmentalSensorDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(EnvironmentalSensorDetailFragment.ARG_ITEM_ID));
+            arguments.putString(EnvironmentalSensorDetailFragment.ARGUMENT_SENSOR_ID,
+                    getIntent().getStringExtra(EnvironmentalSensorDetailFragment.ARGUMENT_SENSOR_ID));
             EnvironmentalSensorDetailFragment fragment = new EnvironmentalSensorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(com.igrow.android.R.id.environmentalsensor_detail_fragment, fragment)
+                    .add(com.igrow.android.R.id.content_frame, fragment)
                     .commit();
         }
     }

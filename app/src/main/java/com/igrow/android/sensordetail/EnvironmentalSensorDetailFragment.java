@@ -45,7 +45,7 @@ public class EnvironmentalSensorDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARGUMENT_SENSOR_ID = "com.igrow.android.sensordetail.ARGUMENT_SENSOR_ID";
 
     /**
      * The dummy content this fragment is presenting.
@@ -67,18 +67,19 @@ public class EnvironmentalSensorDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ARGUMENT_SENSOR_ID)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            String fakeId = "1";
+            mItem = DummyContent.ITEM_MAP.get(fakeId);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(com.igrow.android.R.layout.fragment_environmentalsensor_detail,
+        View rootView = inflater.inflate(com.igrow.android.R.layout.sensor_detail_frag,
                 container, false);
 
         // Show the dummy content as text in a TextView.
