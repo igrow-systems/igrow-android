@@ -30,6 +30,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
         <!--
         <activity
             android:name=".SignInActivity"
@@ -39,17 +40,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-->
+        </activity
+        -->
         <activity
             android:name=".sensors.EnvironmentalSensorsActivity"
             android:label="@string/title_environmentalsensor_list"
-            android:parentActivityName=".sensors.EnvironmentalSensorsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".sensors.EnvironmentalSensorsActivity" />
-            <!--<intent-filter>
-                <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
-            </intent-filter> -->
+            android:parentActivityName=".sensors.EnvironmentalSensorsActivity"
+            android:theme="@style/AppTheme.OverlapSystemBar">
         </activity>
         <activity
             android:name=".sensors.EnvironmentalSensorsScanActivity"
@@ -58,21 +55,29 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".sensors.EnvironmentalSensorsActivity" />
-            <!--<intent-filter>
-                <action android:name="com.igrow.android.ACTION_SCAN_UPDATE"></action>
-            </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".addeditsensor.EnvironmentalSensorAddEditActivity"
+            android:label="@string/add_edit_sensor"
+            android:parentActivityName=".sensors.EnvironmentalSensorsScanActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".sensors.EnvironmentalSensorsScanActivity" />
         </activity>
         <activity
             android:name=".sensordetail.EnvironmentalSensorDetailActivity"
             android:label="@string/title_environmentalsensor_detail"
-            android:parentActivityName=".sensors.EnvironmentalSensorsActivity">
+            android:parentActivityName=".sensors.EnvironmentalSensorsActivity"
+            android:theme="@style/AppTheme.OverlapSystemBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".sensors.EnvironmentalSensorsActivity" />
         </activity>
         <activity
-            android:name=".addeditsensor.EnvironmentalSensorInitActivity"
-            android:label="@string/title_environmentalsensor_init">
+            android:name=".statistics.StatisticsActivity"
+            android:label="@string/title_activity_statistics"
+            android:parentActivityName=".sensors.EnvironmentalSensorsActivity"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".sensors.EnvironmentalSensorsActivity" />
@@ -80,7 +85,7 @@
 
         <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
         <service
-            android:name=".bluetooth.BluetoothLeService"
+            android:name=".bluetooth.BluetoothLeServiceImpl"
             android:description="@string/service_ble_description"
             android:enabled="true"
             android:exported="false"
@@ -93,6 +98,7 @@
             android:exported="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/service_ble_scan_label" />
+
     </application>
 
 </manifest>
