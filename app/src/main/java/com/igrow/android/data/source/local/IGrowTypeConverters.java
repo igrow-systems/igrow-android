@@ -27,11 +27,12 @@ public class IGrowTypeConverters {
 
     @TypeConverter
     public UUID fromString(String value) {
+
         return value == null ? null : UUID.fromString(value);
     }
 
     @TypeConverter
     public String uuidToString(UUID uuid) {
-        return uuid == null ? null : uuidToString(uuid);
+        return uuid == null ? null : uuid.toString();
     }
 }
