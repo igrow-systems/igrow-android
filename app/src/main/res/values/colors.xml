@@ -2,5 +2,11 @@
 <resources>
     <color name="blue_grey_900">#263238</color>
 
+    <color name="colorPrimary">#455A64</color>
+    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorAccent">#D50000</color>
+
+    <!-- <drawable name="completedTaskBackground">#CCCCCC</drawable> -->
+
     <drawable name="touchFeedback">#CFD8DC</drawable>
 </resources>

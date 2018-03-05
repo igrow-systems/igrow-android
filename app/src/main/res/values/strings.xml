@@ -5,6 +5,8 @@
     <string name="title_environmentalsensor_list">Environmental Sensors</string>
     <string name="title_environmentalsensor_list_scan">Scan Environmental Sensors</string>
 
+    <string name="navigation_view_header_title">iGrow</string>
+
     <!-- Init Environmental Sensor -->
     <string name="title_environmentalsensor_init">New Environmental Sensor</string>
 
@@ -27,6 +29,15 @@
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
+
+    <string name="menu_clear">Clear inactive sensors</string>
+    <string name="menu_filter">Filter</string>
+    <string name="menu_refresh">Refresh</string>
+
+    <string name="menu_delete_sensor">Delete sensor</string>
+
+    <string name="list_title">Sensors</string>
+    <string name="statistics_title">Statistics</string>
 
     <!-- Service definitions -->
     <string name="service_ble_description">iGrow Bluetooth Low Energy Service</string>
@@ -83,5 +94,20 @@
     <string name="label_active">Active</string>
 
     <string name="no_sensors_add">Add a sensor +</string>
+
+    <!-- Add edit sensor -->
+    <string name="add_edit_sensor">Add/edit sensor</string>
+    <string name="add_sensor">New sensor</string>
+    <string name="edit_sensor">Edit sensor</string>
+    <string name="empty_sensor_message">Sensors must have a name</string>
+    <string name="address_hint">Bluetooth address</string>
+    <string name="fullname_hint">Enter the name of the sensor here.</string>
+    <string name="title_activity_statistics">StatisticsActivity</string>
+
+    <!-- Statistics -->
+    <string name="statistics_no_sensors">You have no sensors.</string>
+    <string name="statistics_active_sensors">Active sensors: %d</string>
+    <string name="statistics_error">Error loading statistics.</string>
+
 
 </resources>
