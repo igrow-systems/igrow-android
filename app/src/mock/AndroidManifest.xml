@@ -12,10 +12,8 @@
         <activity
             android:name=".sensors.EnvironmentalSensorsActivity"
             android:label="@string/title_environmentalsensor_list"
-            android:parentActivityName=".sensors.EnvironmentalSensorsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".sensors.EnvironmentalSensorsActivity" />
+            android:parentActivityName=".sensors.EnvironmentalSensorsActivity"
+            android:theme="@style/AppTheme.OverlapSystemBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
