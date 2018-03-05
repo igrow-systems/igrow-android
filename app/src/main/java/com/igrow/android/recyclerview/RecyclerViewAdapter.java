@@ -25,10 +25,16 @@ public abstract class RecyclerViewAdapter<ITEM_T, VIEW_MODEL_T extends ItemViewM
 
     protected final ArrayList<ITEM_T> items;
 
+    protected interface OnItemClickListener<ITEM_T> {
+        void onItemClick(ITEM_T item);
+    }
+
+    protected OnItemClickListener mListener;
+
+
     public RecyclerViewAdapter() {
         items = new ArrayList<>();
     }
-
 
     @Override
     public ItemViewHolder<ITEM_T, VIEW_MODEL_T> onCreateViewHolder(ViewGroup parent,
@@ -58,7 +64,15 @@ public abstract class RecyclerViewAdapter<ITEM_T, VIEW_MODEL_T extends ItemViewM
 
     @Override
     public final void onBindViewHolder(ItemViewHolder<ITEM_T, VIEW_MODEL_T> holder, int position) {
-        holder.setItem(items.get(position));
+        final ITEM_T item = items.get(position);
+        holder.setItem(item);
+        ItemUserActionsListener userActionsListener = new ItemUserActionsListener() {
+            @Override
+            public void onClick() {
+                mListener.onItemClick(item);
+            }
+        };
+        holder.binding.setVariable(BR.listener, userActionsListener);
     }
 
     @Override
@@ -74,6 +88,10 @@ public abstract class RecyclerViewAdapter<ITEM_T, VIEW_MODEL_T extends ItemViewM
 
     public List<ITEM_T> getItems() {
         return items;
+    }
+
+    public void setListener(OnItemClickListener listener) {
+        this.mListener = listener;
     }
 
     public static class ItemViewHolder<T, VT extends ItemViewModel<T>>
