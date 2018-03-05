@@ -6,10 +6,12 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.VisibleForTesting;
 
+import com.igrow.android.addeditsensor.EnvironmentalSensorAddEditViewModel;
 import com.igrow.android.data.source.EnvironmentalSensorsRepository;
 import com.igrow.android.sensor.EnvironmentalSensorViewModel;
 import com.igrow.android.sensors.EnvironmentalSensorsScanViewModel;
 import com.igrow.android.sensors.EnvironmentalSensorsViewModel;
+import com.igrow.android.statistics.StatisticsViewModel;
 
 /**
  * Created by jsr on 2/01/18.
@@ -64,10 +66,13 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(EnvironmentalSensorViewModel.class)) {
             //noinspection unchecked
             return (T) new EnvironmentalSensorViewModel();
-        } /*else if (modelClass.isAssignableFrom(EnvironmentalSensorsViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(EnvironmentalSensorAddEditViewModel.class)) {
             //noinspection unchecked
-            return (T) new EnvironmentalSensorsViewModel(mApplication, mEnvironmentalSensorsRepository);
-        }*/
+            return (T) new EnvironmentalSensorAddEditViewModel(mApplication, mEnvironmentalSensorsRepository);
+        } else if (modelClass.isAssignableFrom(StatisticsViewModel.class)) {
+            //noinspection unchecked
+            return (T) new StatisticsViewModel(mApplication, mEnvironmentalSensorsRepository);
+        }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 }
