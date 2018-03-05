@@ -92,7 +92,7 @@ public class EnvironmentalSensorsActivityTest {
     @Test
     public void addNewSensor_addedToCollection() throws Exception {
 
-        onView(ViewMatchers.withId(R.id.fab_environmentalsensor_list)).perform(click());
+        onView(ViewMatchers.withId(R.id.fab_add_sensor)).perform(click());
 
         intended(allOf(hasComponent(new ComponentName(getTargetContext(),
                         EnvironmentalSensorsScanActivity.class)),
@@ -121,7 +121,7 @@ public class EnvironmentalSensorsActivityTest {
         onView(allOf(withId(R.id.textview_device_address),
                 withText(TEST_ADDRESS))).perform(click());
 
-        onView(withId(R.id.fragment_environmentalsensor_detail)).check(matches(isDisplayed()));
+        onView(withId(R.id.sensor_detail_frag)).check(matches(isDisplayed()));
 
     }
 

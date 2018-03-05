@@ -16,6 +16,8 @@ import android.support.test.runner.AndroidJUnit4;
 import com.igrow.android.Injection;
 import com.igrow.android.R;
 import com.igrow.android.ViewModelFactory;
+import com.igrow.android.addeditsensor.EnvironmentalSensorAddEditActivity;
+import com.igrow.android.addeditsensor.EnvironmentalSensorAddEditFragment;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,7 +32,9 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.AllOf.allOf;
@@ -94,12 +98,13 @@ public class EnvironmentalSensorsScanActivityTest {
     }
 
     @Test
-    public void rowClick_displaysDetailFragment() throws Exception {
+    public void rowClick_startsEnvironmentalSensorAddEditActivity() throws Exception {
 
-        onView(allOf(withId(R.id.textview_device_address),
-                withText(TEST_ADDRESS))).perform(click());
+        onView(allOf(withId(R.id.sensor_item),
+                withChild(withId(R.id.textview_device_address)))).perform(click());
 
-        onView(withId(R.id.fragment_environmentalsensor_detail)).check(matches(isDisplayed()));
+        //intended(allOf(hasComponent(new ComponentName(getTargetContext(), EnvironmentalSensorAddEditActivity.class)),
+        //        hasExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_EDIT_SENSOR_ID, ));
 
     }
 
