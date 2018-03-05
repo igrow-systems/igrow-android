@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -31,6 +32,14 @@ import static org.mockito.Mockito.verify;
  */
 public class EnvironmentalSensorsRepositoryTest {
 
+    private final static UUID TEST_ID_1 = UUID.fromString("f24d1220-98ca-455c-a5ff-b39806ded040");
+
+    private final static UUID TEST_ID_2 = UUID.fromString("d2fb5bd2-815d-4171-a516-a3e35443f269");
+
+    private final static UUID TEST_ID_3 = UUID.fromString("ccf786b0-393c-4ae8-ac3a-4261cb79325b");
+
+    private final static UUID TEST_ID_4 = UUID.fromString("caf3ba38-af9a-4a66-b424-0a09052c5d26");
+
     private final static String TEST_ADDRESS_1 = "c0:9e:19:a7:ce:9c";
 
     private final static String TEST_ADDRESS_2 = "c0:a7:9e:19:9c:ce";
@@ -38,18 +47,24 @@ public class EnvironmentalSensorsRepositoryTest {
     private final static String TEST_ADDRESS_3 = "6e:73:dd:57:73:b6";
 
     // We initialise the sensors to 3
-    private final static EnvironmentalSensor sensor1 = new EnvironmentalSensor(TEST_ADDRESS_1,
+    private final static EnvironmentalSensor sensor1 = new EnvironmentalSensor(
+            TEST_ID_1,
+            TEST_ADDRESS_1,
             "Bottom of the garden",
             25, 1514936648636L,
             null,
             null);
-    private final static EnvironmentalSensor sensor2 = new EnvironmentalSensor(TEST_ADDRESS_2,
+    private final static EnvironmentalSensor sensor2 = new EnvironmentalSensor(
+            TEST_ID_2,
+            TEST_ADDRESS_2,
             "In the greenhouse",
             12,
             1514936648887L,
             null,
             null);
-    private final static EnvironmentalSensor sensor3 = new EnvironmentalSensor(TEST_ADDRESS_3,
+    private final static EnvironmentalSensor sensor3 = new EnvironmentalSensor(
+            TEST_ID_3,
+            TEST_ADDRESS_3,
             "Middle of polytunnel",
             37,
             1514936658621L,
@@ -116,7 +131,9 @@ public class EnvironmentalSensorsRepositoryTest {
     @Test
     public void saveEnvironmentalSensor_savesEnvironmentalSensorToServiceAPI() {
         // Given a stub task with title and description
-        EnvironmentalSensor newEnvironmentalSensor = new EnvironmentalSensor("96:af:0f:a0:2a:57",
+        EnvironmentalSensor newEnvironmentalSensor = new EnvironmentalSensor(
+                TEST_ID_4,
+                "96:af:0f:a0:2a:57",
                 "Basement",
                 9,
                 1514936642213L,
@@ -135,10 +152,10 @@ public class EnvironmentalSensorsRepositoryTest {
     @Test
     public void getEnvironmentalSensor_requestsSingleEnvironmentalSensorFromLocalDataSource() {
         // When a task is requested from the environmental sensors repository
-        mEnvironmentalSensorsRepository.getEnvironmentalSensor(TEST_ADDRESS_1, mGetEnvironmentalSensorCallback);
+        mEnvironmentalSensorsRepository.getEnvironmentalSensor(TEST_ID_1, mGetEnvironmentalSensorCallback);
 
         // Then the task is loaded from the database
-        verify(mEnvironmentalSensorsLocalDataSource).getEnvironmentalSensor(eq(TEST_ADDRESS_1), any(
+        verify(mEnvironmentalSensorsLocalDataSource).getEnvironmentalSensor(eq(TEST_ID_1), any(
                 EnvironmentalSensorsDataSource.GetEnvironmentalSensorCallback.class));
     }
 
@@ -167,17 +184,17 @@ public class EnvironmentalSensorsRepositoryTest {
         // Given a task in the repository
 
         mEnvironmentalSensorsRepository.saveEnvironmentalSensor(sensor3);
-        assertThat(mEnvironmentalSensorsRepository.mCachedEnvironmentalSensors.containsKey(sensor3.getId()), is(true));
+        assertThat(mEnvironmentalSensorsRepository.mCachedEnvironmentalSensors.containsKey(sensor3.getSensorId()), is(true));
 
         // When deleted
-        mEnvironmentalSensorsRepository.deleteEnvironmentalSensor(sensor3.getId());
+        mEnvironmentalSensorsRepository.deleteEnvironmentalSensor(sensor3.getSensorId());
 
         // Verify the data sources were called
-        verify(mEnvironmentalSensorsRemoteDataSource).deleteEnvironmentalSensor(sensor3.getId());
-        verify(mEnvironmentalSensorsLocalDataSource).deleteEnvironmentalSensor(sensor3.getId());
+        verify(mEnvironmentalSensorsRemoteDataSource).deleteEnvironmentalSensor(sensor3.getSensorId());
+        verify(mEnvironmentalSensorsLocalDataSource).deleteEnvironmentalSensor(sensor3.getSensorId());
 
         // Verify it's removed from repository
-        assertThat(mEnvironmentalSensorsRepository.mCachedEnvironmentalSensors.containsKey(sensor3.getId()), is(false));
+        assertThat(mEnvironmentalSensorsRepository.mCachedEnvironmentalSensors.containsKey(sensor3.getSensorId()), is(false));
     }
 
     @Test
@@ -227,7 +244,7 @@ public class EnvironmentalSensorsRepositoryTest {
     @Test
     public void getEnvironmentalSensorWithBothDataSourcesUnavailable_firesOnDataUnavailable() {
         // Given a task id
-        final String sensorId = "123";
+        final UUID sensorId = UUID.randomUUID();  // small but finite chance we have this already...
 
         // When calling getEnvironmentalSensor in the repository
         mEnvironmentalSensorsRepository.getEnvironmentalSensor(sensorId, mGetEnvironmentalSensorCallback);
@@ -290,13 +307,13 @@ public class EnvironmentalSensorsRepositoryTest {
         mEnvironmentalSensorsCallbackCaptor.getValue().onEnvironmentalSensorsLoaded(environmentalSensors);
     }
 
-    private void setEnvironmentalSensorNotAvailable(EnvironmentalSensorsDataSource dataSource, String sensorId) {
+    private void setEnvironmentalSensorNotAvailable(EnvironmentalSensorsDataSource dataSource, UUID sensorId) {
         verify(dataSource).getEnvironmentalSensor(eq(sensorId), mEnvironmentalSensorCallbackCaptor.capture());
         mEnvironmentalSensorCallbackCaptor.getValue().onDataNotAvailable();
     }
 
-    private void setEnvironmentalSensorAvailable(EnvironmentalSensorsDataSource dataSource, EnvironmentalSensor task) {
-        verify(dataSource).getEnvironmentalSensor(eq(task.getId()), mEnvironmentalSensorCallbackCaptor.capture());
-        mEnvironmentalSensorCallbackCaptor.getValue().onEnvironmentalSensorLoaded(task);
+    private void setEnvironmentalSensorAvailable(EnvironmentalSensorsDataSource dataSource, EnvironmentalSensor sensor) {
+        verify(dataSource).getEnvironmentalSensor(eq(sensor.getSensorId()), mEnvironmentalSensorCallbackCaptor.capture());
+        mEnvironmentalSensorCallbackCaptor.getValue().onEnvironmentalSensorLoaded(sensor);
     }
 }
