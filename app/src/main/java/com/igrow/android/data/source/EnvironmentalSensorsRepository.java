@@ -35,6 +35,11 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
     Map<UUID, EnvironmentalSensor> mCachedEnvironmentalSensors;
 
     /**
+     * This variable has package local visibility so it can be accessed from tests.
+     */
+    Map<String, EnvironmentalSensor> mAddressToEnvironmentalSensorsMap;
+
+    /**
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
      * has package local visibility so it can be accessed from tests.
      */
@@ -126,6 +131,11 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
             mCachedEnvironmentalSensors = new LinkedHashMap<>();
         }
         mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
+
+        if (mAddressToEnvironmentalSensorsMap == null) {
+            mAddressToEnvironmentalSensorsMap = new LinkedHashMap<>();
+        }
+        mAddressToEnvironmentalSensorsMap.put(environmentalSensor.getAddress(), environmentalSensor);
     }
 
     /**
@@ -160,7 +170,11 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
                 if (mCachedEnvironmentalSensors == null) {
                     mCachedEnvironmentalSensors = new LinkedHashMap<>();
                 }
+                if (mAddressToEnvironmentalSensorsMap == null) {
+                    mAddressToEnvironmentalSensorsMap = new LinkedHashMap<>();
+                }
                 mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
+                mAddressToEnvironmentalSensorsMap.put(environmentalSensor.getAddress(), environmentalSensor);
 
                 EspressoIdlingResource.decrement(); // Set app as idle.
 
@@ -180,7 +194,89 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
                         if (mCachedEnvironmentalSensors == null) {
                             mCachedEnvironmentalSensors = new LinkedHashMap<>();
                         }
+                        if (mAddressToEnvironmentalSensorsMap == null) {
+                            mAddressToEnvironmentalSensorsMap = new LinkedHashMap<>();
+                        }
                         mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
+                        mAddressToEnvironmentalSensorsMap.put(environmentalSensor.getAddress(), environmentalSensor);
+                        EspressoIdlingResource.decrement(); // Set app as idle.
+
+                        callback.onEnvironmentalSensorLoaded(environmentalSensor);
+                    }
+
+                    @Override
+                    public void onDataNotAvailable() {
+                        EspressoIdlingResource.decrement(); // Set app as idle.
+
+                        callback.onDataNotAvailable();
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Gets environmentalSensors from local data source (sqlite) unless the table is new or empty. In that case it
+     * uses the network data source. This is done to simplify the sample.
+     * <p>
+     * Note: {@link GetEnvironmentalSensorCallback#onDataNotAvailable()} is fired if both data sources fail to
+     * get the data.
+     */
+    @Override
+    public void getEnvironmentalSensor(@NonNull final String address,
+                                       @NonNull final GetEnvironmentalSensorCallback callback) {
+        checkNotNull(address);
+        checkNotNull(callback);
+
+        EnvironmentalSensor cachedEnvironmentalSensor = getEnvironmentalSensorWithAddress(address);
+
+        // Respond immediately with cache if available
+        if (cachedEnvironmentalSensor != null) {
+            callback.onEnvironmentalSensorLoaded(cachedEnvironmentalSensor);
+            return;
+        }
+
+        EspressoIdlingResource.increment(); // App is busy until further notice
+
+        // Load from server/persisted if needed.
+
+        // Is the environmentalSensor in the local data source? If not, query the network.
+        mEnvironmentalSensorsLocalDataSource.getEnvironmentalSensor(address, new GetEnvironmentalSensorCallback() {
+            @Override
+            public void onEnvironmentalSensorLoaded(EnvironmentalSensor environmentalSensor) {
+                // Do in memory cache update to keep the app UI up to date
+                if (mCachedEnvironmentalSensors == null) {
+                    mCachedEnvironmentalSensors = new LinkedHashMap<>();
+                }
+                if (mAddressToEnvironmentalSensorsMap == null) {
+                    mAddressToEnvironmentalSensorsMap = new LinkedHashMap<>();
+                }
+                mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
+                mAddressToEnvironmentalSensorsMap.put(environmentalSensor.getAddress(), environmentalSensor);
+
+                EspressoIdlingResource.decrement(); // Set app as idle.
+
+                callback.onEnvironmentalSensorLoaded(environmentalSensor);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                mEnvironmentalSensorsRemoteDataSource.getEnvironmentalSensor(address, new GetEnvironmentalSensorCallback() {
+                    @Override
+                    public void onEnvironmentalSensorLoaded(EnvironmentalSensor environmentalSensor) {
+                        if (environmentalSensor == null) {
+                            onDataNotAvailable();
+                            return;
+                        }
+                        // Do in memory cache update to keep the app UI up to date
+                        if (mCachedEnvironmentalSensors == null) {
+                            mCachedEnvironmentalSensors = new LinkedHashMap<>();
+                        }
+                        if (mAddressToEnvironmentalSensorsMap == null) {
+                            mAddressToEnvironmentalSensorsMap = new LinkedHashMap<>();
+                        }
+                        mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
+                        mAddressToEnvironmentalSensorsMap.put(environmentalSensor.getAddress(), environmentalSensor);
                         EspressoIdlingResource.decrement(); // Set app as idle.
 
                         callback.onEnvironmentalSensorLoaded(environmentalSensor);
@@ -210,7 +306,11 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
         if (mCachedEnvironmentalSensors == null) {
             mCachedEnvironmentalSensors = new LinkedHashMap<>();
         }
+        if (mAddressToEnvironmentalSensorsMap == null) {
+            mAddressToEnvironmentalSensorsMap = new LinkedHashMap<>();
+        }
         mCachedEnvironmentalSensors.clear();
+        mAddressToEnvironmentalSensorsMap.clear();
     }
 
     @Override
@@ -218,6 +318,7 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
         mEnvironmentalSensorsRemoteDataSource.deleteEnvironmentalSensor(checkNotNull(sensorId));
         mEnvironmentalSensorsLocalDataSource.deleteEnvironmentalSensor(checkNotNull(sensorId));
 
+        mAddressToEnvironmentalSensorsMap.remove(mCachedEnvironmentalSensors.get(sensorId).getAddress());
         mCachedEnvironmentalSensors.remove(sensorId);
     }
 
@@ -245,9 +346,14 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
         if (mCachedEnvironmentalSensors == null) {
             mCachedEnvironmentalSensors = new LinkedHashMap<>();
         }
+        if (mAddressToEnvironmentalSensorsMap == null) {
+            mAddressToEnvironmentalSensorsMap = new LinkedHashMap<>();
+        }
         mCachedEnvironmentalSensors.clear();
+        mAddressToEnvironmentalSensorsMap.clear();
         for (EnvironmentalSensor environmentalSensor : environmentalSensors) {
             mCachedEnvironmentalSensors.put(environmentalSensor.getSensorId(), environmentalSensor);
+            mAddressToEnvironmentalSensorsMap.put(environmentalSensor.getAddress(), environmentalSensor);
         }
         mCacheIsDirty = false;
     }
@@ -269,4 +375,13 @@ public class EnvironmentalSensorsRepository implements EnvironmentalSensorsDataS
         }
     }
 
+    @Nullable
+    private EnvironmentalSensor getEnvironmentalSensorWithAddress(@NonNull String address) {
+        checkNotNull(address);
+        if (mAddressToEnvironmentalSensorsMap == null || mAddressToEnvironmentalSensorsMap.isEmpty()) {
+            return null;
+        } else {
+            return mAddressToEnvironmentalSensorsMap.get(address);
+        }
+    }
 }

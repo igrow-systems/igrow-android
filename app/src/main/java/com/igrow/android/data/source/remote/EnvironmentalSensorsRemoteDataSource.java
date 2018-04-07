@@ -114,6 +114,25 @@ public class EnvironmentalSensorsRemoteDataSource implements EnvironmentalSensor
         }, SERVICE_LATENCY_IN_MILLIS);
     }
 
+    /**
+     * Note: {@link GetEnvironmentalSensorCallback#onDataNotAvailable()} is never fired. In a real remote data
+     * source implementation, this would be fired if the server can't be contacted or the server
+     * returns an error.
+     */
+    @Override
+    public void getEnvironmentalSensor(@NonNull String address, final @NonNull GetEnvironmentalSensorCallback callback) {
+        final EnvironmentalSensor environmentalSensors = ENVIRONMENTAL_SENSORS_SERVICE_DATA.get(address);
+
+        // Simulate network by delaying the execution.
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                callback.onEnvironmentalSensorLoaded(environmentalSensors);
+            }
+        }, SERVICE_LATENCY_IN_MILLIS);
+    }
+
     @Override
     public void saveEnvironmentalSensor(@NonNull EnvironmentalSensor environmentalSensors) {
         ENVIRONMENTAL_SENSORS_SERVICE_DATA.put(environmentalSensors.getSensorId(), environmentalSensors);

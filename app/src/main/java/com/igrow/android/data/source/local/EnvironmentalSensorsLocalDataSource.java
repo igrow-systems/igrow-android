@@ -97,6 +97,33 @@ public class EnvironmentalSensorsLocalDataSource implements EnvironmentalSensors
         mAppExecutors.diskIO().execute(runnable);
     }
 
+    /**
+     * Note: {@link GetEnvironmentalSensorCallback#onDataNotAvailable()} is fired if the {@link EnvironmentalSensor} isn't
+     * found.
+     */
+    @Override
+    public void getEnvironmentalSensor(@NonNull final String address, @NonNull final GetEnvironmentalSensorCallback callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final EnvironmentalSensor environmentalSensor = mEnvironmentalSensorsDao.getEnvironmentalSensorByAddress(address);
+
+                mAppExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (environmentalSensor != null) {
+                            callback.onEnvironmentalSensorLoaded(environmentalSensor);
+                        } else {
+                            callback.onDataNotAvailable();
+                        }
+                    }
+                });
+            }
+        };
+
+        mAppExecutors.diskIO().execute(runnable);
+    }
+
     @Override
     public void saveEnvironmentalSensor(@NonNull final EnvironmentalSensor environmentalSensor) {
         checkNotNull(environmentalSensor);

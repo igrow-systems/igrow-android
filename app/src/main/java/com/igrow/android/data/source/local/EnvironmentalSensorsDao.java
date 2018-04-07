@@ -39,6 +39,15 @@ public interface EnvironmentalSensorsDao {
     EnvironmentalSensor getEnvironmentalSensorById(UUID sensorId);
 
     /**
+     * Select a environmental sensor by BLE address.
+     *
+     * @param address the environmental sensor address.
+     * @return the environmental sensor with sensorId.
+     */
+    @Query("SELECT * FROM environmental_sensors WHERE id = :address")
+    EnvironmentalSensor getEnvironmentalSensorByAddress(String address);
+
+    /**
      * Insert a environmental sensor in the database. If the environmental sensor already exists, replace it.
      *
      * @param task the environmental sensor to be inserted.

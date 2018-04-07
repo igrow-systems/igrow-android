@@ -31,6 +31,8 @@ public interface EnvironmentalSensorsDataSource {
 
     void getEnvironmentalSensor(@NonNull UUID sensorId, @NonNull GetEnvironmentalSensorCallback callback);
 
+    void getEnvironmentalSensor(@NonNull String address, @NonNull GetEnvironmentalSensorCallback callback);
+
     void saveEnvironmentalSensor(@NonNull EnvironmentalSensor environmentalSensor);
 
     void refreshEnvironmentalSensors();
