@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -157,13 +158,15 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
 
-        mBluetoothLeScanService.stopScan();
-        // unbind the BLEScanService via the rudimentary flavourful DI
-        Injection.unbindBluetoothLeScanService(this, mConnection);
-        // set bound = false to indicate to the activity that
-        // calls should not be made to the service from now on
-        // even though the service may not yet be unbound.
-        mBluetoothLeScanServiceBound = false;
+        if (mBluetoothLeScanServiceBound && mBluetoothLeScanService != null) {
+            mBluetoothLeScanService.stopScan();
+            // unbind the BLEScanService via the rudimentary flavourful DI
+            Injection.unbindBluetoothLeScanService(this, mConnection);
+            // set bound = false to indicate to the activity that
+            // calls should not be made to the service from now on
+            // even though the service may not yet be unbound.
+            mBluetoothLeScanServiceBound = false;
+        }
     }
 
     private void onItemSelected(String address, String name) {
@@ -190,7 +193,8 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity {
         }
     }
 
-    private void onSensorScanUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    public void onSensorScanUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
 
         mViewModel.handleEnvironmentalSensorUpdate(sensorScanUpdate);
 

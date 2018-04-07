@@ -253,7 +253,7 @@ public class EnvironmentalSensorsScanViewModel extends RecyclerViewViewModel {
                 mIsDataLoadingError.set(false);
 
                 sensors.clear();
-                sensors.addAll(environmentalSensorsToShow);
+                //sensors.addAll(environmentalSensorsToShow);
                 empty.set(sensors.isEmpty());
             }
 
