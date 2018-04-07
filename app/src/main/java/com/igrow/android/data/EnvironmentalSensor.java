@@ -51,6 +51,9 @@ public class EnvironmentalSensor {
     @ColumnInfo(name = "timestamp")
     private long mTimestamp;
 
+    @ColumnInfo(name = "last_seq")
+    private int mLastSequenceNum;
+
     //@ColumnInfo(name = "location")
     @Ignore
     private Location mLocation;
@@ -69,6 +72,8 @@ public class EnvironmentalSensor {
         private int rssi;
 
         private long timestamp;
+
+        private int lastSequenceNum;
 
         private Location location;
 
@@ -99,6 +104,11 @@ public class EnvironmentalSensor {
             return this;
         }
 
+        public EnvironmentalSensorBuilder setLastSequenceNum(int lastSequenceNum) {
+            this.lastSequenceNum = lastSequenceNum;
+            return this;
+        }
+
         public EnvironmentalSensorBuilder setLocation(Location location) {
             this.location = location;
             return this;
@@ -111,9 +121,12 @@ public class EnvironmentalSensor {
 
         public EnvironmentalSensor build() {
             if (sensorid == null) {
-                return new EnvironmentalSensor(address, fullName, rssi, timestamp, location, observationCollection);
+                return new EnvironmentalSensor(address, fullName, rssi,
+                        timestamp, location, observationCollection);
             } else {
-                return new EnvironmentalSensor(sensorid, address, fullName, rssi, timestamp, location, observationCollection);
+                return new EnvironmentalSensor(sensorid, address, fullName, rssi,
+                        timestamp, lastSequenceNum,
+                        location, observationCollection);
             }
         }
     }
@@ -125,17 +138,26 @@ public class EnvironmentalSensor {
         this.mFullName = fullName;
         this.mRSSI = rssi;
         this.mTimestamp = timestamp;
+        this.mLastSequenceNum = 0;  // TODO: 0 indicates we haven't yet read a value for this sensor
+        // find a better way, an explicit state enum perhaps
         this.mLocation = location;
         this.mObservationCollection = observationCollection;
     }
 
-    public EnvironmentalSensor(UUID sensorId, String address, String fullName, int rssi, long timestamp,
-                               Location location, ObservationCollection observationCollection) {
+    public EnvironmentalSensor(UUID sensorId,
+                               String address,
+                               String fullName,
+                               int rssi,
+                               long timestamp,
+                               int lastSequenceNum,
+                               Location location,
+                               ObservationCollection observationCollection) {
         this.mSensorId = sensorId;
         this.mAddress = address;
         this.mFullName = fullName;
         this.mRSSI = rssi;
         this.mTimestamp = timestamp;
+        this.mLastSequenceNum = lastSequenceNum;
         this.mLocation = location;
         this.mObservationCollection = observationCollection;
     }
@@ -147,27 +169,39 @@ public class EnvironmentalSensor {
 
     }
 
-    public UUID getSensorId() { return mSensorId; }
+    public UUID getSensorId() {
+        return mSensorId;
+    }
 
-    public String getAddress() { return mAddress; }
+    public String getAddress() {
+        return mAddress;
+    }
 
     public String getFullName() {
         return mFullName;
     }
 
-    public int getRSSI() { return mRSSI; }
+    public int getRSSI() {
+        return mRSSI;
+    }
 
     public long getTimestamp() {
         return mTimestamp;
     }
 
-    public Location getLocation() { return mLocation; }
+    public int getLastSequenceNum() { return mLastSequenceNum; }
+
+    public Location getLocation() {
+        return mLocation;
+    }
 
     public ObservationCollection getObservationCollection() {
         return mObservationCollection;
     }
 
-    public void setSensorId(UUID sensorId) { mSensorId = sensorId; }
+    public void setSensorId(UUID sensorId) {
+        mSensorId = sensorId;
+    }
 
     public void setAddress(String address) {
         this.mAddress = address;
@@ -180,6 +214,8 @@ public class EnvironmentalSensor {
     public void setTimestamp(long timestamp) {
         this.mTimestamp = timestamp;
     }
+
+    public void setLastSequenceNum(int lastSequenceNum) { this.mLastSequenceNum = lastSequenceNum; }
 
     public void setRSSI(int rssi) {
         this.mRSSI = rssi;
