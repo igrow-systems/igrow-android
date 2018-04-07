@@ -51,7 +51,9 @@ public class EnvironmentalSensorsRepositoryTest {
             TEST_ID_1,
             TEST_ADDRESS_1,
             "Bottom of the garden",
-            25, 1514936648636L,
+            25,
+            1514936648636L,
+            0,
             null,
             null);
     private final static EnvironmentalSensor sensor2 = new EnvironmentalSensor(
@@ -60,6 +62,7 @@ public class EnvironmentalSensorsRepositoryTest {
             "In the greenhouse",
             12,
             1514936648887L,
+            0,
             null,
             null);
     private final static EnvironmentalSensor sensor3 = new EnvironmentalSensor(
@@ -68,6 +71,7 @@ public class EnvironmentalSensorsRepositoryTest {
             "Middle of polytunnel",
             37,
             1514936658621L,
+            0,
             null,
             null);
 
@@ -137,6 +141,7 @@ public class EnvironmentalSensorsRepositoryTest {
                 "Basement",
                 9,
                 1514936642213L,
+                1234,
                 null,
                 null);
 
@@ -154,8 +159,18 @@ public class EnvironmentalSensorsRepositoryTest {
         // When a task is requested from the environmental sensors repository
         mEnvironmentalSensorsRepository.getEnvironmentalSensor(TEST_ID_1, mGetEnvironmentalSensorCallback);
 
-        // Then the task is loaded from the database
+        // Then the sensor is loaded from the database
         verify(mEnvironmentalSensorsLocalDataSource).getEnvironmentalSensor(eq(TEST_ID_1), any(
+                EnvironmentalSensorsDataSource.GetEnvironmentalSensorCallback.class));
+    }
+
+    @Test
+    public void getEnvironmentalSensorByAddress_requestsSingleEnvironmentalSensorFromLocalDataSource() {
+        // When a task is requested from the environmental sensors repository
+        mEnvironmentalSensorsRepository.getEnvironmentalSensor(TEST_ADDRESS_2, mGetEnvironmentalSensorCallback);
+
+        // Then the sensor is loaded from the database
+        verify(mEnvironmentalSensorsLocalDataSource).getEnvironmentalSensor(eq(TEST_ADDRESS_2), any(
                 EnvironmentalSensorsDataSource.GetEnvironmentalSensorCallback.class));
     }
 
