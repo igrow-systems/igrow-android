@@ -5,19 +5,17 @@ import android.app.Instrumentation;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.igrow.android.Injection;
 import com.igrow.android.R;
 import com.igrow.android.ViewModelFactory;
 import com.igrow.android.addeditsensor.EnvironmentalSensorAddEditActivity;
 import com.igrow.android.addeditsensor.EnvironmentalSensorAddEditFragment;
+import com.igrow.android.bluetooth.EnvironmentalSensorBLEScanUpdate;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,14 +25,12 @@ import org.junit.runner.RunWith;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.AllOf.allOf;
@@ -48,23 +44,21 @@ public class EnvironmentalSensorsScanActivityTest {
 
     private final static String TEST_ADDRESS = "c0:9e:19:a7:ce:9c";
 
+    private final static int TEST_SEQ_NUM = 675;
+
+    private final static int TEST_RSSI = 31;
+
     @Rule
     public IntentsTestRule<EnvironmentalSensorsScanActivity> intentsTestRule =
             new IntentsTestRule<>(EnvironmentalSensorsScanActivity.class);
 
-    //@BeforeClass
-    //public static void stub
-
     @Before
     public void resetState() {
         ViewModelFactory.destroyInstance();
-        // not using the repository - the scanning state is transient
-        //Injection.provideEnvironmentalSensorsRepository(InstrumentationRegistry.getTargetContext())
-        //        .deleteAllEnvironmentalSensors();
     }
 
     @Before
-    public void stubEnvironmentalSensorListScanActivityIntent() {
+    public void stubEnvironmentalSensorListScanIntent() {
 
         Instrumentation.ActivityResult result = createEnvironmentalSensorScanActivityResultStub();
 
@@ -88,7 +82,6 @@ public class EnvironmentalSensorsScanActivityTest {
     public void collection_isUpdatedByScanService() throws Exception {
 
 
-
     }
 
     @Test
@@ -100,11 +93,28 @@ public class EnvironmentalSensorsScanActivityTest {
     @Test
     public void rowClick_startsEnvironmentalSensorAddEditActivity() throws Exception {
 
-        onView(allOf(withId(R.id.sensor_item),
-                withChild(withId(R.id.textview_device_address)))).perform(click());
+        intentsTestRule.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                intentsTestRule.getActivity().onSensorScanUpdate(createBLESensorScanUpdate());
+            }
+        });
 
-        //intended(allOf(hasComponent(new ComponentName(getTargetContext(), EnvironmentalSensorAddEditActivity.class)),
-        //        hasExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_EDIT_SENSOR_ID, ));
+        onView(allOf(withId(R.id.sensor_item),
+                hasDescendant(allOf(withId(R.id.textview_device_address), withText(TEST_ADDRESS)))))
+                .perform(click());
+
+        intended(allOf(hasComponent(new ComponentName(getTargetContext(), EnvironmentalSensorAddEditActivity.class)),
+                hasExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_ADDRESS, TEST_ADDRESS),
+                hasExtra(EnvironmentalSensorAddEditFragment.ARGUMENT_SENSOR_NAME, "Unknown sensor")));
+
+    }
+
+    private EnvironmentalSensorBLEScanUpdate createBLESensorScanUpdate() {
+        EnvironmentalSensorBLEScanUpdate scanUpdate = new EnvironmentalSensorBLEScanUpdate(
+                TEST_ADDRESS,
+                TEST_RSSI,
+                TEST_SEQ_NUM);
+        return scanUpdate;
 
     }
 
