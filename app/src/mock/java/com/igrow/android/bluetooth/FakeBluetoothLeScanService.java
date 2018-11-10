@@ -29,10 +29,14 @@ public class FakeBluetoothLeScanService extends Service implements BluetoothLeSc
 
     private final static String[] TEST_ADDRESSES = new String[]{TEST_ADDRESS_1, TEST_ADDRESS_2};
 
+    private final static int[] TEST_SEQ_NUMBERS = new int[]{3456, 234, 6785, 1234, 5675};
+
     private final static Random mRandomGenerator = new Random();
 
     // TODO volatile not required here as we synchronized() access?
     private volatile boolean mScanning = false;
+
+    private int mCurrentSequenceNum = 0;
 
     public static FakeBluetoothLeScanService getInstance(Context context) {
         if (INSTANCE == null) {
@@ -68,11 +72,19 @@ public class FakeBluetoothLeScanService extends Service implements BluetoothLeSc
                         int currentIndex = 0;
                         while (mScanning) {
                             EnvironmentalSensorBLEScanUpdate sensorScanUpdate
-                                    = new EnvironmentalSensorBLEScanUpdate(TEST_ADDRESSES[currentIndex],
-                                    mRandomGenerator.nextInt(100));
+                                    = new EnvironmentalSensorBLEScanUpdate(
+                                    TEST_ADDRESSES[currentIndex],
+                                    mRandomGenerator.nextInt(100),
+                                    TEST_SEQ_NUMBERS[mCurrentSequenceNum]);
                             Intent intent = new Intent(BluetoothLeScanService.ACTION_SCAN_UPDATE);
                             intent.putExtra(EXTRA_UPDATE_PARCELABLE, sensorScanUpdate);
                             mContext.sendBroadcast(intent);
+
+                            mCurrentSequenceNum++;
+                            if (mCurrentSequenceNum >= TEST_SEQ_NUMBERS.length) {
+                                mCurrentSequenceNum = 0;
+                            }
+
                             currentIndex++;
                             if (currentIndex >= TEST_ADDRESSES.length) {
                                 currentIndex = 0;

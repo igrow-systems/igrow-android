@@ -36,13 +36,13 @@ public class FakeBluetoothAdapter implements BluetoothAdapter {
         return null;
     }
 
-    @Override
-    public BluetoothLeAdvertiser getBluetoothLeAdvertiser() {
-        return null;
-    }
+//    @Override
+//    public BluetoothLeAdvertiser getBluetoothLeAdvertiser() {
+//        return null;
+//    }
 
     @Override
-    public BluetoothLeScanner getBluetoothLeScanner() {
+    public BluetoothLeScanProxy getBluetoothLeScanProxy() {
         return null;
     }
 

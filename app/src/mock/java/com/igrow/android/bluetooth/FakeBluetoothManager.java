@@ -8,9 +8,12 @@ import android.content.Context;
 import java.util.List;
 
 public class FakeBluetoothManager implements BluetoothManager {
+
+    private static volatile BluetoothAdapter mFakeBluetoothAdapter = new FakeBluetoothAdapter();
+
     @Override
     public BluetoothAdapter getAdapter() {
-        return null;
+        return mFakeBluetoothAdapter;
     }
 
     @Override
