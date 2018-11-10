@@ -60,6 +60,6 @@ public class Injection {
     }
 
     public static BluetoothLeScanProxy provideBluetoothLeScanProxy(BluetoothAdapter bluetoothAdapter) {
-        return BluetoothLeScanProxy.create(bluetoothAdapter);
+        return bluetoothAdapter.getBluetoothLeScanProxy();
     }
 }
