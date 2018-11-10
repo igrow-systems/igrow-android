@@ -22,7 +22,7 @@ public abstract class BluetoothLeScanProxy {
         mCallback = callback;
     }
 
-    public static BluetoothLeScanProxy create(BluetoothAdapter bluetoothAdapter) {
+    public static BluetoothLeScanProxy create(android.bluetooth.BluetoothAdapter bluetoothAdapter) {
 
         BluetoothLeScanProxy bluetoothLeScanProxy = null;
 

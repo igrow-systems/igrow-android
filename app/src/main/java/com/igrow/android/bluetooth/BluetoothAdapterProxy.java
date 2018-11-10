@@ -15,7 +15,7 @@ public class BluetoothAdapterProxy implements BluetoothAdapter {
     private android.bluetooth.BluetoothAdapter mBluetoothAdapter;
 
     public BluetoothAdapterProxy(android.bluetooth.BluetoothAdapter bluetoothAdapter) {
-
+        mBluetoothAdapter = bluetoothAdapter;
     }
 
     @Override
@@ -43,14 +43,15 @@ public class BluetoothAdapterProxy implements BluetoothAdapter {
         return null;
     }
 
-    @Override
-    public BluetoothLeAdvertiser getBluetoothLeAdvertiser() {
-        return null;
-    }
+    // TODO: Not required for now
+//    @Override
+//    public BluetoothLeAdvertiser getBluetoothLeAdvertiser() {
+//        return null;
+//    }
 
     @Override
-    public BluetoothLeScanner getBluetoothLeScanner() {
-        return null;
+    public BluetoothLeScanProxy getBluetoothLeScanProxy() {
+        return BluetoothLeScanProxy.create(mBluetoothAdapter);
     }
 
     @Override
@@ -105,7 +106,7 @@ public class BluetoothAdapterProxy implements BluetoothAdapter {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return mBluetoothAdapter.isEnabled();
     }
 
     @Override

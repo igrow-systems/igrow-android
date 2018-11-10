@@ -25,7 +25,7 @@ public class BluetoothLeScanL21Proxy extends BluetoothLeScanProxy {
     private ScanCallback mLeScanCallback;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BluetoothLeScanL21Proxy(BluetoothAdapter bluetoothAdapter) {
+    public BluetoothLeScanL21Proxy(android.bluetooth.BluetoothAdapter bluetoothAdapter) {
 
         mBluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
 

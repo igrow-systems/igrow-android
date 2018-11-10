@@ -17,7 +17,7 @@ public class BluetoothLeScanL18Proxy extends BluetoothLeScanProxy {
 
     private final static String TAG = BluetoothLeScanL18Proxy.class.getSimpleName();
 
-    private BluetoothAdapter mBluetoothAdapter;
+    private android.bluetooth.BluetoothAdapter mBluetoothAdapter;
     // Device scan callback.
     private android.bluetooth.BluetoothAdapter.LeScanCallback mLeScanCallback =
             new android.bluetooth.BluetoothAdapter.LeScanCallback() {
@@ -28,14 +28,14 @@ public class BluetoothLeScanL18Proxy extends BluetoothLeScanProxy {
                     Log.d(TAG, String.format("RSSI: %d Found: %s Scan Record: %s",
                             rssi, device.toString(), scanRecord.toString()));
 
-                    EnvironmentalSensorBLEScanUpdate sensorScanUpdate = new EnvironmentalSensorBLEScanUpdate(device.getAddress(), rssi);
+                    EnvironmentalSensorBLEScanUpdate sensorScanUpdate = new EnvironmentalSensorBLEScanUpdate(device.getAddress(), rssi, 11);
                     if (mCallback != null) {
                         mCallback.onUpdate(sensorScanUpdate);
                     }
                 }
             };
 
-    public BluetoothLeScanL18Proxy(BluetoothAdapter bluetoothAdapter) {
+    public BluetoothLeScanL18Proxy(android.bluetooth.BluetoothAdapter bluetoothAdapter) {
         mBluetoothAdapter = bluetoothAdapter;
     }
 

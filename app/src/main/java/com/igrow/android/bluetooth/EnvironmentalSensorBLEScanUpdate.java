@@ -13,9 +13,12 @@ public class EnvironmentalSensorBLEScanUpdate implements Parcelable {
 
     private int mRSSI;
 
-    public EnvironmentalSensorBLEScanUpdate(String address, int RSSI) {
+    private int mSequenceNum;
+
+    public EnvironmentalSensorBLEScanUpdate(String address, int RSSI, int sequenceNum) {
         this.mAddress = address;
         this.mRSSI = RSSI;
+        this.mSequenceNum = sequenceNum;
     }
 
     public EnvironmentalSensorBLEScanUpdate(String address) {
@@ -34,6 +37,14 @@ public class EnvironmentalSensorBLEScanUpdate implements Parcelable {
         this.mRSSI = RSSI;
     }
 
+    public int getSequenceNum() {
+        return mSequenceNum;
+    }
+
+    public void setSequenceNum(int mSequenceNum) {
+        this.mSequenceNum = mSequenceNum;
+    }
+
     /* everything below here is for implementing Parcelable */
 
     // 99.9% of the time you can just ignore this
@@ -47,6 +58,7 @@ public class EnvironmentalSensorBLEScanUpdate implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(mAddress);
         out.writeInt(mRSSI);
+        out.writeInt(mSequenceNum);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -64,5 +76,6 @@ public class EnvironmentalSensorBLEScanUpdate implements Parcelable {
     private EnvironmentalSensorBLEScanUpdate(Parcel in) {
         mAddress = in.readString();
         mRSSI = in.readInt();
+        mSequenceNum = in.readInt();
     }
 }

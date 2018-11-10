@@ -16,45 +16,91 @@
 
 package com.igrow.android.bluetooth;
 
-import android.app.Service;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
+import android.os.Messenger;
 import android.util.Log;
+
+import com.firebase.jobdispatcher.JobParameters;
+import com.firebase.jobdispatcher.JobService;
+import com.igrow.android.Injection;
+import com.igrow.android.data.EnvironmentalSensor;
+import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
  */
-public class BluetoothLeServiceImpl extends Service implements BluetoothLeService {
+public class BluetoothLeServiceImpl extends JobService implements BluetoothLeScanProxy.OnUpdateCallback, BluetoothLeService  {
 
     private final static String TAG = BluetoothLeServiceImpl.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
+
     private BluetoothAdapter mBluetoothAdapter;
+
+    private BluetoothLeScanProxy mBluetoothLeScanProxy;
+
+    private EnvironmentalSensorsDataSource mSensorsDataSource;
+
     private String mBluetoothDeviceAddress;
+
     private BluetoothGatt mBluetoothGatt;
 
     private int mConnectionState = STATE_DISCONNECTED;
+
+    private boolean mIsInitialized = false;
+
+    private boolean mIsScanning = false;
+
+    private Messenger mActivityMessenger;
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
 
+    private static final int SCAN_DURATION = 10000;
 
+    public BluetoothLeServiceImpl() {
+        super();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Log.i(TAG, "onCreate()");
+
+        if (!mIsInitialized) {
+            mIsInitialized = initialize();
+        }
+
+        if (mIsInitialized) {
+
+        } else {
+            broadcastUpdate(ERROR_NOT_INITIALIZED);
+        }
+
+        Log.i(TAG, "Service created");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mIsInitialized = false;
+        Log.i(TAG, "Service destroyed");
+    }
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -137,39 +183,60 @@ public class BluetoothLeServiceImpl extends Service implements BluetoothLeServic
         sendBroadcast(intent);
     }
 
-    public class LocalBinder extends Binder {
-        public BluetoothLeServiceImpl getService() {
-            return BluetoothLeServiceImpl.this;
+    @Override
+    public boolean onStartJob(JobParameters params) {
+
+        Log.i(TAG, "onStartJob()");
+
+        if (!mIsInitialized) {
+            return false;
         }
+        // Listen for advertisements
+
+        mBluetoothLeScanProxy.startLeScan();
+        Log.i(TAG, "startLeScan()");
+        mIsScanning = true;
+
+        final Runnable runnable = () -> {
+            try {
+                Thread.sleep(SCAN_DURATION);
+                mBluetoothLeScanProxy.stopLeScan();
+                Log.i(TAG, "stopLeScan()");
+                mIsScanning = false;
+                jobFinished(params, true);
+            } catch (InterruptedException ie) {
+                Log.e(TAG, "Scan thread sleep interrupted");
+            }
+        };
+
+        new Thread(runnable).start();
+
+        return true;
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
+    public boolean onStopJob(JobParameters params) {
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        // After using a given device, you should make sure that BluetoothGatt.close() is called
-        // such that resources are cleaned up properly.  In this particular example, close() is
-        // invoked when the UI is disconnected from the Service.
-        close();
-        return super.onUnbind(intent);
-    }
+        if (mIsScanning == true) {
+            mBluetoothLeScanProxy.stopLeScan();
+            Log.i(TAG, "stopLeScan()");
+            mIsScanning = false;
+        }
 
-    private final IBinder mBinder = new LocalBinder();
+        return false;
+    }
 
     /**
      * Initializes a reference to the local Bluetooth adapter.
      *
      * @return Return true if the initialization is successful.
      */
-    @Override
     public boolean initialize() {
         // For API level 18 and above, get a reference to BluetoothAdapter through
         // BluetoothManager.
         if (mBluetoothManager == null) {
-            mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+            mBluetoothManager = Injection.provideBluetoothManager(this);
             if (mBluetoothManager == null) {
                 Log.e(TAG, "Unable to initialize BluetoothManager.");
                 return false;
@@ -180,7 +247,19 @@ public class BluetoothLeServiceImpl extends Service implements BluetoothLeServic
         if (mBluetoothAdapter == null) {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
+        } else {
+            if (!mBluetoothAdapter.isEnabled()) {
+                Log.i(TAG, "Bluetooth adapter disabled!");
+                return false;
+            }
         }
+
+        if (mBluetoothLeScanProxy == null) {
+            mBluetoothLeScanProxy = Injection.provideBluetoothLeScanProxy(mBluetoothAdapter);
+        }
+        mBluetoothLeScanProxy.setOnUpdateCallback(this);
+
+        mSensorsDataSource = Injection.provideEnvironmentalSensorsRepository(this);
 
         return true;
     }
@@ -314,5 +393,28 @@ public class BluetoothLeServiceImpl extends Service implements BluetoothLeServic
         if (mBluetoothGatt == null) return null;
 
         return mBluetoothGatt.getServices();
+    }
+
+    @Override
+    public void onUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
+
+        mSensorsDataSource.getEnvironmentalSensor(sensorScanUpdate.getAddress(),
+                new EnvironmentalSensorsDataSource.GetEnvironmentalSensorCallback() {
+            @Override
+            public void onEnvironmentalSensorLoaded(EnvironmentalSensor environmentalSensor) {
+                int lastSequenceNum = environmentalSensor.getLastSequenceNum();
+                if (sensorScanUpdate.getSequenceNum() != lastSequenceNum) {
+                    // the sensor has new data not yet recorded by this instance of the app
+
+
+
+                }
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                // ignore for now
+            }
+        });
     }
 }

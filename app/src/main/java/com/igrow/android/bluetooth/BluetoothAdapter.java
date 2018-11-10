@@ -3,8 +3,6 @@ package com.igrow.android.bluetooth;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.le.BluetoothLeAdvertiser;
-import android.bluetooth.le.BluetoothLeScanner;
 import android.content.Context;
 
 import java.util.Set;
@@ -22,9 +20,10 @@ public interface BluetoothAdapter {
 
     String	getAddress();
 
-    BluetoothLeAdvertiser getBluetoothLeAdvertiser();
+    // TODO: Don't need the notion of an advertiser
+    //BluetoothLeAdvertiser getBluetoothLeAdvertiser();
 
-    BluetoothLeScanner getBluetoothLeScanner();
+    BluetoothLeScanProxy getBluetoothLeScanProxy();
 
     Set<BluetoothDevice> getBondedDevices();
 

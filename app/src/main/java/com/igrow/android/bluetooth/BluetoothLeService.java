@@ -7,6 +7,8 @@ import java.util.List;
 
 interface BluetoothLeService {
 
+    String ERROR_NOT_INITIALIZED =
+            "com.igrow.android.ERROR_NOT_INITIALIZED";
     String ACTION_GATT_CONNECTED =
             "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
     String ACTION_GATT_DISCONNECTED =
