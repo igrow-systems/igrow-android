@@ -105,11 +105,9 @@ android {
 
 repositories {
     jcenter()
+    google()
     mavenLocal()  // Add Maven local repository for igrow-api-java
-    maven {
-        url 'https://maven.google.com/'
-        name 'Google'
-    }
+    maven { url "https://jitpack.io" }  // For MPAndroidChart
 }
 
 dependencies {
@@ -119,7 +117,7 @@ dependencies {
 
     // As we allow running on API level >=19 , need to patch the
     // classloader on the target, which this library does for us.
-    implementation 'com.android.support:multidex:1.0.2'
+    implementation "com.android.support:multidex:$rootProject.ext.supportMultidexVersion"
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-android
     implementation 'org.slf4j:slf4j-android:1.7.22'
@@ -128,12 +126,13 @@ dependencies {
     implementation 'com.igrow:igrow-api-java:1.0-SNAPSHOT'
 
     // Google Sign-in
-    implementation 'com.google.android.gms:play-services-auth:11.8.0'
+    implementation 'com.google.android.gms:play-services-identity:16.0.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     // Google Dagger
     implementation 'com.google.dagger:dagger:2.10'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:support-v4:27.0.2'
+    implementation "com.android.support:support-v4:$rootProject.ext.supportLibraryVersion"
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
 
     // RxJava
@@ -143,11 +142,11 @@ dependencies {
     //implementation 'org.greenrobot:eventbus:3.0.0'
 
     // Room
-    implementation 'android.arch.persistence.room:runtime:1.0.0'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0'
+    implementation "android.arch.persistence.room:runtime:$rootProject.ext.roomVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.ext.roomVersion"
 
     // Lifecycle extensions
-    implementation 'android.arch.lifecycle:extensions:1.0.0'
+    implementation "android.arch.lifecycle:extensions:$rootProject.ext.archLifecycleVersion"
 
     // Support libraries
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
@@ -171,10 +170,23 @@ dependencies {
     // osmdroid
     implementation 'org.osmdroid:osmdroid-android:5.5:release@aar'
 
+    // As of June 12th Release 2018, need to explicitly
+    // declare dependency on firebase-core
+    //implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseCoreVersion"
+    // Firebase JobDispatcher provides backward compatibility
+    // implementation for JobScheduler (API 21+)
+    implementation "com.firebase:firebase-jobdispatcher:$rootProject.ext.jobDispatcherVersion"
+
     // Testing
 
+    testImplementation 'org.robolectric:robolectric:3.5.1'
+
     // Required -- JUnit 4 framework
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$rootProject.ext.junitVersion"
+
+    // As we allow running on API level >=19 , need to patch the
+    // classloader on the target, which this library does for us.
+    testImplementation "com.android.support:multidex:$rootProject.ext.supportMultidexVersion"
 
     // Mockito framework
     testImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
@@ -190,10 +202,13 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$rootProject.ext.mockitoVersion"
 
     // Android JUnit Runner
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation "com.android.support.test:runner:$rootProject.ext.testRunnerVersion"
+
+    // Multidex support for instrumentation tests
+    androidTestImplementation "com.android.support:multidex-instrumentation:$rootProject.ext.supportMultidexVersion"
 
     // JUnit4 Rules
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation "com.android.support.test:rules:$rootProject.ext.testRulesVersion"
 
     // Espresso core
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
@@ -220,8 +235,6 @@ dependencies {
     //androidTestImplementation "org.powermock:powermock-module-junit4-rule:$rootProject.ext.powerMockitoVersion"
     //androidTestImplementation "org.powermock:powermock-api-mockito2:$rootProject.ext.powerMockitoVersion"
     //androidTestImplementation "org.powermock:powermock-classloading-xstream:$rootProject.ext.powerMockitoVersion"
-
-    testImplementation 'org.robolectric:robolectric:3.5.1'
 
 }
 
