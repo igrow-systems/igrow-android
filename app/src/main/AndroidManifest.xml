@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Reconfigure the JobDispatcher (?) -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -90,7 +92,11 @@
             android:enabled="true"
             android:exported="false"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/service_ble_label" />
+            android:label="@string/service_ble_label">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
         <service
             android:name=".bluetooth.BluetoothLeScanServiceImpl"
             android:description="@string/service_ble_scan_description"

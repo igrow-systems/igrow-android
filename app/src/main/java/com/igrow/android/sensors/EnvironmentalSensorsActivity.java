@@ -19,9 +19,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.igrow.android.R;
 import com.igrow.android.ViewModelFactory;
 import com.igrow.android.bluetooth.BluetoothLeScanServiceImpl;
+import com.igrow.android.bluetooth.BluetoothLeServiceImpl;
 import com.igrow.android.bluetooth.EnvironmentalSensorBLEScanUpdate;
 import com.igrow.android.data.EnvironmentalSensor;
 import com.igrow.android.sensor.EnvironmentalSensorCollection;
@@ -63,6 +71,8 @@ public class EnvironmentalSensorsActivity extends AppCompatActivity {
     private EnvironmentalSensorsViewModel mViewModel;
 
     private EnvironmentalSensorsFragment mSensorsFragment;
+
+    private FirebaseJobDispatcher mJobDispatcher;
 
     private final static int REQUEST_ENABLE_BT = 1;
 
@@ -116,6 +126,8 @@ public class EnvironmentalSensorsActivity extends AppCompatActivity {
         setupNavigationDrawer();
 
         setupViewFragment(savedInstanceState);
+
+        setupJobDispatcher();
 
         mViewModel = obtainViewModel(this);
 
@@ -212,6 +224,10 @@ public class EnvironmentalSensorsActivity extends AppCompatActivity {
                 });
     }
 
+    private void setupJobDispatcher() {
+        mJobDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+    }
+
     public static EnvironmentalSensorsViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
         ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
@@ -231,6 +247,35 @@ public class EnvironmentalSensorsActivity extends AppCompatActivity {
         filter.addAction(ACTION_SCAN_UPDATE);
 
         registerReceiver(mBroadcastReceiver, filter);
+
+        final Job.Builder builder =
+                mJobDispatcher
+                        .newJobBuilder()
+                        .setTag(TAG)
+                        .setRecurring(true)
+                        .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                        .setService(BluetoothLeServiceImpl.class)
+                        .setReplaceCurrent(true)
+                        .setRetryStrategy(
+                                mJobDispatcher.newRetryStrategy(
+                                        RetryStrategy.RETRY_POLICY_EXPONENTIAL,
+                                        30,
+                                        300));
+
+//        if (form.constrainDeviceCharging.get()) {
+//            builder.addConstraint(Constraint.DEVICE_CHARGING);
+//        }
+//        if (form.constrainOnAnyNetwork.get()) {
+//            builder.addConstraint(Constraint.ON_ANY_NETWORK);
+//        }
+//        if (form.constrainOnUnmeteredNetwork.get()) {
+//            builder.addConstraint(Constraint.ON_UNMETERED_NETWORK);
+
+        builder.setTrigger(
+                Trigger.executionWindow(60, 120));
+
+        Log.i(TAG, "scheduling new job");
+        mJobDispatcher.mustSchedule(builder.build());
     }
 
     @Override
