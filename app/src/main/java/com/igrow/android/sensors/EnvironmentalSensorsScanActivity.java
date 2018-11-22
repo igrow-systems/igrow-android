@@ -133,7 +133,8 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity {
         super.onStart();
 
         // bind to BLEScanService via the rudimentary flavourful DI
-        Injection.bindBluetoothLeScanService(this, mConnection, Context.BIND_AUTO_CREATE);
+        boolean result = Injection.bindBluetoothLeScanService(this, mConnection, Context.BIND_AUTO_CREATE);
+        Log.d(TAG, String.format("bindService() result [ %b ] ", result));
     }
 
     @Override
@@ -143,6 +144,10 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_SCAN_UPDATE);
         registerReceiver(mBroadcastReceiver, filter);
+
+        if (mBluetoothLeScanServiceBound && mBluetoothLeScanService != null) {
+            mBluetoothLeScanService.startScan();
+        }
     }
 
 
@@ -152,14 +157,18 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity {
 
         unregisterReceiver(mBroadcastReceiver);
 
+        if (mBluetoothLeScanServiceBound && mBluetoothLeScanService != null) {
+            mBluetoothLeScanService.stopScan();
+        }
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        if (mBluetoothLeScanServiceBound && mBluetoothLeScanService != null) {
-            mBluetoothLeScanService.stopScan();
+        if (mBluetoothLeScanServiceBound) {
+
             // unbind the BLEScanService via the rudimentary flavourful DI
             Injection.unbindBluetoothLeScanService(this, mConnection);
             // set bound = false to indicate to the activity that
@@ -167,6 +176,7 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity {
             // even though the service may not yet be unbound.
             mBluetoothLeScanServiceBound = false;
         }
+
     }
 
     private void onItemSelected(String address, String name) {
@@ -216,6 +226,9 @@ public class EnvironmentalSensorsScanActivity extends FragmentActivity {
             mBluetoothLeScanService = binder.getService();
             mBluetoothLeScanServiceBound = true;
 
+            // startScan is called on resuming, however, there is
+            // some delay until the service is bound from onStart
+            // so we startScan here too.  TODO: store a isScanning flag in the service
             mBluetoothLeScanService.startScan();
         }
 

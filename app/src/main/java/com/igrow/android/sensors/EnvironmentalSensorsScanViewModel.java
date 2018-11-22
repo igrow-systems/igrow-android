@@ -1,7 +1,6 @@
 package com.igrow.android.sensors;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.content.Context;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
@@ -21,12 +20,10 @@ import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 import com.igrow.android.data.source.EnvironmentalSensorsRepository;
 import com.igrow.android.recyclerview.RecyclerViewAdapter;
 import com.igrow.android.recyclerview.RecyclerViewViewModel;
-import com.igrow.android.sensor.EnvironmentalSensorCollection;
 import com.igrow.android.sensordetail.EnvironmentalSensorDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -170,6 +167,7 @@ public class EnvironmentalSensorsScanViewModel extends RecyclerViewViewModel {
         if (existingSensor != null) {
 
             existingSensor.setRSSI(sensorScanUpdate.getRSSI());
+            existingSensor.setLastSequenceNum(sensorScanUpdate.getSequenceNum());
 
             mUpdateEnvironmentalSensorEvent.call();
 
@@ -177,7 +175,8 @@ public class EnvironmentalSensorsScanViewModel extends RecyclerViewViewModel {
             EnvironmentalSensor sensor = new EnvironmentalSensor.EnvironmentalSensorBuilder()
                     .setAddress(sensorScanUpdate.getAddress())
                     .setFullName("Unknown sensor")
-                    .setRssi(sensorScanUpdate.getRSSI()).build();
+                    .setRssi(sensorScanUpdate.getRSSI())
+                    .setLastSequenceNum(sensorScanUpdate.getSequenceNum()).build();
 
             sensors.add(sensor);
             empty.set(false);
