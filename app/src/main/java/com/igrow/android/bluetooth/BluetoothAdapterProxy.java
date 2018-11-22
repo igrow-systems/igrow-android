@@ -81,12 +81,12 @@ public class BluetoothAdapterProxy implements BluetoothAdapter {
 
     @Override
     public BluetoothDevice getRemoteDevice(byte[] address) {
-        return null;
+        return mBluetoothAdapter.getRemoteDevice(address);
     }
 
     @Override
     public BluetoothDevice getRemoteDevice(String address) {
-        return null;
+        return mBluetoothAdapter.getRemoteDevice(address);
     }
 
     @Override
