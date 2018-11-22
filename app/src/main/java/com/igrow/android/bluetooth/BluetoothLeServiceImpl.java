@@ -36,6 +36,9 @@ import com.igrow.android.data.source.EnvironmentalSensorsDataSource;
 import java.util.List;
 import java.util.UUID;
 
+import static com.igrow.android.bluetooth.IGrowGattAttributes.TEMPERATURE_UUID;
+import static com.igrow.android.bluetooth.IGrowGattServices.ENVIRONMENTAL_SENSING_UUID;
+
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -129,6 +132,12 @@ public class BluetoothLeServiceImpl extends JobService implements BluetoothLeSca
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                List<BluetoothGattService> services = getSupportedGattServices();
+                for (BluetoothGattService service : services) {
+                    if (service.getUuid().equals(ENVIRONMENTAL_SENSING_UUID)) {
+                        readCharacteristic(service.getCharacteristic(TEMPERATURE_UUID));
+                    }
+                }
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
@@ -139,6 +148,9 @@ public class BluetoothLeServiceImpl extends JobService implements BluetoothLeSca
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.d(TAG, String.format("Read temperature characteristic value: %s",
+                        characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT16,
+                                0)));
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
         }
@@ -203,7 +215,7 @@ public class BluetoothLeServiceImpl extends JobService implements BluetoothLeSca
                 mBluetoothLeScanProxy.stopLeScan();
                 Log.i(TAG, "stopLeScan()");
                 mIsScanning = false;
-                jobFinished(params, true);
+                jobFinished(params, false);
             } catch (InterruptedException ie) {
                 Log.e(TAG, "Scan thread sleep interrupted");
             }
@@ -367,7 +379,7 @@ public class BluetoothLeServiceImpl extends JobService implements BluetoothLeSca
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
         // This is specific to Temperature characteristic.
-        if (IGrowGattAttributes.TEMPERATURE_UUID.equals(characteristic.getUuid())) {
+        if (TEMPERATURE_UUID.equals(characteristic.getUuid())) {
             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
                     UUID.fromString(IGrowGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
@@ -398,6 +410,10 @@ public class BluetoothLeServiceImpl extends JobService implements BluetoothLeSca
     @Override
     public void onUpdate(EnvironmentalSensorBLEScanUpdate sensorScanUpdate) {
 
+        Log.d(TAG, String.format("Processing update for address %s, sequence number %d",
+                sensorScanUpdate.getAddress(),
+                sensorScanUpdate.getSequenceNum()));
+
         mSensorsDataSource.getEnvironmentalSensor(sensorScanUpdate.getAddress(),
                 new EnvironmentalSensorsDataSource.GetEnvironmentalSensorCallback() {
             @Override
@@ -406,13 +422,18 @@ public class BluetoothLeServiceImpl extends JobService implements BluetoothLeSca
                 if (sensorScanUpdate.getSequenceNum() != lastSequenceNum) {
                     // the sensor has new data not yet recorded by this instance of the app
 
+                    environmentalSensor.setLastSequenceNum(sensorScanUpdate.getSequenceNum());
+                    connect(sensorScanUpdate.getAddress());
 
+                    // Move this to once we've connected and read new values.
+                    mSensorsDataSource.saveEnvironmentalSensor(environmentalSensor);
 
                 }
             }
 
             @Override
             public void onDataNotAvailable() {
+                Log.d(TAG, String.format("Unregistered sensor."));
                 // ignore for now
             }
         });
