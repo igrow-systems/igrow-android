@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import com.igrow.android.bluetooth.BluetoothAdapter;
 import com.igrow.android.bluetooth.BluetoothLeScanProxy;
 import com.igrow.android.bluetooth.BluetoothLeScanService;
+import com.igrow.android.bluetooth.BluetoothLeScanServiceImpl;
 import com.igrow.android.bluetooth.BluetoothManager;
 import com.igrow.android.bluetooth.BluetoothManagerProxy;
 import com.igrow.android.data.source.EnvironmentalSensorsRepository;
@@ -34,11 +35,11 @@ public class Injection {
     }
 
 
-    public static void bindBluetoothLeScanService(@NonNull Context context, ServiceConnection connection, int bindFlags) {
+    public static boolean bindBluetoothLeScanService(@NonNull Context context, ServiceConnection connection, int bindFlags) {
         checkNotNull(context);
 
-        Intent intent = new Intent(context, BluetoothLeScanService.class);
-        context.bindService(intent, connection, bindFlags);
+        Intent intent = new Intent(context, BluetoothLeScanServiceImpl.class);
+        return context.bindService(intent, connection, bindFlags);
     }
 
     public static void unbindBluetoothLeScanService(@NonNull Context context, ServiceConnection connection) {

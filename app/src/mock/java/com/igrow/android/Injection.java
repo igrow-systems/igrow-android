@@ -46,12 +46,13 @@ public class Injection {
                         database.environmentalSensorsDao()));
     }
 
-    public static void bindBluetoothLeScanService(@NonNull Context context, ServiceConnection connection, int bindFlags) {
+    public static boolean bindBluetoothLeScanService(@NonNull Context context, ServiceConnection connection, int bindFlags) {
         checkNotNull(context);
 
         // TODO the sequencing of calls from a client's perspective may not be as per the framework proper
         connection.onServiceConnected(new ComponentName("com.igrow.android", "FakeBluetoothLeScanService"),
                 FakeBluetoothLeScanService.getInstance(context).getBinder());
+        return true;
     }
 
     public static void unbindBluetoothLeScanService(@NonNull Context context, ServiceConnection connection) {
