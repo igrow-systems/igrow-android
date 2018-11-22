@@ -3,9 +3,12 @@ package com.igrow.android.bluetooth;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
+import com.igrow.android.BuildConfig;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +20,8 @@ public class BluetoothLeScanL18Proxy extends BluetoothLeScanProxy {
 
     private final static String TAG = BluetoothLeScanL18Proxy.class.getSimpleName();
 
+    private BluetoothLeAdvPacketParser mAdvPacketParser = new BluetoothLeAdvPacketParser();
+
     private android.bluetooth.BluetoothAdapter mBluetoothAdapter;
     // Device scan callback.
     private android.bluetooth.BluetoothAdapter.LeScanCallback mLeScanCallback =
@@ -25,10 +30,24 @@ public class BluetoothLeScanL18Proxy extends BluetoothLeScanProxy {
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {
 
-                    Log.d(TAG, String.format("RSSI: %d Found: %s Scan Record: %s",
-                            rssi, device.toString(), scanRecord.toString()));
+                    if (BuildConfig.DEBUG) {
 
-                    EnvironmentalSensorBLEScanUpdate sensorScanUpdate = new EnvironmentalSensorBLEScanUpdate(device.getAddress(), rssi, 11);
+                        Log.d(TAG, String.format("RSSI: %d Found: %s Scan Record: %s",
+                                rssi, device.toString(), scanRecord.toString()));
+
+                        List<UUID> uuids = parseUuids(scanRecord);
+                        for (UUID uuid : uuids) {
+                            String serviceName = IGrowGattAttributes.lookup(uuid.toString(), "Unknown service");
+                            Log.d(TAG, String.format("Service: %s",
+                                    serviceName));
+                        }
+
+                    }
+
+                    mAdvPacketParser.parse(scanRecord);
+                    EnvironmentalSensorBLEScanUpdate sensorScanUpdate = new EnvironmentalSensorBLEScanUpdate(device.getAddress(),
+                            rssi,
+                            mAdvPacketParser.getEssSequenceNumber());
                     if (mCallback != null) {
                         mCallback.onUpdate(sensorScanUpdate);
                     }
@@ -90,5 +109,7 @@ public class BluetoothLeScanL18Proxy extends BluetoothLeScanProxy {
         }
         return uuids;
     }
+
+
 
 }
